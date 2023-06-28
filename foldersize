@@ -1,0 +1,12 @@
+#!/bin/sh
+
+dir=${1:-"."}
+
+# Count of files and folders
+count=`ls -A $dir | wc -l`
+
+# Get total size, human readable (SI)
+size=`du $dir -ch | tail -n 1 | awk '{print $1}'`
+
+echo "$count files, ${size}iB"
+

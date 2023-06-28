@@ -1,0 +1,20 @@
+#!/bin/sh
+
+title=$1
+
+if [ ! "$title" ]; then
+    echo "Please provide window title"
+    exit 1
+fi
+
+active=$(xdotool getactivewindow)
+target=$(xdotool search --name $title)
+
+echo "Active: '$active', Target: '$target'"
+
+if [ "$active" = "$target" ]; then
+    xdotool search --name $title windowunmap
+else
+    xdotool search --name $title windowmap windowactivate
+fi
+

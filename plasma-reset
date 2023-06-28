@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Create backup folder
+date=$(date +'%Y-%m-%d_%H-%M')
+bak="$HOME/plasma-config.$date.bak/"
+mkdir $bak
+
+# Move all plasma configs to backup folder
+mv $HOME/.config/{plasma-org.kde.plasma.desktop-appletsrc,plasmashellrc,plasmarc} $bak
+
+# Trash backup folder
+trash $bak
+

@@ -1,0 +1,31 @@
+#!/bin/sh
+
+mac='40:DE:17:43:2F:49'
+
+case $1 in
+  connect)
+    echo "Connecting..."
+    bluetoothctl connect $mac
+  ;;
+
+  disconnect)
+    echo "Disconnecting..."
+    bluetoothctl disconnect $mac
+  ;;
+
+  # repair)
+  #   echo "Removing device and reconnecting.."
+  #   bluetoothctl remove $mac && \
+  #   bluetoothctl pair $mac && \
+  #   bluetoothctl connect $mac
+  # ;;
+
+  mac)
+    echo $mac
+  ;;
+
+  *)
+    echo "Please provide subcommand: connect | disconnect | repair"
+  ;;
+esac
+
