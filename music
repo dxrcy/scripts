@@ -1,16 +1,17 @@
 #!/bin/sh
 
-folder='~/Music/CoolSongs'
-link='https://open.spotify.com/playlist/6mczz83X2b8KZSYyp3vWFr?si=5dc50a06f2014f4e'
-filename='{list-position} {title} - {artists}'
+# Directory to download to
+location="$HOME/music/CoolSongs"
+# Link to playlist to download
+playlist='https://open.spotify.com/playlist/6mczz83X2b8KZSYyp3vWFr?si=5dc50a06f2014f4e'
+# Filename of track
+trackname='{list-position} {title} - {artists}'
 
-# Rename old folder
-mv -r $folder $folder.old
-# Create new folder
-mkdir $folder
-cd $folder
-# Downloads songs to folder, with formatted filename
-spotdl $link --output $filename
 # Remove old folder
-# trash $folder.old
+trash $location
+# Create new folder
+mkdir $location
+cd $location
+# Downloads songs to folder, with formatted filename
+spotdl $playlist --output "$trackname"
 
