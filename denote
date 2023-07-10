@@ -7,6 +7,7 @@ if [ "$1" = '-h' ] || [ "$1" = '--help' ]; then
     echo '    Saves to [FILE].txt'
     echo '  Usage: denote [FILE] -p'
     echo '    Prints to stdout'
+    exit 0
 fi
 
 # No filename argument
