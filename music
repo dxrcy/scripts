@@ -7,10 +7,24 @@ playlist='https://open.spotify.com/playlist/6mczz83X2b8KZSYyp3vWFr?si=5dc50a06f2
 # Filename of track
 trackname='{list-position} {title} - {artists}'
 
+# Confirm
+echo 'Remove and redownload all songs'
+read -p 'Are you sure? [Y/n] ' -n 1 -r
+# Insert newline, if input was not enter
+if [[ ! $REPLY =~ ^$'\n'*$ ]]; then
+    echo
+fi
+
+# Return if input was not 'Y' or blank (enter key)
+if [[ ! $REPLY =~ ^[Yy]?$ ]]; then
+    echo 'Cancelled.'
+    exit 0
+fi
+
 # Remove old folder
 trash $location
 # Create new folder
-mkdir $location
+mkdir -p $location
 cd $location
 # Downloads songs to folder, with formatted filename
 spotdl $playlist --output "$trackname"
