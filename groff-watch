@@ -9,9 +9,11 @@ if [ "$1" = '-h' ] || [ "$1" = '--help' ]; then
     exit 0
 fi
 
-if [ "$1" = '-s' ] || [ "$1" = '--stop' ]; then
+if pgrep inotifywait &> /dev/null; then
     killall inotifywait
     echo 'Stopped watching file.'
+fi
+if [ "$1" = '-s' ] || [ "$1" = '--stop' ]; then
     exit 0
 fi
 
@@ -29,7 +31,7 @@ if [ ! -f "$in" ]; then
 fi
 
 compile() {
-    groff -ms -tbl -T pdf $in > $out || exit 1
+    groff -ms -tbl -T pdf $in > $out 2> /dev/null
 }
 
 watch() {
