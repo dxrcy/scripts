@@ -1,0 +1,6 @@
+#!/bin/sh
+
+pkill 'entr' && exit
+notify-send 'Activated autocomp'
+echo "$1" | entr -n compiler "$1"
+
