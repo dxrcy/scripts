@@ -1,0 +1,20 @@
+#!/bin/sh
+
+a="$1"
+b="$2"
+
+if [ ! $a ]; then
+    echo "ffmpegall: no input filetype given"
+    exit 1
+fi
+if [ ! $b ]; then
+    echo "ffmpegall: no output filetype given"
+    exit 1
+fi
+
+for i in *.$a; do
+    ffmpeg -i $i ${i/.*}.$b || exit 1
+done
+
+trash *.$a
+
