@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# find:  List absolute filepaths
+# sed:   Add file:// to each line
+# tr:    Replace newlines with space
+# awk:   Remove trailing whitespace, and add '$' to start of string
+# xclip: Save to clipboard
+
+find ~/pics/bg \
+    | sed 's|^|file://|' \
+    | tr '\n' ' ' \
+    | awk '{$1="$ "$1};1' \
+    | xclip -selection clipboard \
+    && echo 'Background string saved to clipboard.'
+
