@@ -3,13 +3,13 @@
 # Location of movies folder 
 drive=/run/media/darcy/MOVIES/Movies/
 # Filepath of movies list backup
-list_copy=$HOME/docs/movies.txt
+list_copy="$HOME/docs/movies.txt"
 # Location of semdir folder
-semdir=$HOME/docs/semdir/
+semdir="$HOME/docs/semdir/"
 
 cd $drive \
-  && tree . --filesfirst > .meta/movies.txt \
-  && cp .meta/movies.txt $list_copy \
-  && cp $semdir/README.md .meta/SEMDIR.md \
-  && echo 'Done.'
+    && tree . --filesfirst > .meta/movies.txt \
+    && cp .meta/movies.txt "$list_copy" \
+    && cp "$semdir/README.md" .meta/SEMDIR.md \
+    && echo 'Done.'
 

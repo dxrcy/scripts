@@ -11,7 +11,7 @@ if [ -e "$1" ]; then
 fi
 
 # Create file
-echo -e '#!/bin/sh\n\n' > "$1"
+printf '#!/bin/sh\n\n' > "$1"
 # Set as executable
 chmod +x "$1"
 

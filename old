@@ -1,20 +1,20 @@
 #!/bin/sh
 
 # Help
-if [ "$1" = '--help' ] || [ "$1" == '-h' ]; then
-  echo 'old: move file or directory into .old/ folder'
-  echo '  Usage: old [FILE]'
-  exit 0
+if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
+    echo 'old: move file or directory into .old/ folder'
+    echo '  Usage: old [FILE]'
+    exit 0
 fi
 
 if [ ! "$1" ]; then
-  echo 'old: missing file or directory'
-  exit 1
+    echo 'old: missing file or directory'
+    exit 1
 fi
 
 if [ ! -d '.old' ]; then
-  echo 'old: missing folder .old/ in current directory'
-  exit 1
+    echo 'old: missing folder .old/ in current directory'
+    exit 1
 fi
 
 mv "$1" .old/

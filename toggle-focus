@@ -8,13 +8,13 @@ if [ ! "$title" ]; then
 fi
 
 active=$(xdotool getactivewindow)
-target=$(xdotool search --name $title)
+target=$(xdotool search --name "$title")
 
 echo "Active: '$active', Target: '$target'"
 
 if [ "$active" = "$target" ]; then
-    xdotool search --name $title windowunmap
+    xdotool search --name "$title" windowunmap
 else
-    xdotool search --name $title windowmap windowactivate
+    xdotool search --name "$title" windowmap windowactivate
 fi
 
