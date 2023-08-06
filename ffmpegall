@@ -1,20 +1,17 @@
 #!/bin/sh
 
-a="$1"
-b="$2"
-
-if [ ! $a ]; then
+if [ ! "$1" ]; then
     echo "ffmpegall: no input filetype given"
     exit 1
 fi
-if [ ! $b ]; then
+if [ ! "$2" ]; then
     echo "ffmpegall: no output filetype given"
     exit 1
 fi
 
-for i in *.$a; do
-    ffmpeg -i $i ${i/.*}.$b || exit 1
+for file in *."$1"; do
+    echo "$file"
+    ffmpeg -i "$file" "${file%.*}.$2" -loglevel error || exit 1
+    trash "$file"
 done
-
-trash *.$a
 

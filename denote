@@ -21,7 +21,7 @@ fi
 # Remove lines beginning with space
 # Combine lines separated by single newline (less than 2 in a row)
 # Wrap words to fit width
-out=$(cat $1 -s \
+out=$(cat "$1" -s \
     | sed '/^ /d' \
     | awk 'BEGIN{ RS="\n\n"; ORS="\n\n" } { gsub("\n"," "); print }' \
     | sed 's/ +/ /g' \
