@@ -1,40 +1,43 @@
 #!/bin/sh
 
+date="$1"
+
 # Handle argument options
 while getopts 'rh' opt; do
-  case "$opt" in
-    
+    case "$opt" in
+
     # Replace prevous instance of `display`
     r)
-      killall display &> /dev/null
-      echo "Replaced previous displayed image"
-      ;;
+        if pgrep display; then
+            killall display > /dev/null
+            echo "Replaced previous displayed image"
+        fi
+        # Set date to next argument, after switch
+        date="$2"
+        ;;
 
     # Help
-    ?|h)
-      echo "Garfield comic"
-      echo "    -r  Replace previous displayed image"
-      echo "    [DATE] (default: random date)"
-      exit 1
-      ;;
+    *)
+        echo "Garfield comic"
+        echo "    -r  Replace previous displayed image"
+        echo "    [DATE] (default: random date)"
+        exit 0
+        ;;
 
-  esac
+esac
 done
-
-# Set $1 to next argument
-shift "$(($OPTIND -1))"
 
 # Directory of comics
 dir=~/pics/garfield
 
-if [ $1 ]; then
-  # Date given as argument
-  file=$dir/$1.png
+if [ "$date" ]; then
+    # Date given as argument
+    file="$dir/$date.png"
 else
-  # Get 1 random file in directory
-  file=$( find $dir | shuf -n 1 )
+    # Get 1 random file in directory
+    file=$(find "$dir" | shuf -n 1)
 fi
 
-echo $file
-display $file 
+echo "$file"
+display "$file"
 
