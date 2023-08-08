@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 # Directory to download to
 location="$HOME/music/CoolSongs"
@@ -9,23 +9,26 @@ trackname='{list-position} {title} - {artists}'
 
 # Confirm
 echo 'Remove and redownload all songs'
-read -p 'Are you sure? [Y/n] ' -n 1 -r
-# Insert newline, if input was not enter
-if [[ ! $REPLY =~ ^$'\n'*$ ]]; then
-    echo
-fi
+printf 'Are you sure? [Y/n] '
 
 # Return if input was not 'Y' or blank (enter key)
-if [[ ! $REPLY =~ ^[Yy]?$ ]]; then
-    echo 'Cancelled.'
-    exit 0
-fi
+read -r confirm
+case "$confirm" in
+    y|Y|"") ;;
+    *)
+        echo 'Cancelled.'
+        exit 0
+        ;;
+esac
 
 # Remove old folder
-trash $location
+if [ -f "$location" ]; then
+    trash "$location"
+fi
 # Create new folder
-mkdir -p $location
-cd $location
+mkdir -p "$location"
+cd "$location" || exit 1
 # Downloads songs to folder, with formatted filename
-spotdl $playlist --output "$trackname"
+spotdl "$playlist" --output "$trackname" || exit 1
+notify-send 'Spotify download complete.'
 
