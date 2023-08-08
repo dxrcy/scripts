@@ -1,8 +1,0 @@
-#!/bin/zsh
-
-echo 123
-
-if [[ 123 ]]; then
-    echo 123
-fi
-
