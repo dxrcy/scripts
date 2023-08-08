@@ -1,0 +1,7 @@
+#!/bin/sh
+
+trash ~/.local/share/nvim
+trash ~/.local/state/nvim
+trash ~/.cache/nvim
+trash ~/dotfiles/nvim/.config/nvim/plugin/packer_compiled.lua
+
