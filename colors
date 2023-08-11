@@ -1,0 +1,16 @@
+#!/bin/sh
+
+bg=40
+while [ "$bg" -le 47 ]; do
+    fg=30
+    while [ "$fg" -le 37 ]; do
+        printf '\x1b[%sm' "$bg"
+        printf '\x1b[%sm' "$fg"
+        printf '* '
+        printf '\x1b[0m'
+        fg=$((fg + 1))
+    done
+    bg=$((bg + 1))
+    echo
+done
+
