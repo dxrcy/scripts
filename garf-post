@@ -1,0 +1,27 @@
+#!/bin/sh
+
+date="$1"
+
+if [ ! "$date" ]; then
+    echo 'date not given'
+    exit 1
+fi
+
+input="$HOME/pics/garfield/$date.png"
+
+if [ ! -f "$input" ]; then
+    echo 'not the date of a real comic'
+    exit 1
+fi
+
+cd "$HOME/pics/garfeo" || exit 1
+
+if [ ! -d "unedited" ]; then
+    mkdir -p "unedited"
+fi
+
+garf-convert "$input" "unedited/$date.png"
+
+name=$(tr -dc 'a-zA-Z' < /dev/urandom | head -c 4)
+garf-organize "unedited/$date.png" "unedited/$name"
+
