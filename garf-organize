@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ ! "$1" ]; then
+    echo "image path not given"
+    exit 1
+fi
+
+dir="POST"
+
+mkdir "$dir"
+
+cp "$1" "$dir/english.png"
+cp "$1" "$dir/esperanto.png"
+touch "$dir/title"
+
+date=$(basename "$1" .png)
+echo "$date" > "$dir/date"
+
+tree "$dir"
+trash "$1"
+
