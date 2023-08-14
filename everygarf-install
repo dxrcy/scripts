@@ -1,0 +1,32 @@
+#!/bin/sh
+# 1. Navigate to user systemd config
+cd ~/.config/systemd/user
+
+# 2. Create service file
+# ExecStart path must be absolute, $HOME is interpolated on file create
+echo "\
+[Unit]
+Description=Run EveryGarf program to download Garfield comics
+[Service]
+ExecStart=$HOME/.cargo/bin/everygarf
+[Install]
+WantedBy=everygarf.timer\
+" > everygarf.service
+
+# 3. Create timer file
+# Runs shortly after each boot, and every 3 hours
+echo "\
+[Unit]
+Description=Timer for EveryGarf service
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=3h
+Unit=everygarf.service
+[Install]
+WantedBy=timers.target\
+" > everygarf.timer
+
+# 4. Enable and start with systemd
+systemctl --user daemon-reload
+systemctl --user enable everygarf.timer
+systemctl --user start everygarf.timer
