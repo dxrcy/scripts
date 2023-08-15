@@ -23,5 +23,5 @@ fi
 garf-convert "$input" "unedited/$date.png"
 
 name=$(tr -dc 'a-zA-Z' < /dev/urandom | head -c 4)
-garf-organize "unedited/$date.png" "unedited/$name"
+garf-organize "unedited/$date.png" "unedited/${name}_$date"
 
