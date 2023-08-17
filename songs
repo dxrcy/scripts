@@ -22,7 +22,7 @@ case "$confirm" in
 esac
 
 # Remove old folder
-if [ -f "$location" ]; then
+if [ -d "$location" ]; then
     trash "$location"
 fi
 # Create new folder
