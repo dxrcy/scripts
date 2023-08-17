@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Directory to download to
-location="$HOME/music/CoolSongs"
+location="$HOME/music/songs"
 # Link to playlist to download
 playlist='https://open.spotify.com/playlist/6mczz83X2b8KZSYyp3vWFr?si=5dc50a06f2014f4e'
 # Filename of track
