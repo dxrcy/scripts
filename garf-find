@@ -1,0 +1,59 @@
+#!/bin/sh
+
+src="$HOME/pics/garfield"
+out="$HOME/pics/garfeo/find"
+
+# Arguments
+month="$1"
+day="$2"
+
+# If MM-dd format for month argument
+case "$month" in
+    *-*)
+        # Split values
+        date="$month"
+        month="$(echo "$date" | cut -d '-' -f 1)"
+        day="$(echo "$date" | cut -d '-' -f 2)"
+        ;;
+esac
+
+if [ -z "$month" ]; then
+    # Not given
+    echo "garf-find: month argument not given"
+    exit 1
+elif [ ${#month} -eq 1 ]; then
+    # 1 character - add zero to start
+    month="0$month"
+elif [ ${#month} -gt 2 ]; then
+    # Greater than 2 characters long
+    echo 'garf-find: month argument should be 1-2 characters'
+    exit 1
+fi
+
+if [ -z "$day" ]; then
+    # Not given
+    echo "garf-find: day argument not given"
+    exit 1
+elif [ ${#day} -eq 1 ]; then
+    # 1 character - add zero to start
+    day="0$day"
+elif [ ${#day} -gt 2 ]; then
+    # Greater than 2 characters long
+    echo 'garf-find: day argument should be 1-2 characters'
+    exit 1
+fi
+
+# Remove previous files and recreate folder
+if [ -d "$out" ]; then
+    rm -r "$out"
+fi
+mkdir "$out"
+
+# Copy all files
+# Loop works better with glob
+for file in "$src"/*"-$month-$day.png"; do
+    cp "$file" "$out/"
+done
+
+echo 'Done.'
+
