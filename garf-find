@@ -43,11 +43,10 @@ elif [ ${#day} -gt 2 ]; then
     exit 1
 fi
 
-# Remove previous files and recreate folder
-if [ -d "$out" ]; then
-    rm -r "$out"
+# Remove previous files in folder
+if [ "$(ls -A "$out")" ]; then
+    rm "$out/"*
 fi
-mkdir "$out"
 
 # Copy all files
 # Loop works better with glob
