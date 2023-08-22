@@ -21,7 +21,6 @@ touch "$dir/title"
 date=$(basename "$img" .png)
 echo "$date" > "$dir/date"
 
-echo
 tree "$dir"
 trash "$img"
 

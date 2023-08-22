@@ -16,12 +16,19 @@ fi
 
 cd "$HOME/pics/garfeo" || exit 1
 
+# Make folder if does not exist
 if [ ! -d "unedited" ]; then
     mkdir -p "unedited"
 fi
 
+# Convert image to square format, with watermark
 garf-convert "$input" "unedited/$date.png"
 
-name=$(tr -dc 'a-zA-Z' < /dev/urandom | head -c 4)
-garf-organize "unedited/$date.png" "unedited/${name}_$date"
+# Create unique name for folder
+now=$(date +'%m%d%H')
+id=$(tr -dc 'a-z' < /dev/urandom | head -c 4)
+name="${now}_${id}_$date"
+
+# Create other files from image
+garf-organize "unedited/$date.png" "unedited/$name"
 
