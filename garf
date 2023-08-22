@@ -1,6 +1,7 @@
 #!/bin/sh
 
 date="$1"
+name="$2" # Optional
 
 if [ ! "$date" ]; then
     echo 'date not given'
@@ -24,10 +25,12 @@ fi
 # Convert image to square format, with watermark
 garf-convert "$input" "unedited/$date.png"
 
-# Create unique name for folder
-now=$(date +'%m%d%H')
-id=$(tr -dc 'a-z' < /dev/urandom | head -c 4)
-name="${now}_${id}_$date"
+# Create unique name for folder, if not specified as argument
+if [ ! "$name" ]; then
+    now=$(date +'%m%d%H')
+    id=$(tr -dc 'a-z' < /dev/urandom | head -c 4)
+    name="${now}_${id}_$date"
+fi
 
 # Create other files from image
 garf-organize "unedited/$date.png" "unedited/$name"
