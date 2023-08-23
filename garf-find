@@ -1,58 +1,36 @@
 #!/bin/sh
 
-src="$HOME/pics/garfield"
-out="$HOME/pics/garfeo/find"
+id="$1"
 
-# Arguments
-month="$1"
-day="$2"
-
-# If MM-dd format for month argument
-case "$month" in
-    *-*)
-        # Split values
-        date="$month"
-        month="$(echo "$date" | cut -d '-' -f 1)"
-        day="$(echo "$date" | cut -d '-' -f 2)"
-        ;;
-esac
-
-if [ -z "$month" ]; then
-    # Not given
-    echo "garf-find: month argument not given"
-    exit 1
-elif [ ${#month} -eq 1 ]; then
-    # 1 character - add zero to start
-    month="0$month"
-elif [ ${#month} -gt 2 ]; then
-    # Greater than 2 characters long
-    echo 'garf-find: month argument should be 1-2 characters'
+if [ ! "$id" ]; then
+    echo 'no id given.'
     exit 1
 fi
 
-if [ -z "$day" ]; then
-    # Not given
-    echo "garf-find: day argument not given"
-    exit 1
-elif [ ${#day} -eq 1 ]; then
-    # 1 character - add zero to start
-    day="0$day"
-elif [ ${#day} -gt 2 ]; then
-    # Greater than 2 characters long
-    echo 'garf-find: day argument should be 1-2 characters'
+src="$HOME/pics/garfeo/posts/$id/esperanto.png"
+
+if [ ! -f "$src" ]; then
+    echo 'post not found with that id.'
     exit 1
 fi
 
-# Remove previous files in folder
-if [ "$(ls -A "$out")" ]; then
-    rm "$out/"*
-fi
+echo 'Opening image...'
+display "$src"
 
-# Copy all files
-# Loop works better with glob
-for file in "$src"/*"-$month-$day.png"; do
-    cp "$file" "$out/"
-done
+printf 'Enter date (mm-dd): '
+read -r date
 
-echo 'Done.'
+echo 'Find comics with that date...'
+garf-find-date "$date" || exit 1
+
+find="$HOME/pics/garfeo/find"
+
+dolphin "$find" >> /dev/null
+
+printf 'Enter full date (yyyy-mm-dd): '
+read -r date
+
+garf "$date" "$id" || exit 1
+
+echo 'All done!'
 
