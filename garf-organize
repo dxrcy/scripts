@@ -19,7 +19,7 @@ cp "$img" "$dir/esperanto.png"
 touch "$dir/title"
 
 date=$(basename "$img" .png)
-echo "$date" > "$dir/date"
+# echo "$date" > "$dir/date"
 
 trash "$img"
 
