@@ -31,7 +31,7 @@ for folder in 'unedited/'*; do
 done
 
 # Convert image to square format, with watermark
-garf-convert "$input" "unedited/$date.png"
+garf-convert "$input" "unedited/$date.png" >> /dev/null
 
 # Create unique name for folder, if not specified as argument
 if [ ! "$name" ]; then
