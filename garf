@@ -36,7 +36,7 @@ garf-convert "$input" "unedited/$date.png" >> /dev/null
 # Create unique name for folder, if not specified as argument
 if [ ! "$name" ]; then
     now=$(date +'%m%d%H')
-    id=$(tr -dc 'a-z' < /dev/urandom | head -c 4)
+    id=$(tr -dc '[:lower:]' < /dev/urandom | head -c 4)
     name="${now}_${id}_$date"
 fi
 
