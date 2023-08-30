@@ -80,5 +80,6 @@ for file in "$src"/*"-$month-$day.png"; do
     cp "$file" "$out/"
 done
 
-dolphin "$out" >> /dev/null
+# Open dolphin and ignore stdout/stderr
+nohup dolphin "$out" >> /dev/null 2>&1
 

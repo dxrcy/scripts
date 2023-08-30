@@ -23,5 +23,5 @@ printf 'Enter full date (yyyy-mm-dd): '
 read -r date
 
 echo "$date" >> "$posts/$id/date"
-echo 'Done.'
+echo "Created $id/date."
 
