@@ -73,8 +73,3 @@ done
 
 dolphin "$out" >> /dev/null
 
-printf 'Enter full date (yyyy-mm-dd): '
-read -r date
-
-echo 'There you go.'
-

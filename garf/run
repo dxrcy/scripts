@@ -20,6 +20,7 @@ case "$cmd" in
         echo '    show: display a comic'
         echo '    make: make post data including formatted comic'
         echo '    find: open all comics with given month and day, or post id'
+        echo '    date: add date to existing post'
         exit 0
         ;;
 
@@ -33,10 +34,9 @@ case "$cmd" in
     'find'|'f')
         $dir/find $@
         ;;
-
-    # 'add-date'|'fp')
-    #     $dir/add-date $@
-    #     ;;
+    'date'|'d')
+        $dir/date $@
+        ;;
 
     # Private
     '+format')
