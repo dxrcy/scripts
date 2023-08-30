@@ -4,16 +4,16 @@ posts="$HOME/pics/garfeo/posts"
 
 id="$1"
 if [ ! "$id" ]; then
-    echo 'garf add-date: no post id given'
+    echo 'garf date: no post id given'
     exit 1
 fi
 
 if [ ! -d "$posts/$id" ]; then
-    echo 'garf add-date: post does not exist with that id'
+    echo 'garf date: post does not exist with that id'
     exit 1
 fi
 if [ -f "$posts/$id/date" ]; then
-    echo 'garf add-date: post already has date file'
+    echo 'garf date: post already has date file'
     exit 1
 fi
 

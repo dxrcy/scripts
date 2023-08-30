@@ -5,7 +5,7 @@ dir=~/scripts/garf
 # Missing command
 if [ ! "$1" ]; then
     echo 'garf: missing subcommand'
-    echo "    available subcommands: [help|show|make|find]"
+    echo "    available subcommands: [help|show|make|find|date]"
     exit 1
 fi
 
@@ -48,7 +48,7 @@ case "$cmd" in
 
     *)
         echo "garf: unknown subcommand: '$cmd'"
-        echo "    available subcommands: [help|show|make|find]"
+        echo "    available subcommands: [help|show|make|find|date]"
         exit 1
         ;;
 esac

@@ -12,7 +12,16 @@ if [ "$1" = '-p' ] || [ "$1" = '--post' ]; then
         exit 1
     fi
 
-    post="$posts/$id/esperanto.png"
+    # Show english if exists, else esperanto
+    if [ -f "$posts/$id/english.png" ]; then
+        post="$posts/$id/english.png"
+    elif [ -f "$posts/$id/esperanto.png" ]; then
+        post="$posts/$id/esperanto.png"
+    else
+        echo 'garf find: post does not exist with that id'
+        exit 1
+    fi
+
     echo 'Opening image...'
     display "$post"
 
