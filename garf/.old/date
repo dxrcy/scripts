@@ -3,19 +3,10 @@
 src="$HOME/pics/garfield"
 out="$HOME/pics/garfeo/find"
 
-# Arguments
-month="$1"
-day="$2"
-
-# If MM-dd format for month argument
-# case "$month" in
-#     *-*)
-#         # Split values
-#         date="$month"
-#         month="$(echo "$date" | cut -d '-' -f 1)"
-#         day="$(echo "$date" | cut -d '-' -f 2)"
-#         ;;
-# esac
+# Split values at dash
+date="$1"
+month="$(echo "$date" | cut -d '-' -f 1)"
+day="$(echo "$date" | cut -d '-' -f 2)"
 
 if [ -z "$month" ]; then
     # Not given
@@ -56,9 +47,4 @@ done
 
 find="$HOME/pics/garfeo/find"
 dolphin "$find" >> /dev/null
-
-printf 'Enter full date (yyyy-mm-dd): '
-read -r date
-
-~/scripts/garf/run make "$date" "$id" || exit 1
 

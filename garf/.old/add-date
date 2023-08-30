@@ -1,0 +1,4 @@
+#!/bin/sh
+
+~/scripts/garf/run date $@ || exit 1
+
