@@ -3,14 +3,14 @@
 id="$1"
 
 if [ ! "$id" ]; then
-    echo 'no id given.'
+    echo 'garf find-post: no id given.'
     exit 1
 fi
 
 src="$HOME/pics/garfeo/posts/$id/esperanto.png"
 
 if [ ! -f "$src" ]; then
-    echo 'post not found with that id.'
+    echo 'garf find-post: post not found with that id.'
     exit 1
 fi
 
@@ -21,16 +21,5 @@ printf 'Enter date (mm-dd): '
 read -r date
 
 echo 'Find comics with that date...'
-garf-find-date "$date" || exit 1
-
-find="$HOME/pics/garfeo/find"
-
-dolphin "$find" >> /dev/null
-
-printf 'Enter full date (yyyy-mm-dd): '
-read -r date
-
-garf "$date" "$id" || exit 1
-
-echo 'All done!'
+~/scripts/garf/run find-date "$date" || exit 1
 

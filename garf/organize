@@ -2,24 +2,21 @@
 
 img="$1"
 if [ ! "$img" ]; then
-    echo 'image path not given'
+    echo 'garf organize: image path not given'
     exit 1
 fi
 
 dir="$2"
 if [ ! "$dir" ]; then
-    echo 'directory not exist'
+    echo 'garf organize: directory not exist'
     exit 1
 fi
 
-mkdir "$dir"
-
-cp "$img" "$dir/english.png"
-cp "$img" "$dir/esperanto.png"
-touch "$dir/title"
+mkdir "$dir"                   || exit 1
+cp "$img" "$dir/english.png"   || exit 1
+mv "$img" "$dir/esperanto.png" || exit 1
+touch "$dir/title"             || exit 1
 
 date=$(basename "$img" .png)
 echo "$date" > "$dir/date"
-
-trash "$img"
 

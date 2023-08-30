@@ -10,7 +10,6 @@ while getopts 'rh' opt; do
     r)
         if pgrep display; then
             killall display > /dev/null
-            echo "Replaced previous displayed image"
         fi
         # Set date to next argument, after switch
         date="$2"
@@ -18,9 +17,9 @@ while getopts 'rh' opt; do
 
     # Help
     *)
-        echo "Garfield comic"
-        echo "    -r  Replace previous displayed image"
-        echo "    [DATE] (default: random date)"
+        echo 'garf show'
+        echo '    -r  replace previous displayed image'
+        echo '    [DATE] (default: random date)'
         exit 0
         ;;
 

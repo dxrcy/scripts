@@ -1,0 +1,57 @@
+#!/bin/sh
+
+dir=~/scripts/garf
+
+# Missing command
+if [ ! "$1" ]; then
+    echo 'garf: missing subcommand'
+    echo "    available commands: [help|show|make|find-date|find-post]"
+    echo '    show help with --help'
+    exit 1
+fi
+
+# Remove subcommand from $@
+cmd="$1"
+shift
+
+case "$cmd" in
+    # Help
+    'help'|'h'|'--help'|'-h')
+        echo 'garf: available subcommands'
+        echo '    show:      display a comic'
+        echo '    make:      make post data including formatted comic'
+        echo '    find-date: open all comics with given month and day'
+        echo '    find-post: open all comics with month and day from post index'
+        exit 0
+        ;;
+
+    # Public
+    'show'|'s')
+        $dir/show $@
+        ;;
+    'make'|'m')
+        $dir/make $@
+        ;;
+    'find-date'|'fd')
+        $dir/find-date $@
+        ;;
+    'find-post'|'fp')
+        $dir/find-post $@
+        ;;
+
+    # Private
+    '+format')
+        $dir/format $@
+        ;;
+    '+organize')
+        $dir/organize $@
+        ;;
+
+    *)
+        echo "garf: unknown subcommand: '$cmd'"
+        echo "    available subcommands: [help|show|make|find-date|find-post]"
+        echo '    show help with --help'
+        exit 1
+        ;;
+esac
+
