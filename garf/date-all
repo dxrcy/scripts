@@ -14,7 +14,7 @@ fi
 
 for post in *; do
     if [ ! -f "$post/date" ]; then
-        ~/scripts/garf/run date "$post" || exit "$?"
+        ~/scripts/cmd/garf date "$post" || exit "$?"
     fi
 done
 

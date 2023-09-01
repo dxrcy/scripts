@@ -31,7 +31,7 @@ for folder in "$dir/unedited/"*; do
 done
 
 # Convert image to square format, with watermark
-~/scripts/garf/run +format "$input" "$dir/unedited/$date.png" || exit 1
+~/scripts/cmd/garf +format "$input" "$dir/unedited/$date.png" || exit 1
 
 # Create unique name for folder, if not specified as argument
 if [ ! "$name" ]; then
@@ -41,6 +41,6 @@ if [ ! "$name" ]; then
 fi
 
 # Create other files from image
-~/scripts/garf/run +organize "$dir/unedited/$date.png" "$dir/unedited/$name" || exit 1
+~/scripts/cmd/garf +organize "$dir/unedited/$date.png" "$dir/unedited/$name" || exit 1
 echo "Created $name"
 
