@@ -22,10 +22,13 @@ if [ ! -d "$dir/unedited" ]; then
     mkdir -p "$dir/unedited"
 fi
 
-# Check if folder already exists with same date
+# Check if folder already exists ending in same date
+#   or has date file with same date
 for folder in "$dir/unedited/"*; do
-    if [ "$(expr "$folder" : '.*_\(.*\)')" = "$date" ]; then
-        echo 'comic has already been formatted with that date'
+    if [ "$(expr "$folder" : '.*_\(.*\)')" = "$date" ] \
+        || ( [ -f "$folder/date" ] && [ "$(cat "$folder/date")" = "$date" ] ) \
+    ; then
+        echo 'garf make: comic has already been formatted with that date'
         exit 1
     fi
 done

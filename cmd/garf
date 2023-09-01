@@ -2,10 +2,12 @@
 
 dir="$HOME/scripts/garf"
 
+available='help | show | make | find | date | date-all | error | revise'
+
 # Missing command
 if [ ! "$1" ]; then
     echo 'garf: missing subcommand'
-    echo "    available subcommands: [help|show|make|find|date|date-all|error]"
+    echo "    available subcommands: $available"
     exit 1
 fi
 
@@ -23,6 +25,7 @@ case "$cmd" in
         echo '    date:     add date to existing post'
         echo '    date-all: add date to all posts with missing dates'
         echo '    error:    show next post with error'
+        echo '    revise:   remake next post with error'
         exit 0
         ;;
 
@@ -45,6 +48,9 @@ case "$cmd" in
     'error'|'e')
         "$dir/error" "$@"
         ;;
+    'revise'|'e')
+        "$dir/revise" "$@"
+        ;;
 
     # Private
     '+format')
@@ -56,7 +62,7 @@ case "$cmd" in
 
     *)
         echo "garf: unknown subcommand: '$cmd'"
-        echo "    available subcommands: [help|show|make|find|date|date-all|error]"
+        echo "    available subcommands: $available"
         exit 1
         ;;
 esac

@@ -1,0 +1,55 @@
+#!/bin/sh
+
+cd "$HOME/pics/garfeo/posts" || exit 1
+find="$HOME/pics/garfeo/find"
+unedited="$HOME/pics/garfeo/unedited"
+old="$HOME/pics/garfeo/old"
+
+post="$1"
+
+if [ ! "$post" ]; then
+    # Get first post id with errata file
+    for i in *; do
+        if [ -f "$i/errata" ]; then
+            post="$i"
+            break
+        fi
+    done
+
+    # No post to revise!
+    if [ ! "$post" ]; then
+        echo 'garf revise: no posts with errors'
+        exit 0
+    fi
+
+    echo "Post id: $post"
+fi
+
+# Invalid post id
+if [ ! -d "$post" ]; then
+    echo 'garf revise: no post with that id'
+    exit 1
+fi
+
+# Find date if not existing file
+if [ ! -f "$post/date" ]; then
+    echo 'No date file, please find from post'
+    ~/scripts/cmd/garf date "$post" || exit "$?"
+fi
+
+# Read date file (existing or just created)
+date="$(cat "$post/date")"
+echo "Date: $date"
+
+# Make post
+~/scripts/cmd/garf make "$date" "$post" || exit "$?"
+
+# Copy title file
+cp "$post/title"  "$unedited/$post/title" || exit 1
+# Add revised to properties file
+echo 'revised' >> "$unedited/$post/props" || exit 1
+
+# Move old post to old
+mv "$post" "$old/" || exit
+echo "Moved $post to old folder"
+
