@@ -38,6 +38,11 @@ case "$cmd" in
         $dir/date "$@"
         ;;
 
+    # Unlisted
+    'date-all')
+        $dir/date-all "$@"
+        ;;
+
     # Private
     '+format')
         $dir/format "$@"

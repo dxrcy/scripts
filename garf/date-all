@@ -1,0 +1,20 @@
+#!/bin/sh
+
+cd "$HOME/pics/garfeo/posts" || exit 1
+
+if [ "$1" = '--count' ] || [ "$1" = '-c' ]; then
+    count=0
+    for post in *; do
+        if [ ! -f "$post/date" ]; then
+            count=$(("$count" + 1))
+        fi
+    done
+    echo "Count: $count"
+fi
+
+for post in *; do
+    if [ ! -f "$post/date" ]; then
+        ~/scripts/garf/run date "$post" || exit "$?"
+    fi
+done
+

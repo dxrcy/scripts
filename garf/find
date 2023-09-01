@@ -77,7 +77,7 @@ fi
 # Copy all files
 # Loop works better with glob
 for file in "$src"/*"-$month-$day.png"; do
-    cp "$file" "$out/"
+    cp "$file" "$out/" || exit 1
 done
 
 # Open dolphin and ignore stdout/stderr

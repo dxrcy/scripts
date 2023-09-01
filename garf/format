@@ -1,4 +1,4 @@
 #!/bin/sh
 
-comic-format "$@" >> /dev/null
+comic-format "$1" "$2" "Garfield Esperanto" >> /dev/null
 
