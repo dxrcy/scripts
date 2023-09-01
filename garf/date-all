@@ -14,6 +14,7 @@ fi
 
 for post in *; do
     if [ ! -f "$post/date" ]; then
+        echo "Post id: $post"
         ~/scripts/cmd/garf date "$post" || exit "$?"
     fi
 done

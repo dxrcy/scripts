@@ -22,6 +22,11 @@ fi
 printf 'Enter full date (yyyy-mm-dd): '
 read -r date
 
+if ! expr "$date" : '^[[:digit:]]\{4\}-[[:digit:]]\{2\}-[[:digit:]]\{2\}$' > /dev/null; then
+    echo 'garf date: full date must be yyyy-mm-dd format'
+    exit 1
+fi
+
 echo "$date" >> "$posts/$id/date"
 echo "Created $id/date."
 
