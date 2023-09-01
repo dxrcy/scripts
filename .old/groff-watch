@@ -1,0 +1,49 @@
+#!/bin/sh
+
+if [ "$1" = '-h' ] || [ "$1" = '--help' ]; then
+    echo 'groff-watch: Watch a groff file and preview pdf output'
+    echo '  Usage: groff-watch [FILE]'
+    echo '    Watch file for changes and compile'
+    echo '  Usage: groff-watch --stop'
+    echo '    Stop watch job'
+    exit 0
+fi
+
+if pgrep inotifywait &> /dev/null; then
+    killall inotifywait
+    echo 'Stopped watching file.'
+fi
+if [ "$1" = '-s' ] || [ "$1" = '--stop' ]; then
+    exit 0
+fi
+
+if [ ! "$1" ]; then
+    echo 'watch: no file specified'
+    exit 1
+fi
+
+in="$1.ms"
+out="$1.pdf"
+
+if [ ! -f "$in" ]; then
+    echo "groff-watch: input file '$in' does not exist"
+    exit 1
+fi
+
+compile() {
+    groff -ms -tbl -T pdf $in > $out 2> /dev/null
+}
+
+watch() {
+    compile
+    while inotifywait --quiet -e close_write $in > /dev/null; do
+        compile
+    done
+}
+
+watch &
+zathura $out &
+nvim $in
+
+echo 'groff-watch: Watching file for changes...'
+

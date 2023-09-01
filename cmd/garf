@@ -27,29 +27,29 @@ case "$cmd" in
 
     # Public
     'show'|'s')
-        $dir/show "$@"
+        "$dir/show" "$@"
         ;;
     'make'|'m')
-        $dir/make "$@"
+        "$dir/make" "$@"
         ;;
     'find'|'f')
-        $dir/find "$@"
+        "$dir/find" "$@"
         ;;
     'date'|'d')
-        $dir/date "$@"
+        "$dir/date" "$@"
         ;;
 
     # Unlisted
     'date-all')
-        $dir/date-all "$@"
+        "$dir/date-all" "$@"
         ;;
 
     # Private
     '+format')
-        $dir/format "$@"
+        "$dir/format" "$@"
         ;;
     '+organize')
-        $dir/organize "$@"
+        "$dir/organize" "$@"
         ;;
 
     *)

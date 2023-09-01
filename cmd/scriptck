@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Get location of scripts folder
+scripts="$(readlink -f "$(dirname "$0")/..")"
+
+# Check each folder, or fail
+shellcheck "$scripts/cmd/"*  || exit 1
+shellcheck "$scripts/garf/"* || exit 1
+
+echo 'No issues found.'
+

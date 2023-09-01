@@ -1,0 +1,10 @@
+#!/bin/zsh
+
+echo "<<$jobstates>>"
+
+if [[ -n "$jobstates" ]]; then
+  notify-send "yes!"
+else
+  notify-send "no!"
+fi
+

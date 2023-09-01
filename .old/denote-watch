@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Help
+if [ "$1" = '-h' ] || [ "$1" = '--help' ]; then
+    echo 'denote-watch: Watch file for changes, format note file, removing junk, and save as plaintext'
+    echo '  Usage: denote-watch [FILE]'
+    echo '    Saves to [FILE].txt, when [FILE] is updated'
+    echo '  Usage: denote-watch [FILE] -p'
+    echo '    Prints to stdout'
+fi
+
+# No filename argument
+if [ ! "$1" ]; then
+  echo 'denote: missing file'
+  echo '  Use --help for information'
+  exit 1
+fi
+
+# Run program
+denote $@
+# Watch file for changes, and run again
+while inotifywait -e close_write "$1"; do
+    denote $@
+done
+

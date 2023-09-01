@@ -1,0 +1,63 @@
+#!/bin/sh
+
+folder="$HOME/.local/share/Trash"
+
+case "$1" in
+  
+  # No arguments
+  '')
+    echo 'Missing file or folder name to trash'
+    echo '  Use --help for more information'
+  ;;
+
+  # Help message
+  '-h'|'--help')
+    echo 'Trash: Move a file or folder to trash location'
+    echo '  Usage:'
+    echo '    trash [FILENAME]'
+    echo '      Move file or folder to trash'
+    echo '  Other commands:'
+    echo '    --help'
+    echo '      Show this message'
+    echo '    --location'
+    echo '      Print location of trash folder'
+    echo '    --size'
+    echo '      Print size (disk usage) of trash file'
+    echo '    --empty'
+    echo '      Permanently delete contents of trash'
+  ;;
+
+  # Other commands
+  '-l'|'--location')
+    echo "$folder"
+  ;;
+  '-s'|'--size')
+    echo $(sh ~/scripts/foldersize "$folder")
+  ;;
+  '-e'|'--empty')
+    # Confirm deletion
+    read -p 'Permanently delete all trashed files? [y/N] ' -r
+    if [[ $REPLY =~ ^[Yy] ]]; then
+      # Remove everything in folder, even starting with dot
+      rm -rf $folder/*?* \
+        && echo 'Deleted all trash'
+    else 
+      echo 'Cancelled.'
+    fi
+  ;;
+
+  # Main usage
+  *)
+    date=$(date +'%Y-%m-%d_%H-%M')
+    # date=$(cksum <<< "$date" | cut -f 1 -d ' ')
+
+    name=${1%*/}        # Remove trailing slash
+    name=${name##*/}    # Remove everything except name
+    name=${name}__$date # Add date and time
+
+    mv "$1" "$folder/$name" \
+      && echo "Trashed as '$name'"
+  ;;
+
+esac
+
