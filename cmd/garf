@@ -48,7 +48,7 @@ case "$cmd" in
     'error'|'e')
         "$dir/error" "$@"
         ;;
-    'revise'|'e')
+    'revise'|'r')
         "$dir/revise" "$@"
         ;;
 

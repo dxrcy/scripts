@@ -26,7 +26,7 @@ fi
 #   or has date file with same date
 for folder in "$dir/unedited/"*; do
     if [ "$(expr "$folder" : '.*_\(.*\)')" = "$date" ] \
-        || ( [ -f "$folder/date" ] && [ "$(cat "$folder/date")" = "$date" ] ) \
+        || { [ -f "$folder/date" ] && [ "$(cat "$folder/date")" = "$date" ] ;} \
     ; then
         echo 'garf make: comic has already been formatted with that date'
         exit 1

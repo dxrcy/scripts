@@ -1,7 +1,6 @@
 #!/bin/sh
 
 cd "$HOME/pics/garfeo/posts" || exit 1
-find="$HOME/pics/garfeo/find"
 unedited="$HOME/pics/garfeo/unedited"
 old="$HOME/pics/garfeo/old"
 
@@ -50,7 +49,7 @@ cp "$post/title"  "$unedited/$post/title" || exit 1
 echo 'revised' >> "$unedited/$post/props" || exit 1
 
 # Move old post to old
-printf "Move $post to old folder? (CTRL-C to cancel) "
+printf 'Move old post to old folder? (CTRL-C to cancel) '
 read -r
 mv "$post" "$old/" || exit
 echo "Moved $post to old folder"
