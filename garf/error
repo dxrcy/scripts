@@ -1,0 +1,12 @@
+#!/bin/sh
+
+cd "$HOME/pics/garfeo/posts" || exit 1
+
+for i in *; do
+    if [ -f "$i/errata" ]; then
+        echo "$i"
+        cat "$i/errata"
+        break
+    fi
+done
+
