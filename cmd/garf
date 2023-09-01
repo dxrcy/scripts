@@ -1,12 +1,11 @@
 #!/bin/sh
 
-# Get location of garf subscripts
-dir="$(readlink -f "$(dirname "$0")/..")/garf"
+dir="$HOME/scripts/garf"
 
 # Missing command
 if [ ! "$1" ]; then
     echo 'garf: missing subcommand'
-    echo "    available subcommands: [help|show|make|find|date|error]"
+    echo "    available subcommands: [help|show|make|find|date|date-all|error]"
     exit 1
 fi
 
@@ -18,11 +17,12 @@ case "$cmd" in
     # Help
     'help'|'h'|'--help'|'-h')
         echo 'garf: available subcommands'
-        echo '    show:  display a comic'
-        echo '    make:  make post data including formatted comic'
-        echo '    find:  open all comics with given month and day, or post id'
-        echo '    date:  add date to existing post'
-        echo '    error: show next post with error'
+        echo '    show:     display a comic'
+        echo '    make:     make post data including formatted comic'
+        echo '    find:     open all comics with given month and day, or post id'
+        echo '    date:     add date to existing post'
+        echo '    date-all: add date to all posts with missing dates'
+        echo '    error:    show next post with error'
         exit 0
         ;;
 
@@ -39,13 +39,11 @@ case "$cmd" in
     'date'|'d')
         "$dir/date" "$@"
         ;;
+    'date-all'|'da')
+        "$dir/date-all" "$@"
+        ;;
     'error'|'e')
         "$dir/error" "$@"
-        ;;
-
-    # Unlisted
-    'date-all')
-        "$dir/date-all" "$@"
         ;;
 
     # Private
@@ -58,7 +56,7 @@ case "$cmd" in
 
     *)
         echo "garf: unknown subcommand: '$cmd'"
-        echo "    available subcommands: [help|show|make|find|date]"
+        echo "    available subcommands: [help|show|make|find|date|date-all|error]"
         exit 1
         ;;
 esac
