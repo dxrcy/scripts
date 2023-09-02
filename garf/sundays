@@ -1,0 +1,26 @@
+#!/bin/sh
+
+src="$HOME/pics/garfield"
+out="$HOME/pics/garfeo/sundays"
+
+# Create out folder if it does not exist
+if [ ! -d "$out" ]; then
+    mkdir "$out"
+fi
+
+# Remove previous files in folder
+if [ "$(ls -A "$out")" ]; then
+    rm "$out/"*
+fi
+
+count=1
+for file in "$src"/*; do
+    if ((count % 7 == 0)); then
+        cp "$file" "$out/"
+    fi
+    ((count++))
+done
+
+# Open dolphin and ignore stdout/stderr
+nohup dolphin "$out" >> /dev/null 2>&1
+

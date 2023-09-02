@@ -69,6 +69,11 @@ elif [ ${#day} -gt 2 ]; then
     exit 1
 fi
 
+# Create out folder if it does not exist
+if [ ! -d "$out" ]; then
+    mkdir "$out"
+fi
+
 # Remove previous files in folder
 if [ "$(ls -A "$out")" ]; then
     rm "$out/"*

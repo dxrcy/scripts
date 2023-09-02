@@ -52,6 +52,11 @@ case "$cmd" in
         "$dir/revise" "$@"
         ;;
 
+    # Unlisted
+    'sunday'|'sundays'|'su')
+        "$dir/sundays" "$@"
+        ;;
+
     # Private
     '+format')
         "$dir/format" "$@"
