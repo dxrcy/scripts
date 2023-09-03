@@ -15,10 +15,10 @@ fi
 
 count=1
 for file in "$src"/*; do
-    if ((count % 7 == 0)); then
+    if [ $((count % 7)) -eq 0 ]; then
         cp "$file" "$out/"
     fi
-    ((count++))
+    count=$((count+1))
 done
 
 # Open dolphin and ignore stdout/stderr
