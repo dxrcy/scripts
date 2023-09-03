@@ -40,6 +40,10 @@ fi
 date="$(cat "$post/date")"
 echo "Date: $date"
 
+# Show errors
+echo 'Errors:'
+echo "$(sed -e 's/^/ * /' -e '/^ *$/d' "$post/errata")"
+
 # Make post
 ~/scripts/cmd/garf make "$date" "$post" || exit "$?"
 
