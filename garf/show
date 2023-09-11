@@ -37,6 +37,12 @@ else
     file=$(find "$dir" | shuf -n 1)
 fi
 
+# File not found
+if [ ! -f "$file" ]; then
+    echo 'garf show: not the date of a real comic'
+    exit 1
+fi
+
 echo "$file"
 display "$file"
 
