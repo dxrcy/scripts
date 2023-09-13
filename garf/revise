@@ -49,12 +49,15 @@ sed -e '/^ *$/d' -e 's/^/ * /' "$post/errata"
 
 # Copy title and props files
 cp "$post/title"  "$unedited/$post/title" || exit 1
-cp "$post/props"  "$unedited/$post/props" || exit 1
-# Append 'revised' to properties file (add newline if necessary)
-if [[ "$(tail -c 1 "$unedited/$post/props")" != $'\n' ]]; then
-    echo >> "$unedited/$post/props"
+
+# Copy existing props file
+if [ -f "$post/props" ]; then
+    cp "$post/props"  "$unedited/$post/props" || exit 1
 fi
+# Append 'revised' to properties file
 echo 'revised' >> "$unedited/$post/props" || exit 1
+
+exit
 
 # Move old post to old
 printf 'Move old post to old folder? (CTRL-C to cancel) '
