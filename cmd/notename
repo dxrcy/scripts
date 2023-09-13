@@ -1,0 +1,17 @@
+#!/bin/sh
+
+dir="$HOME/docs/notes"
+
+# Create folder if doesn't exist
+if [ ! -d "$dir" ]; then
+    mkdir "$dir" || exit 1
+fi
+
+# Get name with date and random string
+now=$(date +'%y%m%d')
+id=$(tr -dc '[:lower:]' < /dev/urandom | head -c 4)
+name="${now}_${id}"
+
+# Full path of non-existant file
+echo "$dir/$name"
+
