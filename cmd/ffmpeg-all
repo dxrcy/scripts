@@ -1,4 +1,5 @@
 #!/bin/sh
+#~~~ run ffmpeg on all files in current directory, converting one filetype to another
 
 if [ ! "$1" ]; then
     echo "ffmpegall: no input filetype given"

@@ -1,4 +1,5 @@
 #!/bin/sh
+#~~~ backup and reset plasma config
 
 # Create backup folder
 date=$(date +'%Y-%m-%d_%H-%M')

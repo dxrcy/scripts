@@ -1,4 +1,5 @@
 #!/bin/sh
+#~~~ index all files in movies directory
 
 # Location of movies folder 
 drive=/run/media/darcy/MOVIES/Movies/

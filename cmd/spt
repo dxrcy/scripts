@@ -1,4 +1,5 @@
 #!/bin/sh
+#~~~ open Spotify tui, starting spotifyd if necessary
 
 # Handle arguments
 while getopts 'kdh' opt; do

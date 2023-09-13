@@ -1,4 +1,5 @@
 #!/bin/sh
+#~~~ toggle window focus for a window with specified title
 
 title=$1
 

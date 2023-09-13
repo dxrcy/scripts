@@ -1,4 +1,5 @@
 #!/bin/sh
+#~~~ enable or disable php daemon
 
 case $1 in
 

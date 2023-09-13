@@ -1,4 +1,5 @@
 #!/bin/sh
+#~~~ clear all cache for nvim
 
 trash ~/.local/share/nvim
 trash ~/.local/state/nvim

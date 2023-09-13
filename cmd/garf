@@ -1,4 +1,5 @@
 #!/bin/sh
+#~~~ show, find, or make Garfield comics (garf help)
 
 dir="$HOME/scripts/garf"
 

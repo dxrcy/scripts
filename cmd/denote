@@ -1,4 +1,5 @@
 #!/bin/sh
+#~~~ remove junk lines from a text file and format nicely
 
 # Help
 if [ "$1" = '-h' ] || [ "$1" = '--help' ]; then

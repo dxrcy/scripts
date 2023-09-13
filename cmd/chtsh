@@ -1,4 +1,5 @@
 #!/bin/sh
+#~~~ shorthand for curl-ing 'cht.sh'
 
 curl "https://cht.sh/$1" | less
 

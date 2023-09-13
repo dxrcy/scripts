@@ -1,4 +1,5 @@
 #!/bin/sh
+#~~~ copy image names from backgrounds folder to clipboard
 
 # find:  List absolute filepaths
 # sed:   Add file:// to each line

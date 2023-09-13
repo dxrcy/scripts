@@ -1,4 +1,5 @@
 #!/bin/sh
+#~~~ kill and restart plasmashell
 
 killall plasmashell && kstart plasmashell
 

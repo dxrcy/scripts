@@ -1,4 +1,5 @@
 #!/bin/sh
+#~~~ prints size of directory
 
 dir=${1:-"."}
 

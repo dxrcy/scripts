@@ -1,4 +1,5 @@
 #!/bin/sh
+#~~~ print a nice rainbow color pattern
 
 bg=40
 while [ "$bg" -le 47 ]; do

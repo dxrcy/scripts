@@ -1,5 +1,7 @@
 #!/bin/sh
+#~~~ print random name for note file, with date
 
+# Directory of notes
 dir="$HOME/docs/notes"
 
 # Create folder if doesn't exist
