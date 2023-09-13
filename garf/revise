@@ -47,9 +47,13 @@ sed -e '/^ *$/d' -e 's/^/ * /' "$post/errata"
 # Make post
 ~/scripts/cmd/garf make "$date" "$post" || exit "$?"
 
-# Copy title file
+# Copy title and props files
 cp "$post/title"  "$unedited/$post/title" || exit 1
-# Add revised to properties file
+cp "$post/props"  "$unedited/$post/props" || exit 1
+# Append 'revised' to properties file (add newline if necessary)
+if [[ "$(tail -c 1 "$unedited/$post/props")" != $'\n' ]]; then
+    echo >> "$unedited/$post/props"
+fi
 echo 'revised' >> "$unedited/$post/props" || exit 1
 
 # Move old post to old
