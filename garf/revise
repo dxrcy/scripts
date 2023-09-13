@@ -42,7 +42,7 @@ echo "Date: $date"
 
 # Show errors
 echo 'Errors:'
-sed -e 's/^/ * /' -e '/^ *$/d' "$post/errata"
+sed -e '/^ *$/d' -e 's/^/ * /' "$post/errata"
 
 # Make post
 ~/scripts/cmd/garf make "$date" "$post" || exit "$?"
