@@ -57,8 +57,6 @@ fi
 # Append 'revised' to properties file
 echo 'revised' >> "$unedited/$post/props" || exit 1
 
-exit
-
 # Move old post to old
 printf 'Move old post to old folder? (CTRL-C to cancel) '
 read -r
