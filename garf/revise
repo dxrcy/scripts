@@ -41,8 +41,12 @@ date="$(cat "$post/date")"
 echo "Date: $date"
 
 # Show errors
-echo 'Errors:'
-sed -e '/^ *$/d' -e 's/^/ * /' "$post/errata"
+if [ -f "$post/errata" ]; then
+    echo 'Errors:'
+    sed -e '/^ *$/d' -e 's/^/ * /' "$post/errata"
+else
+    echo 'No errors'
+fi
 
 # Make post
 ~/scripts/cmd/garf make "$date" "$post" || exit "$?"
