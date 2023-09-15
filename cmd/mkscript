@@ -12,7 +12,7 @@ if [ -e "$1" ]; then
 fi
 
 # Create file
-printf '#!/bin/sh\n\n' > "$1"
+printf '#!/bin/sh\n#~~~ \n\n' > "$1"
 # Set as executable
 chmod +x "$1"
 

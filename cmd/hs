@@ -1,0 +1,25 @@
+#!/bin/sh
+#~~~ Compile and run a Haskell program with ghc
+
+name="$1"
+
+# Check argument
+if [ ! "$name" ]; then
+    echo "hs: no file name given"
+    exit 1
+fi
+if [ ! -f "$name" ]; then
+    echo "hs: no file '$name.hs'"
+    exit 1
+fi
+
+# Watch file for changes and run this script again
+if [ "$2" = "-w" ] || [ "$2" = "--watch" ]; then
+    echo "$name.hs" | entr -c "$0" "$name"
+    exit 0
+fi
+
+# Compile and run
+ghc -dynamic "$name.hs" > /dev/null || exit 2
+"./$name"
+
