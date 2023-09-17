@@ -20,6 +20,6 @@ if [ "$2" = "-w" ] || [ "$2" = "--watch" ]; then
 fi
 
 # Compile and run
-ghc -dynamic "$name.hs" > /dev/null || exit 2
+ghc -dynamic "$name.hs" -Wall > /dev/null || exit 2
 "./$name"
 
