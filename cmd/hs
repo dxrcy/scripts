@@ -8,7 +8,7 @@ if [ ! "$name" ]; then
     echo "hs: no file name given"
     exit 1
 fi
-if [ ! -f "$name" ]; then
+if [ ! -f "$name.hs" ]; then
     echo "hs: no file '$name.hs'"
     exit 1
 fi
