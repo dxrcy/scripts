@@ -1,6 +1,7 @@
 #!/bin/sh
 
-cd "$HOME/pics/garfeo/posts" || exit 1
+posts="$(~/scripts/cmd/garf +dir 'posts' || exit 1)"
+cd "$posts" || exit 1
 
 for i in *; do
     if [ -f "$i/errata" ]; then

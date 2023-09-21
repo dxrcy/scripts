@@ -1,5 +1,7 @@
 #!/bin/sh
 
+src="$(~/scripts/cmd/garf +dir 'src' || exit 1)"
+
 date="$1"
 
 # Handle argument options
@@ -26,15 +28,12 @@ while getopts 'rh' opt; do
 esac
 done
 
-# Directory of comics
-dir=~/pics/garfield
-
 if [ "$date" ]; then
     # Date given as argument
-    file="$dir/$date.png"
+    file="$src/$date.png"
 else
     # Get 1 random file in directory
-    file=$(find "$dir" | shuf -n 1)
+    file=$(find "$src" | shuf -n 1)
 fi
 
 # File not found

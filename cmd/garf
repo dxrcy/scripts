@@ -59,6 +59,9 @@ case "$cmd" in
         ;;
 
     # Private
+    '+dir')
+        "$dir/dir" "$@"
+        ;;
     '+format')
         "$dir/format" "$@"
         ;;

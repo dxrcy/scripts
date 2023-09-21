@@ -1,14 +1,10 @@
 #!/bin/sh
 
-cd "$HOME/pics/garfeo/posts" || exit 1
+posts="$(~/scripts/cmd/garf +dir 'posts' || exit 1)"
+cd "$posts" || exit 1
 
 if [ "$1" = '--count' ] || [ "$1" = '-c' ]; then
-    count=0
-    for post in *; do
-        if [ ! -f "$post/date" ]; then
-            count=$(("$count" + 1))
-        fi
-    done
+    count="$(find '.' -name "date" | wc -l)"
     echo "Count: $count"
 fi
 
@@ -18,4 +14,5 @@ for post in *; do
         ~/scripts/cmd/garf date "$post" || exit "$?"
     fi
 done
+
 

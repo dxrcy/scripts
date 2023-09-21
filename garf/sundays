@@ -1,7 +1,7 @@
 #!/bin/sh
 
-src="$HOME/pics/garfield"
-out="$HOME/pics/garfeo/sundays"
+src="$(~/scripts/cmd/garf +dir 'src'     || exit 1)"
+out="$(~/scripts/cmd/garf +dir 'sundays' || exit 1)"
 
 # Create out folder if it does not exist
 if [ ! -d "$out" ]; then

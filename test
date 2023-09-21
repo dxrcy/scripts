@@ -1,0 +1,7 @@
+#!/bin/sh
+
+while IFS= read -r -u 3 file; do
+    echo "$file"
+    read -p input
+    echo "You inputted: $input"
+done 3< $()

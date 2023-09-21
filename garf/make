@@ -1,6 +1,7 @@
 #!/bin/sh
 
-dir="$HOME/pics/garfeo"
+src="$(~/scripts/cmd/garf +dir 'src' || exit 1)"
+unedited="$(~/scripts/cmd/garf +dir 'unedited' || exit 1)"
 
 date="$1"
 name="$2" # Optional
@@ -10,7 +11,7 @@ if [ ! "$date" ]; then
     exit 1
 fi
 
-input="$HOME/pics/garfield/$date.png"
+input="$src/$date.png"
 
 if [ ! -f "$input" ]; then
     echo 'garf make: not the date of a real comic'
@@ -18,13 +19,13 @@ if [ ! -f "$input" ]; then
 fi
 
 # Make folder if does not exist
-if [ ! -d "$dir/unedited" ]; then
-    mkdir -p "$dir/unedited"
+if [ ! -d "$unedited" ]; then
+    mkdir -p "$unedited"
 fi
 
 # Check if folder already exists ending in same date
 #   or has date file with same date
-for folder in "$dir/unedited/"*; do
+for folder in "$unedited/"*; do
     if [ "$(expr "$folder" : '.*_\(.*\)')" = "$date" ] \
         || { [ -f "$folder/date" ] && [ "$(cat "$folder/date")" = "$date" ] ;} \
     ; then
@@ -34,7 +35,7 @@ for folder in "$dir/unedited/"*; do
 done
 
 # Convert image to square format, with watermark
-~/scripts/cmd/garf +format "$input" "$dir/unedited/$date.png" || exit 1
+~/scripts/cmd/garf +format "$input" "$unedited/$date.png" || exit 1
 
 # Create unique name for folder, if not specified as argument
 if [ ! "$name" ]; then
@@ -44,6 +45,6 @@ if [ ! "$name" ]; then
 fi
 
 # Create other files from image
-~/scripts/cmd/garf +organize "$dir/unedited/$date.png" "$dir/unedited/$name" || exit 1
+~/scripts/cmd/garf +organize "$unedited/$date.png" "$unedited/$name" || exit 1
 echo "Created $name"
 

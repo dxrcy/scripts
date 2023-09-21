@@ -1,8 +1,10 @@
 #!/bin/sh
 
-cd "$HOME/pics/garfeo/posts" || exit 1
-unedited="$HOME/pics/garfeo/unedited"
-old="$HOME/pics/garfeo/old"
+posts="$(   ~/scripts/cmd/garf +dir 'posts'    || exit 1)"
+unedited="$(~/scripts/cmd/garf +dir 'unedited' || exit 1)"
+old="$(     ~/scripts/cmd/garf +dir 'old'      || exit 1)"
+
+cd "$posts" || exit 1
 
 post="$1"
 

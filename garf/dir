@@ -1,0 +1,27 @@
+#!/bin/sh
+
+name="$1"
+
+if [ ! "$name" ]; then
+    echo 'garf dir: no directory name given.'
+    exit 1
+fi
+
+case "$name" in
+    src|source)
+        echo "$HOME/pics/garfield" ;;
+    posts)
+        echo "$HOME/pics/geo/posts" ;;
+    find)
+        echo "$HOME/pics/geo/find" ;;
+    unedited)
+        echo "$HOME/pics/geo/unedited" ;;
+    sundays)
+        echo "$HOME/pics/geo/sundays" ;;
+
+    *)
+        echo "garf dir: unknown directory name '$name'"
+        exit 1
+        ;;
+esac
+

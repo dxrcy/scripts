@@ -1,8 +1,8 @@
 #!/bin/sh
 
-src="$HOME/pics/garfield"
-out="$HOME/pics/garfeo/find"
-posts="$HOME/pics/garfeo/posts"
+src="$(  ~/scripts/cmd/garf +dir 'src'   || exit 1)"
+find="$( ~/scripts/cmd/garf +dir 'find'  || exit 1)"
+posts="$(~/scripts/cmd/garf +dir 'posts' || exit 1)"
 
 # Show post and read input
 if [ "$1" = '-p' ] || [ "$1" = '--post' ]; then
@@ -70,21 +70,21 @@ elif [ ${#day} -gt 2 ]; then
 fi
 
 # Create out folder if it does not exist
-if [ ! -d "$out" ]; then
-    mkdir "$out"
+if [ ! -d "$find" ]; then
+    mkdir "$find"
 fi
 
 # Remove previous files in folder
-if [ "$(ls -A "$out")" ]; then
-    rm "$out/"*
+if [ "$(ls -A "$find")" ]; then
+    rm "$find/"*
 fi
 
 # Copy all files
 # Loop works better with glob
 for file in "$src"/*"-$month-$day.png"; do
-    cp "$file" "$out/" || exit 1
+    cp "$file" "$find/" || exit 1
 done
 
 # Open dolphin and ignore stdout/stderr
-nohup dolphin "$out" >> /dev/null 2>&1
+nohup dolphin "$find" >> /dev/null 2>&1
 

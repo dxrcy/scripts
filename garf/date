@@ -1,6 +1,6 @@
 #!/bin/sh
 
-posts="$HOME/pics/garfeo/posts"
+posts="$(~/scripts/cmd/garf +dir 'posts' || exit 1)"
 
 id="$1"
 if [ ! "$id" ]; then
@@ -17,7 +17,7 @@ if [ -f "$posts/$id/date" ]; then
     exit 1
 fi
 
-~/scripts/cmd/garf find -p "$1" || exit 1
+~/scripts/cmd/garf find -p "$id" || exit 1
 
 printf 'Enter full date (yyyy-mm-dd): '
 read -r date
