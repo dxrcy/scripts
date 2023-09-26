@@ -5,7 +5,7 @@ dir="$HOME/pics/wallpapers"
 delay=300 # 5 minutes
 
 while true; do
-    feh --randomize --bg-scale "$dir/"*
+    feh --randomize --bg-scale "$dir/"*'.jpg'
 
     if [ ! "$1" = '--forever' ]; then
         exit
