@@ -2,50 +2,47 @@
 #~~~ enable or disable battery conservation with tlp
 
 case "$1" in
-
-  'off')
-    sudo tlp setcharge 0 0 BAT0 && echo "Success"
-    ;;
-
-  'on')
-    sudo tlp setcharge 1 1 BAT0 && echo "Success"
-    ;;
-
-  'gui')
-    ans=$( zenity --info \
-      --text="Conservation Mode" \
-      --ok-label "Disable" \
-      --extra-button "Enable" \
-    )
-
-    case "$?-$ans" in
-      '0-')
-        pkexec tlp setcharge 0 0 BAT0 \
-          && notify-send -t 1500 -a 'TLP Conservation Mode' 'Conservation mode DISABLED'
+    'off')
+        sudo tlp setcharge 0 0 BAT0 && echo "Success"
         ;;
-      '1-Enable')
-        pkexec tlp setcharge 1 1 BAT0 \
-          && notify-send -t 1500 -a 'TLP Conservation Mode' 'Conservation mode ENABLED'
+
+    'on')
+        sudo tlp setcharge 1 1 BAT0 && echo "Success"
         ;;
-      *)
+
+    'gui')
+        ans=$( zenity --info \
+          --text="Conservation Mode" \
+          --ok-label "Disable" \
+          --extra-button "Enable" \
+        )
+        case "$?-$ans" in
+          '0-')
+            pkexec tlp setcharge 0 0 BAT0 \
+              && notify-send -t 1500 -a 'TLP Conservation Mode' 'Conservation mode DISABLED'
+            ;;
+          '1-Enable')
+            pkexec tlp setcharge 1 1 BAT0 \
+              && notify-send -t 1500 -a 'TLP Conservation Mode' 'Conservation mode ENABLED'
+            ;;
+          *)
+            exit
+            ;;
+        esac
+        ;;
+
+    h|help|-h|--help)
+        echo "Conservation mode"
+        echo "    Subcommands:"
+        echo "      - on    Enable"
+        echo "      - off   Disable"
+        echo "      - gui   Ask using zenity gui"
+        echo "      - help  Show this message"
+        ;;
+
+    *)
+        echo "Please provide subcommand: on|off|gui|help"
         exit
         ;;
-    esac
-    ;;
-
-  h|help|-h|--help)
-    echo "Conservation mode"
-    echo "    Subcommands:"
-    echo "      - on    Enable"
-    echo "      - off   Disable"
-    echo "      - gui   Ask using zenity gui"
-    echo "      - help  Show this message"
-    ;;
-
-  *)
-    echo "Please provide subcommand: on|off|gui|help"
-    exit
-    ;;
-
 esac
 
