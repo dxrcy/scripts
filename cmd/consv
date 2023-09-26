@@ -11,37 +11,43 @@ case "$1" in
         ;;
 
     'gui')
-        ans=$( zenity --info \
-          --text="Conservation Mode" \
-          --ok-label "Disable" \
-          --extra-button "Enable" \
-        )
+        state="$($0 status)"
+        ans="$( zenity --info \
+            --text="Conservation Mode (=$state)" \
+            --ok-label "Disable" \
+            --extra-button "Enable" \
+        )"
         case "$?-$ans" in
-          '0-')
-            pkexec tlp setcharge 0 0 BAT0 \
-              && notify-send -t 1500 -a 'TLP Conservation Mode' 'Conservation mode DISABLED'
-            ;;
-          '1-Enable')
-            pkexec tlp setcharge 1 1 BAT0 \
-              && notify-send -t 1500 -a 'TLP Conservation Mode' 'Conservation mode ENABLED'
-            ;;
-          *)
-            exit
-            ;;
+            '0-')
+                gksu tlp setcharge 0 0 BAT0 \
+                    && notify-send -t 1500 -a 'TLP Conservation Mode' 'Conservation mode DISABLED'
+                ;;
+            '1-Enable')
+                gksu tlp setcharge 1 1 BAT0 \
+                    && notify-send -t 1500 -a 'TLP Conservation Mode' 'Conservation mode ENABLED'
+                ;;
+            *)
+                exit
+                ;;
         esac
+        ;;
+
+    'status')
+        cat /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode
         ;;
 
     h|help|-h|--help)
         echo "Conservation mode"
         echo "    Subcommands:"
-        echo "      - on    Enable"
-        echo "      - off   Disable"
-        echo "      - gui   Ask using zenity gui"
-        echo "      - help  Show this message"
+        echo "      - on     Enable"
+        echo "      - off    Disable"
+        echo "      - gui    Ask using zenity gui"
+        echo "      - status Get current state"
+        echo "      - help   Show this message"
         ;;
 
     *)
-        echo "Please provide subcommand: on|off|gui|help"
+        echo "Please provide subcommand: on|off|gui|status|help"
         exit
         ;;
 esac
