@@ -7,7 +7,7 @@
 # awk:   Remove trailing whitespace, and add '$' to start of string
 # xclip: Save to clipboard
 
-find ~/pics/funny-wallpapers/* \
+find ~/pics/wallpapers/* \
     | sed 's|^|file://|' \
     | tr '\n' ' ' \
     | awk '{$1="$ "$1};1' \
