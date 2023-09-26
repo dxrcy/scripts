@@ -1,0 +1,16 @@
+#!/bin/sh
+#~~~ shuffle backgrounds every so often
+
+dir="$HOME/pics/wallpapers/nice"
+delay=300 # 5 minutes
+
+while true; do
+    feh --randomize --bg-scale "$dir/"*
+
+    if [ ! "$1" = '--forever' ]; then
+        exit
+    fi
+
+    sleep "$delay"
+done
+
