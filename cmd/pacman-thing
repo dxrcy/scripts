@@ -38,19 +38,15 @@ if [ "$cmd" ]; then
     cmd="-$cmd"
 fi
 
-# Show final command, and run
+# Whole command to run
+final=""
 case "$mode" in
-    "normal")
-        echo "pacman $cmd" "$@"
-        pacman "$cmd" "$@"
-        ;;
-    "sudo")
-        echo "sudo pacman $cmd" "$@"
-        sudo pacman "$cmd" "$@"
-        ;;
-    "paru")
-        echo "paru $cmd" "$@"
-        paru "$cmd" "$@"
-        ;;
+    "normal") final="pacman $cmd $*" ;;
+    "sudo")   final="sudo pacman $cmd $*" ;;
+    "paru")   final="paru $cmd $*" ;;
 esac
+
+# Show command, and run
+printf "\x1b[2m%s\x1b[0m\n" "$final"
+eval "$final"
 
