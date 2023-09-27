@@ -6,6 +6,7 @@ mac='40:DE:17:43:2F:49'
 case $1 in
   connect)
     echo "Connecting..."
+    bluetoothctl scan on
     bluetoothctl connect $mac
   ;;
 
