@@ -18,6 +18,8 @@ case "$name" in
         echo "$HOME/pics/geo/unedited" ;;
     sundays)
         echo "$HOME/pics/geo/sundays" ;;
+    old)
+        echo "$HOME/pics/geo/old" ;;
 
     *)
         echo "garf dir: unknown directory name '$name'"
