@@ -1,0 +1,56 @@
+#!/bin/sh
+#~~~ use pacman/paru with a 'nicer' sytax
+
+# Pacman subcommand (like -Syu) is first argument
+cmd="$1"
+# Pacman mode [normal|sudo|paru]
+mode="normal"
+
+# If no command given, run as pacman
+if [ ! "$cmd" ]; then
+    pacman
+    exit $?
+fi
+
+# Remove $1 from $@
+shift
+
+# First character, and rest of string
+first="$(echo "$cmd" | cut -c1)"
+rest="$(echo "$cmd" | cut -c2-)"
+
+# 's' for `sudo`, 'p' for `paru`
+if [ "$first" = "s" ]; then
+    cmd="$rest"
+    mode="sudo"
+elif [ "$first" = "p" ]; then
+    cmd="$rest"
+    mode="paru"
+fi
+
+# Remove redundant dash
+if [ "$(echo "$cmd" | cut -c1)" = "-" ]; then
+    cmd="$(echo "$cmd" | cut -c2-)"
+fi
+
+# Add dash if command is given
+if [ "$cmd" ]; then
+    cmd="-$cmd"
+fi
+
+# Show final command, and run
+case "$mode" in
+    "normal")
+        echo "pacman $cmd" "$@"
+        pacman "$cmd" "$@"
+        ;;
+    "sudo")
+        echo "sudo pacman $cmd" "$@"
+        sudo pacman "$cmd" "$@"
+        ;;
+    "paru")
+        echo "paru $cmd" "$@"
+        paru "$cmd" "$@"
+        ;;
+esac
+
