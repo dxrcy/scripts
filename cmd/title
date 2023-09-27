@@ -1,0 +1,49 @@
+#!/bin/sh
+#~~~ center text and add horizontal lines
+
+# Get text from argument, or piped in with flag
+text="$1"
+if [ "$text" = '-p' ] || [ "$text" = '--pipe' ]; then
+    text="$(cat -)"
+fi
+
+# Width of terminal
+width=$(tput cols)
+
+# Calculate two sides of padding
+padding_total=$((width - ${#text}))
+padding_l=$((padding_total / 2 - 1))
+padding_r=$((padding_total - padding_l - 2))
+
+# Characters for box drawing
+line_h='─'
+line_v='│'
+corner_tl='┌'
+corner_tr='┐'
+corner_bl='└'
+corner_br='┘'
+
+# Some helper functions
+print() {
+    printf '%s' "$1"
+}
+repeat() {
+    for _ in $(seq 1 "$1"); do
+        printf '%s' "$2"
+    done
+}
+
+print $corner_tl
+repeat $((width - 2)) $line_h
+echo $corner_tr
+
+print $line_v
+repeat "$padding_l" ' '
+printf '%s' "$text"
+repeat "$padding_r" ' '
+echo $line_v
+
+print $corner_bl
+repeat $((width - 2)) $line_h
+echo $corner_br
+
