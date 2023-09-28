@@ -4,29 +4,22 @@
 mac='40:DE:17:43:2F:49'
 
 case $1 in
-  connect)
-    echo "Connecting..."
-    bluetoothctl connect $mac
-  ;;
+    connect)
+        echo "Connecting..."
+        bluetoothctl connect $mac
+        ;;
 
-  disconnect)
-    echo "Disconnecting..."
-    bluetoothctl disconnect $mac
-  ;;
+    disconnect)
+        echo "Disconnecting..."
+        bluetoothctl disconnect $mac
+        ;;
 
-  # repair)
-  #   echo "Removing device and reconnecting.."
-  #   bluetoothctl remove $mac && \
-  #   bluetoothctl pair $mac && \
-  #   bluetoothctl connect $mac
-  # ;;
+    mac)
+        echo $mac
+        ;;
 
-  mac)
-    echo $mac
-  ;;
-
-  *)
-    echo "Please provide subcommand: connect | disconnect | repair"
-  ;;
+    *)
+        echo "Please provide subcommand: [ connect | disconnect ]"
+        ;;
 esac
 
