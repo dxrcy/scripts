@@ -4,7 +4,7 @@
 mac='40:DE:17:43:2F:49'
 
 # Start scanning for all devices, until given MAC address is found
-wait_for_scan() {
+scan_and_wait() {
     bluetoothctl scan on &
     while ! bluetoothctl devices | grep -q "$mac"; do
         sleep 1
@@ -15,12 +15,14 @@ wait_for_scan() {
 # Run subcommand
 case "$1" in
     connect)
-        wait_for_scan
+        bluetoothctl power on
+        scan_and_wait
         bluetoothctl connect $mac
         ;;
 
     disconnect)
         bluetoothctl disconnect $mac
+        bluetoothctl power off
         ;;
 
     mac)
