@@ -29,8 +29,16 @@ case "$1" in
         echo $mac
         ;;
 
+    status)
+        if bluetoothctl devices | grep -q "$mac"; then
+            echo '1'
+        else
+            echo '0'
+        fi
+        ;;
+
     *)
-        echo "Please provide subcommand: [ connect | disconnect ]"
+        echo "Please provide subcommand: [ connect | disconnect | mac | status ]"
         ;;
 esac
 
