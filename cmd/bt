@@ -19,6 +19,7 @@ case "$1" in
         scan_and_wait
         bluetoothctl connect $mac
         # Lower volume, because it keeps resetting to 100%
+        sleep 1
         pactl set-sink-volume @DEFAULT_SINK@ 40%
         ;;
 
