@@ -1,10 +1,37 @@
 #!/bin/sh
 #~~~ center text and add horizontal lines
 
+# Set characters for borders
+if [ "$1" = '--borderless' ] || [ "$1" = '-b' ]; then
+    line_h=' '
+    line_v=' '
+    corner_tl=' '
+    corner_tr=' '
+    corner_bl=' '
+    corner_br=' '
+    shift
+elif [ "$1" = '--ascii' ] || [ "$1" = '-a' ]; then
+    line_h='-'
+    line_v=' '
+    corner_tl=' '
+    corner_tr=' '
+    corner_bl=' '
+    corner_br=' '
+    shift
+else
+    line_h='─'
+    line_v='│'
+    corner_tl='┌'
+    corner_tr='┐'
+    corner_bl='└'
+    corner_br='┘'
+fi
+
 # Get text from argument, or piped in with flag
-text="$*"
-if [ "$text" = '-p' ] || [ "$text" = '--pipe' ]; then
+if [ "$1" = '--pipe' ] || [ "$1" = '-p' ]; then
     text="$(cat -)"
+else 
+    text="$*"
 fi
 
 # Width of terminal
@@ -16,12 +43,6 @@ padding_l=$((padding_total / 2 - 1))
 padding_r=$((padding_total - padding_l - 2))
 
 # Characters for box drawing
-line_h='─'
-line_v='│'
-corner_tl='┌'
-corner_tr='┐'
-corner_bl='└'
-corner_br='┘'
 
 # Some helper functions
 print() {
