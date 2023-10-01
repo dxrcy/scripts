@@ -28,20 +28,13 @@ case "$1" in
         bluetoothctl power off
         ;;
 
-    mac)
-        echo $mac
-        ;;
+    mac) echo $mac ;;
 
-    status)
-        if [ "$2" = 'icon' ]; then
-            bluetoothctl devices | grep -q "$mac" && echo '' || echo ''
-        else
-            bluetoothctl devices | grep -q "$mac" && echo '1' || echo '0'
-        fi
-        ;;
+    status) bluetoothctl devices | grep -q "$mac" ;;
 
     *)
-        echo "Please provide subcommand: [ connect | disconnect | mac | status ]"
+        echo 'bt: please provide valid subcommand'
+        echo 'usage: [ connect | disconnect | mac | status ]'
         ;;
 esac
 
