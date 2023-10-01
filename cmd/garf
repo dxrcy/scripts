@@ -3,7 +3,7 @@
 
 dir="$HOME/scripts/garf"
 
-available='help | show | make | find | date | date-all | error | revise'
+available='help | show | make | find | | error | revise'
 
 # Missing command
 if [ ! "$1" ]; then
@@ -23,8 +23,6 @@ case "$cmd" in
         echo '    show:     display a comic'
         echo '    make:     make post data including formatted comic'
         echo '    find:     open all comics with given month and day, or post id'
-        echo '    date:     add date to existing post'
-        echo '    date-all: add date to all posts with missing dates'
         echo '    error:    show next post with error'
         echo '    revise:   remake next post with error'
         exit 0
@@ -39,12 +37,6 @@ case "$cmd" in
         ;;
     'find'|'f')
         "$dir/find" "$@"
-        ;;
-    'date'|'d')
-        "$dir/date" "$@"
-        ;;
-    'date-all'|'da')
-        "$dir/date-all" "$@"
         ;;
     'error'|'e')
         "$dir/error" "$@"
