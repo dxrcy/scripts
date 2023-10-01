@@ -20,11 +20,11 @@ case "$cmd" in
     # Help
     'help'|'h'|'--help'|'-h')
         echo 'garf: available subcommands'
-        echo '    show:     display a comic'
-        echo '    make:     make post data including formatted comic'
-        echo '    find:     open all comics with given month and day, or post id'
-        echo '    error:    show next post with error'
-        echo '    revise:   remake next post with error'
+        echo '    show:   display a comic'
+        echo '    make:   make post data including formatted comic'
+        echo '    find:   open all comics with given month and day, or post id'
+        echo '    error:  show next post with error'
+        echo '    revise: remake next post with error'
         exit 0
         ;;
 
