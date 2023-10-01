@@ -10,9 +10,7 @@ while getopts 'rh' opt; do
 
     # Replace prevous instance of `display`
     r)
-        if pgrep display; then
-            killall display > /dev/null
-        fi
+        pkill -f -c 'feh-garf'
         # Set date to next argument, after switch
         date="$2"
         ;;
@@ -43,5 +41,5 @@ if [ ! -f "$file" ]; then
 fi
 
 echo "$file"
-display "$file"
+feh "$file" --fullscreen --class 'feh-garf'
 

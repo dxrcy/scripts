@@ -23,7 +23,7 @@ if [ "$1" = '-p' ] || [ "$1" = '--post' ]; then
     fi
 
     echo 'Opening image...'
-    display "$post"
+    feh "$post" --fullscreen
 
     printf 'Enter date (mm-dd): '
     read -r date
