@@ -1,0 +1,57 @@
+#!/bin/sh
+#~~~ switch between english and esperanto keyboard
+
+turn_on() {
+    xmodmap -e 'keycode 24 = scircumflex Scircumflex'
+    xmodmap -e 'keycode 25 = gcircumflex Gcircumflex'
+    xmodmap -e 'keycode 29 = ubreve Ubreve'
+    xmodmap -e 'keycode 34 = jcircumflex Jcircumflex'
+    xmodmap -e 'keycode 35 = hcircumflex Hcircumflex'
+    xmodmap -e 'keycode 53 = ccircumflex Ccircumflex'
+    echo 'Esperanto keyboard enabled'
+}
+
+turn_off() {
+    xmodmap -e 'keycode 24 = q Q'
+    xmodmap -e 'keycode 25 = w W'
+    xmodmap -e 'keycode 29 = y Y'
+    xmodmap -e 'keycode 34 = bracketleft braceleft'
+    xmodmap -e 'keycode 35 = bracketright braceright'
+    xmodmap -e 'keycode 53 = x X'
+    echo 'Esperanto keyboard disabled'
+}
+
+status() {
+    xmodmap -pke | grep -q 'circumflex'
+}
+
+show_usage() {
+    echo 'usage: esperanto [ on | off | toggle ]'
+}
+
+case "$1" in
+    'on')     turn_on ;;
+    'off')    turn_off ;;
+    'status') status ;;
+    'toggle')
+        if status;
+            then turn_off
+            else turn_on
+        fi ;;
+
+    '-h'|'--help'|'h'|'help')
+        show_usage
+        exit 0
+        ;;
+    '')
+        echo 'esperanto: missing subcommand'
+        show_usage
+        exit 1
+        ;;
+    *)
+        echo 'esperanto: unknown subcommand'
+        show_usage
+        exit 1
+        ;;
+esac
+
