@@ -2,7 +2,7 @@
 #~~~ center text and add horizontal lines
 
 # Get text from argument, or piped in with flag
-text="$1"
+text="$*"
 if [ "$text" = '-p' ] || [ "$text" = '--pipe' ]; then
     text="$(cat -)"
 fi
