@@ -23,7 +23,7 @@ if [ "$1" = '-p' ] || [ "$1" = '--post' ]; then
     fi
 
     echo 'Opening image...'
-    feh "$post" --fullscreen
+    feh "$post" --fullscreen --auto-zoom
 
     printf 'Enter date (mm-dd): '
     read -r date
@@ -86,5 +86,5 @@ for file in "$src"/*"-$month-$day.png"; do
 done
 
 # Open dolphin and ignore stdout/stderr
-nohup dolphin "$find" >> /dev/null 2>&1
+nohup thunar "$find" >> /dev/null 2>&1
 

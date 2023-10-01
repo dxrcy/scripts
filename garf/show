@@ -41,5 +41,5 @@ if [ ! -f "$file" ]; then
 fi
 
 echo "$file"
-feh "$file" --fullscreen --class 'feh-garf'
+feh "$file" --fullscreen --auto-zoom --class 'feh-garf'
 
