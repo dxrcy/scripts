@@ -54,17 +54,17 @@ repeat() {
     done
 }
 
-print $corner_tl
-repeat $((width - 2)) $line_h
-echo $corner_tr
+print "$corner_tl"
+repeat $((width - 2)) "$line_h"
+echo "$corner_tr"
 
-print $line_v
+print "$line_v"
 repeat "$padding_l" ' '
 printf '%s' "$text"
 repeat "$padding_r" ' '
-echo $line_v
+echo "$line_v"
 
-print $corner_bl
-repeat $((width - 2)) $line_h
-echo $corner_br
+print "$corner_bl"
+repeat $((width - 2)) "$line_h"
+echo "$corner_br"
 
