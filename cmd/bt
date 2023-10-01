@@ -10,6 +10,7 @@ scan_and_wait() {
         sleep 1
     done
     bluetoothctl scan off
+    killall bluetoothctl
 }
 
 # Run subcommand
