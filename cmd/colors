@@ -1,17 +1,37 @@
 #!/bin/sh
 #~~~ print a nice rainbow color pattern
 
-bg=40
-while [ "$bg" -le 47 ]; do
-    fg=30
-    while [ "$fg" -le 37 ]; do
-        printf '\x1b[%sm' "$bg"
-        printf '\x1b[%sm' "$fg"
-        printf '* '
-        printf '\x1b[0m'
-        fg=$((fg + 1))
+bg=0
+while [ "$bg" -le 7 ]; do
+    offset=0
+    while [ "$offset" -le 1 ]; do
+        fg=0
+        while [ "$fg" -le 7 ]; do
+            printf '\x1b[48;5;%sm' "$((bg + offset * 8))"
+            printf '\x1b[38;5;%sm' "$((fg + offset * 8))"
+            printf '* '
+            printf '\x1b[0m'
+            fg=$((fg + 1))
+        done
+        offset=$((offset + 1))
+        printf '  '
     done
     bg=$((bg + 1))
+    echo
+done
+
+echo
+offset=0
+while [ "$offset" -le 1 ]; do
+    bg=0
+    while [ "$bg" -le 7 ]; do
+        printf '\x1b[48;5;%sm' "$((bg + offset * 8))"
+        printf '   '
+        printf '\x1b[0m'
+
+        bg=$((bg + 1))
+    done
+    offset=$((offset + 1))
     echo
 done
 
