@@ -13,10 +13,10 @@ if [ "$1" = '--borderless' ] || [ "$1" = '-b' ]; then
 elif [ "$1" = '--ascii' ] || [ "$1" = '-a' ]; then
     line_h='-'
     line_v=' '
-    corner_tl=' '
-    corner_tr=' '
-    corner_bl=' '
-    corner_br=' '
+    corner_tl='-'
+    corner_tr='-'
+    corner_bl='-'
+    corner_br='-'
     shift
 else
     line_h='─'
