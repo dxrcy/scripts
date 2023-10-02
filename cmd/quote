@@ -1,0 +1,5 @@
+#!/bin/sh
+#~~~ display a random quote
+
+shuf ~/scripts/share/quotes -n1
+
