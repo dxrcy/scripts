@@ -16,6 +16,7 @@ scan_and_wait() {
 # Run subcommand
 case "$1" in
     connect)
+        pactl set-sink-volume @DEFAULT_SINK@ 0%
         bluetoothctl power on
         scan_and_wait
         bluetoothctl connect $mac && {
