@@ -38,7 +38,8 @@ case "$1" in
         ;;
 
     'status')
-        cat /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode
+        status="$(cat /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode || exit $?)"
+        [ "$status" = '1' ]
         ;;
 
     h|help|-h|--help)
@@ -49,7 +50,7 @@ case "$1" in
         echo '      - on     Enable'
         echo '      - off    Disable'
         echo '      - gui    Ask using zenity gui'
-        echo '      - status Get current state'
+        echo '      - status Get current state (as exit code)'
         echo '      - help   Show this message'
         ;;
 
