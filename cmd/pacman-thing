@@ -4,11 +4,11 @@
 # Pacman subcommand (like -Syu) is first argument
 cmd="$1"
 # Pacman mode [normal|sudo|paru]
-mode="normal"
+mode='normal'
 
-# If no command given, run as pacman
+# If no command given, run paru
 if [ ! "$cmd" ]; then
-    pacman
+    paru
     exit $?
 fi
 
@@ -22,10 +22,10 @@ rest="$(echo "$cmd" | cut -c2-)"
 # 's' for `sudo`, 'p' for `paru`
 if [ "$first" = "s" ]; then
     cmd="$rest"
-    mode="sudo"
+    mode='sudo'
 elif [ "$first" = "p" ]; then
     cmd="$rest"
-    mode="paru"
+    mode='paru'
 fi
 
 # Remove redundant dash
@@ -41,12 +41,12 @@ fi
 # Whole command to run
 final=""
 case "$mode" in
-    "normal") final="pacman $cmd $*" ;;
-    "sudo")   final="sudo pacman $cmd $*" ;;
-    "paru")   final="paru $cmd $*" ;;
+    'normal') final="pacman $cmd $*" ;;
+    'sudo')   final="sudo pacman $cmd $*" ;;
+    'paru')   final="paru $cmd $*" ;;
 esac
 
 # Show command, and run
-printf "\x1b[2m%s\x1b[0m\n" "$final"
+printf '\x1b[2m%s\x1b[0m\n' "$final"
 eval "$final"
 

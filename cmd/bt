@@ -15,7 +15,7 @@ scan_and_wait() {
 
 # Run subcommand
 case "$1" in
-    connect)
+    'connect')
         pactl set-sink-volume @DEFAULT_SINK@ 0%
         bluetoothctl power on
         scan_and_wait
@@ -26,7 +26,7 @@ case "$1" in
         }
         ;;
 
-    disconnect)
+    'disconnect')
         bluetoothctl disconnect $mac
         bluetoothctl power off
         # Mute audio when bluetooth disconnected
@@ -34,9 +34,9 @@ case "$1" in
         pactl set-sink-volume @DEFAULT_SINK@ 0%
         ;;
 
-    mac) echo $mac ;;
+    'mac') echo $mac ;;
 
-    status) bluetoothctl devices | grep -q "$mac" ;;
+    'status') bluetoothctl devices | grep -q "$mac" ;;
 
     *)
         echo 'bt: please provide valid subcommand'

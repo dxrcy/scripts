@@ -15,7 +15,7 @@ printf 'Are you sure? [Y/n] '
 # Return if input was not 'Y' or blank (enter key)
 read -r confirm
 case "$confirm" in
-    y|Y|"") ;;
+    'y'|'Y'|'') ;;
     *)
         echo 'Cancelled.'
         exit 0

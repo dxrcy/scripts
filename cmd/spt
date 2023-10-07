@@ -5,14 +5,14 @@
 while getopts 'kdh' opt; do
     case "$opt" in
 
-    k) do_kill=true ;;
-    d) do_daemon=true ;;
+    'k') do_kill=true ;;
+    'd') do_daemon=true ;;
 
     # Help
     *)
-        echo "Spotify"
-        echo "    -k  Kill daemon, if running"
-        echo "    -d  Start new daemon, if not running"
+        echo 'Spotify'
+        echo '    -k  Kill daemon, if running'
+        echo '    -d  Start new daemon, if not running'
         exit 1
         ;;
 esac
@@ -20,24 +20,25 @@ done
 
 # Kill existing daemon
 if [ "$do_kill" ]; then
-    if pgrep "spotifyd" > /dev/null; then
+    if pgrep 'spotifyd' > /dev/null; then
         killall spotifyd
-        echo "  info: Killed existing daemon"
+        echo '  info: Killed existing daemon'
     else
-        echo "  info: No daemon running"
+        echo '  info: No daemon running'
     fi
 fi
 
 # Start new daemon
 if [ "$do_daemon" ]; then
-    if ! pgrep "spotifyd" > /dev/null; then
+    if ! pgrep 'spotifyd' > /dev/null; then
         spotifyd
-        echo "  info: Started new daemon"
+        echo '  info: Started new daemon'
     else
-        echo "  info: Daemon already running"
+        echo '  info: Daemon already running'
     fi
 fi
 
 # Open client
-echo "Starting spotify client"
-/bin/spt || echo "Failed to open spotify! Maybe no internet?"
+echo 'Starting spotify client'
+/bin/spt || echo 'Failed to open spotify! Maybe no internet?'
+

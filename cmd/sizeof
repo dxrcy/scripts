@@ -1,7 +1,7 @@
 #!/bin/sh
 #~~~ prints size of directory
 
-dir=${1:-"."}
+dir=${1:-'.'}
 
 # Count of files and folders
 count=$(find "$dir" | wc -l)

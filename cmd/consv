@@ -42,7 +42,7 @@ case "$1" in
         [ "$status" = '1' ]
         ;;
 
-    h|help|-h|--help)
+    'h'|'help'|'-h'|'--help')
         echo 'Conservation mode'
         echo '    Usage:'
         echo '        consv [SUBCOMMAND]'
