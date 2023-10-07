@@ -3,28 +3,33 @@
 
 case "$1" in
     'off')
-        sudo tlp setcharge 0 0 BAT0 && echo "Success"
+        sudo tlp setcharge 0 0 BAT0 && echo 'Success'
         ;;
 
     'on')
-        sudo tlp setcharge 1 1 BAT0 && echo "Success"
+        sudo tlp setcharge 1 1 BAT0 && echo 'Success'
         ;;
 
     'gui')
-        state="$($0 status)"
+        if [ "$($0 status)" ]; then
+            state='ENABLED'
+        else
+            state='DISABLED'
+        fi
         ans="$( zenity --info \
-            --text="Conservation Mode (=$state)" \
-            --ok-label "Disable" \
-            --extra-button "Enable" \
+            --text="Change conservation Mode\n(Currently $state)" \
+            --ok-label 'Disable' \
+            --extra-button 'Enable' \
+            --title 'Conservation Mode'
         )"
         case "$?-$ans" in
             '0-')
                 gksu tlp setcharge 0 0 BAT0 \
-                    && notify-send -t 1500 -a 'TLP Conservation Mode' 'Conservation mode DISABLED'
+                    && notify-send -t 1500 -a 'Conservation Mode' 'Conservation mode DISABLED'
                 ;;
             '1-Enable')
                 gksu tlp setcharge 1 1 BAT0 \
-                    && notify-send -t 1500 -a 'TLP Conservation Mode' 'Conservation mode ENABLED'
+                    && notify-send -t 1500 -a 'Conservation Mode' 'Conservation mode ENABLED'
                 ;;
             *)
                 exit
@@ -37,17 +42,19 @@ case "$1" in
         ;;
 
     h|help|-h|--help)
-        echo "Conservation mode"
-        echo "    Subcommands:"
-        echo "      - on     Enable"
-        echo "      - off    Disable"
-        echo "      - gui    Ask using zenity gui"
-        echo "      - status Get current state"
-        echo "      - help   Show this message"
+        echo 'Conservation mode'
+        echo '    Usage:'
+        echo '        consv [SUBCOMMAND]'
+        echo '    Subcommands:'
+        echo '      - on     Enable'
+        echo '      - off    Disable'
+        echo '      - gui    Ask using zenity gui'
+        echo '      - status Get current state'
+        echo '      - help   Show this message'
         ;;
 
     *)
-        echo "Please provide subcommand: on|off|gui|status|help"
+        echo 'consv: please provide subcommand: [ on | off | gui | status | help ]'
         exit
         ;;
 esac
