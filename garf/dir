@@ -11,15 +11,15 @@ case "$name" in
     src|source)
         echo "$HOME/pics/garfield" ;;
     posts)
-        echo "$HOME/pics/geo/posts" ;;
+        echo "$HOME/pics/eo/posts" ;;
     find)
-        echo "$HOME/pics/geo/find" ;;
+        echo "$HOME/pics/eo/find" ;;
     unedited)
-        echo "$HOME/pics/geo/unedited" ;;
+        echo "$HOME/pics/eo/unedited" ;;
     sundays)
-        echo "$HOME/pics/geo/sundays" ;;
+        echo "$HOME/pics/eo/sundays" ;;
     old)
-        echo "$HOME/pics/geo/old" ;;
+        echo "$HOME/pics/eo/old" ;;
 
     *)
         echo "garf dir: unknown directory name '$name'"
