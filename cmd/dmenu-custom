@@ -65,6 +65,6 @@ else
 fi
 
 # Use dmenu to ask which command to run
-run=$(echo "$cmds" | dmenu -b)
+run=$(echo "$cmds" | dmenu -b -p '')
 # Eval is needed, to run aliases as well
 eval "$run"
