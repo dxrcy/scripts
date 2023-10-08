@@ -7,6 +7,7 @@ alias lw='librewolf'
 alias lo='libreoffice'
 alias th='thunar'
 alias ff='firefox'
+alias G='garf'
 
 # Set paths to look for executables
 # Similar to $PATH, but more narrow
@@ -64,7 +65,13 @@ else
     cmds=$(cat "$cache_file")
 fi
 
+# Add paths to $PATH for this script
+# For `eval` to run
+for path in $path; do
+    PATH="$PATH:$path"
+done
+
 # Use dmenu to ask which command to run
 run=$(echo "$cmds" | dmenu -b -p '')
-# Eval is needed, to run aliases as well
+# `eval` is needed, to run aliases as well
 eval "$run"
