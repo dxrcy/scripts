@@ -1,12 +1,12 @@
 #!/bin/sh
-#~~~ custom version of `dmenu_run` to use aliases
+#~~~ custom version of dmenu_run to use aliases
 
 # Set aliases
 # Priority before $path
 alias lw='librewolf'
 alias lo='libreoffice'
 alias th='thunar'
-alias in='inkscape'
+alias ff='firefox'
 
 # Set paths to look for executables
 # Similar to $PATH, but more narrow
@@ -14,10 +14,8 @@ alias in='inkscape'
 path="
 $HOME/scripts/cmd
 $HOME/.cargo/bin
-/usr/local/bin
 /usr/bin
 /bin
-/usr/local/sbin
 "
 
 # Path to cache executables
@@ -47,7 +45,6 @@ if [ ! -f "$cache_file" ] || [ "$1" = 'refresh' ]; then
             fi
             cmd=$(basename "$file") 
             cmds="$cmds$cmd "
-            # echo "$cmd"
         done
     done
 
