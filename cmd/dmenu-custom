@@ -1,0 +1,64 @@
+#!/bin/sh
+#~~~ custom version of `dmenu_run` to use aliases
+
+# Set aliases
+# Priority before $path
+alias lw='librewolf'
+alias lo='libreoffice'
+
+# Set paths to look for executables
+# Similar to $PATH, but more narrow
+# Order is priority
+path="
+$HOME/scripts/cmd
+$HOME/.cargo/bin
+/usr/local/bin
+/usr/bin
+/bin
+/usr/local/sbin
+"
+
+# Path to cache executables
+# Because looking for files in $path is SLOW
+cache_file="$HOME/.cache/dmenu-custom"
+
+# Use cached list if exists
+if [ -f "$cache_file" ] && [ ! "$1" = '--refresh' ]; then
+    cmds=$(cat "$cache_file")
+else
+    echo "Updating cache..."
+
+    # Add aliases to dmenu options
+    cmds=""
+    for alias in $(alias); do
+        cmd="${alias%%=*}"
+        cmds="$cmds$cmd "
+    done
+
+    # Add commands from $PATH
+    for folder in $path; do
+        if [ ! -d "$folder" ]; then
+            continue
+        fi
+        for file in "$folder"/*; do
+            if [ ! -x "$file" ]; then
+                continue
+            fi
+            cmd=$(basename "$file") 
+            cmds="$cmds$cmd "
+            # echo "$cmd"
+        done
+    done
+
+    # Replace spaces with newlines
+    # Remove duplicates
+    cmds=$(echo "$cmds" | sed 's/ /\n/g' | awk '!seen[$0]++')
+    # Write to cache file
+    echo "$cmds" > "$cache_file"
+fi
+
+# Use dmenu to ask which command to run
+run=$(echo "$cmds" | dmenu -b)
+
+# Eval is needed, to run aliases as well
+eval "$run"
