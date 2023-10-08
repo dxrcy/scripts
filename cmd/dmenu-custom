@@ -5,6 +5,8 @@
 # Priority before $path
 alias lw='librewolf'
 alias lo='libreoffice'
+alias th='thunar'
+alias in='inkscape'
 
 # Set paths to look for executables
 # Similar to $PATH, but more narrow
@@ -22,10 +24,9 @@ $HOME/.cargo/bin
 # Because looking for files in $path is SLOW
 cache_file="$HOME/.cache/dmenu-custom"
 
-# Use cached list if exists
-if [ -f "$cache_file" ] && [ ! "$1" = '--refresh' ]; then
-    cmds=$(cat "$cache_file")
-else
+# Create cache file if does not exist
+# Or manual refresh is requested
+if [ ! -f "$cache_file" ] || [ "$1" = 'refresh' ]; then
     echo "Updating cache..."
 
     # Add aliases to dmenu options
@@ -55,10 +56,18 @@ else
     cmds=$(echo "$cmds" | sed 's/ /\n/g' | awk '!seen[$0]++')
     # Write to cache file
     echo "$cmds" > "$cache_file"
+
+    # Exit only if manual refresh was requsted
+    # Not if creating cache automatically due to missing file
+    if [ "$1" = 'refresh' ]; then
+        exit
+    fi
+else
+    # Just read cache file
+    cmds=$(cat "$cache_file")
 fi
 
 # Use dmenu to ask which command to run
 run=$(echo "$cmds" | dmenu -b)
-
 # Eval is needed, to run aliases as well
 eval "$run"
