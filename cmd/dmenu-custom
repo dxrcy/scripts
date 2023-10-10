@@ -8,6 +8,7 @@ alias lo='libreoffice'
 alias th='thunar'
 alias ff='firefox'
 alias G='garf'
+alias kp='keepassxc'
 
 # Set paths to look for executables
 # Similar to $PATH, but more narrow
