@@ -11,7 +11,7 @@ case "$1" in
         ;;
 
     'gui')
-        if [ "$($0 status)" ]; then
+        if $0 status; then
             state='ENABLED'
         else
             state='DISABLED'
