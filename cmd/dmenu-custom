@@ -10,6 +10,7 @@ alias ff='firefox'
 alias G='garf'
 alias kp='keepassxc'
 alias pvz="wine start /unix '/home/darcy/.wine/drive_c/Program Files/Plants vs Zombies/PlantsVsZombies.exe'"
+alias tel='telegram-desktop'
 
 # Set paths to look for executables
 # Similar to $PATH, but more narrow
