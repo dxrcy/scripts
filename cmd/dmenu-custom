@@ -7,9 +7,8 @@ alias lw='librewolf'
 alias lo='libreoffice'
 alias th='thunar'
 alias ff='firefox'
-alias G='garf'
 alias kp='keepassxc'
-alias pvz="wine start /unix '/home/darcy/.wine/drive_c/Program Files/Plants vs Zombies/PlantsVsZombies.exe'"
+alias pvz='wine start /unix "/home/darcy/.wine/drive_c/Program Files/Plants vs Zombies/PlantsVsZombies.exe"'
 alias tel='telegram-desktop'
 
 # Set paths to look for executables
@@ -25,6 +24,7 @@ $HOME/.cargo/bin
 # Path to cache executables
 # Because looking for files in $path is SLOW
 cache_file="$HOME/.cache/dmenu-custom"
+cache_file_temp="/tmp/dmenu-custom"
 
 # Create cache file if does not exist
 # Or manual refresh is requested
@@ -32,10 +32,10 @@ if [ ! -f "$cache_file" ] || [ "$1" = 'refresh' ]; then
     echo "Updating cache..."
 
     # Add aliases to dmenu options
-    cmds=""
-    for alias in $(alias); do
+    # cmds=""
+    alias | while IFS= read -r alias; do
         cmd="${alias%%=*}"
-        cmds="$cmds$cmd "
+        echo "$cmd" >> "$cache_file_temp"
     done
 
     # Add commands from $PATH
@@ -48,25 +48,23 @@ if [ ! -f "$cache_file" ] || [ "$1" = 'refresh' ]; then
                 continue
             fi
             cmd=$(basename "$file") 
-            cmds="$cmds$cmd "
+            echo "$cmd" >> "$cache_file_temp"
         done
     done
 
-    # Replace spaces with newlines
+    # Move to real cache location
     # Remove duplicates
-    cmds=$(echo "$cmds" | sed 's/ /\n/g' | awk '!seen[$0]++')
-    # Write to cache file
-    echo "$cmds" > "$cache_file"
+    awk '!seen[$0]++' "$cache_file_temp" > "$cache_file" || exit 1
 
     # Exit only if manual refresh was requsted
     # Not if creating cache automatically due to missing file
     if [ "$1" = 'refresh' ]; then
         exit
     fi
-else
-    # Just read cache file
-    cmds=$(cat "$cache_file")
 fi
+
+# Read cache file
+cmds=$(cat "$cache_file")
 
 # Add paths to $PATH for this script
 # For `eval` to run
