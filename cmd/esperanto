@@ -26,7 +26,7 @@ status() {
 }
 
 show_usage() {
-    echo 'usage: esperanto [ on | off | toggle ]'
+    echo 'usage: esperanto [ on | off | toggle | status ]'
 }
 
 case "$1" in
