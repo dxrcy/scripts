@@ -33,17 +33,46 @@ if [ "$(echo "$cmd" | cut -c1)" = "-" ]; then
     cmd="$(echo "$cmd" | cut -c2-)"
 fi
 
-# Add dash if command is given
-if [ "$cmd" ]; then
-    cmd="-$cmd"
+# Remove a leading slash from command
+if [ "$(printf '%s' "$cmd" | cut -c 1)" = "-" ]; then
+  cmd="${cmd#?}"
 fi
 
+# Print a confirmation message to switch to 'sudo' mode
+use_sudo() {
+    echo 'this operation requires root privilege.'
+    printf "use 'sudo'? [Y/n] "
+    read -r confirm
+    case "$confirm" in
+        'y'|'Y'|'') mode='sudo' ;;
+        *) ;;
+    esac
+}
+# Successfully returns if any characters of $1 are present in $cmd (except first character)
+contains() {
+    for char in $(echo "$1" | sed 's/./& /g'); do
+        if echo "${cmd#?}" | grep -q "$char"; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+# Check if command needs sudo
+[ "$mode" = 'normal' ] && case "$cmd" in
+    #TODO add more cases
+    R*|U*|S)            use_sudo ;;
+    S*) contains yuc && use_sudo ;;
+    *) ;;
+esac
+
 # Whole command to run
+# Dash is added back here
 final=""
 case "$mode" in
-    'normal') final="pacman $cmd $*" ;;
-    'sudo')   final="sudo pacman $cmd $*" ;;
-    'paru')   final="paru $cmd $*" ;;
+    'normal') final="pacman -$cmd $*" ;;
+    'sudo')   final="sudo pacman -$cmd $*" ;;
+    'paru')   final="paru -$cmd $*" ;;
 esac
 
 # Show command, and run
