@@ -35,13 +35,18 @@ fi
 
 # Remove a leading slash from command
 if [ "$(printf '%s' "$cmd" | cut -c 1)" = "-" ]; then
-  cmd="${cmd#?}"
+    cmd="${cmd#?}"
+fi
+# Check for empty command like `pacman -`
+if [ -z "$cmd" ]; then
+    echo 'no command specified.'
+    exit 1
 fi
 
 # Print a confirmation message to switch to 'sudo' mode
 use_sudo() {
-    echo 'this operation requires root privilege.'
-    printf "use 'sudo'? [Y/n] "
+    printf '\x1b[33mthis operation requires root privilege.\x1b[0m\n'
+    printf "use '\x1b[1msudo\x1b[0m'? [Y/n] "
     read -r confirm
     case "$confirm" in
         'y'|'Y'|'') mode='sudo' ;;
