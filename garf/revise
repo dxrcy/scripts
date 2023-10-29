@@ -45,7 +45,8 @@ echo "Date: $date"
 # Show errors
 if [ -f "$post/errata" ]; then
     echo 'Errors:'
-    sed -e '/^ *$/d' -e 's/^/ * /' "$post/errata"
+    # shellcheck disable=2005
+    echo "$(sed -e 's/^/ * /' "$post/errata")"
 else
     echo 'No errors'
 fi
