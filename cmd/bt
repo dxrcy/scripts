@@ -15,14 +15,14 @@ scan_and_wait() {
 
 # Run subcommand
 case "$1" in
-    'connect')
+    'c'|'connect')
         pactl set-sink-volume @DEFAULT_SINK@ 0%
         bluetoothctl power on
         scan_and_wait
         bluetoothctl connect $mac
         ;;
 
-    'disconnect')
+    'd'|'disconnect')
         bluetoothctl disconnect $mac
         bluetoothctl power off
         # Mute audio when bluetooth disconnected
