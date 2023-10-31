@@ -1,17 +1,28 @@
 #!/bin/sh
 #~~~ compile scss files to minified css
 
+if [ ! -x "$(command -v grass)" ];  then echo "scss: 'grass' command not found.";  exit 1; fi
+if [ ! -x "$(command -v minify)" ]; then echo "scss: 'minify' command not found."; exit 1; fi
+
+if [ "$1" = '-h' ] || [ "$1" = '--help' ]; then
+    echo 'scss: Compile SCSS files to minified CSS'
+    echo '    Usage: scss [INPUT] [OUTPUT] [-w]'
+    echo '    INPUT and OUTPUT arguments must be directories'
+    echo "    Use '-w' to watch files for changes"
+    exit 0
+fi
+
 scss_dir="$1"
 css_dir="$2"
 
-if [ ! "$scss_dir" ];    then echo 'scss: missing SCSS directory argument';                exit 1; fi
-if [ ! "$css_dir" ];     then echo 'scss: missing CSS directory argument';                 exit 1; fi
+if [ ! "$scss_dir" ];    then echo 'scss: missing input SCSS directory argument';          exit 1; fi
+if [ ! "$css_dir" ];     then echo 'scss: missing output CSS directory argument';          exit 1; fi
 if [ ! -d "$scss_dir" ]; then echo "scss: input SCSS directory does not exist: $scss_dir"; exit 1; fi
 if [ ! -d "$css_dir" ];  then echo "scss: output CSS directory does not exist: $css_dir";  exit 1; fi
 
 # watch for changes
-if [ "$3" = "-w" ] || [ "$3" = "--watch" ]; then
-    echo 'watching for changes.'
+if [ "$3" = '-w' ] || [ "$3" = '--watch' ]; then
+    echo 'scss: watching for changes.'
     find "$scss_dir" | entr "$0" "$scss_dir" "$css_dir"
     exit 0
 fi
@@ -37,5 +48,5 @@ for scss in "$scss_dir"/*; do
         rm "$css"
     fi
 done
-echo "compiled $count files."
+echo "scss: compiled $count files."
 
