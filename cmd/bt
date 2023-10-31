@@ -32,7 +32,7 @@ case "$1" in
 
     'mac') echo $mac ;;
 
-    'status') bluetoothctl devices | grep -q "$mac" ;;
+    'status') bluetoothctl info $mac | grep -q 'Connected: yes' ;;
 
     *)
         echo 'bt: please provide valid subcommand'
