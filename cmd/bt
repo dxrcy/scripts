@@ -12,7 +12,6 @@ scan_and_wait() {
     bluetoothctl scan off
     killall bluetoothctl
 }
-
 # Returns successful exit if bluetooth device is connected
 is_connected() {
     bluetoothctl info $mac | grep -q 'Connected: yes'
@@ -26,7 +25,7 @@ is_power_on() {
 case "$1" in
     'c'|'connect')
         is_connected && exit 0 # already connected
-        pactl set-sink-volume @DEFAULT_SINK@ 0%
+        # pactl set-sink-volume @DEFAULT_SINK@ 0%
         bluetoothctl power on
         scan_and_wait
         bluetoothctl connect $mac
@@ -46,9 +45,9 @@ case "$1" in
     'power')  is_power_on ;;
 
     'display')
-        if ! is_power_on;    then echo '󰂲'
-        elif ! is_connected; then echo ''
-                             else echo ''
+        if ! is_power_on;    then echo '󰂲' # power off
+        elif ! is_connected; then echo '' # disconnected
+                             else echo '' # connected
         fi ;;
 
     *)
