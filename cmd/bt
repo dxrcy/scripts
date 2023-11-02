@@ -13,9 +13,19 @@ scan_and_wait() {
     killall bluetoothctl
 }
 
+# Returns successful exit if bluetooth device is connected
+is_connected() {
+    bluetoothctl info $mac | grep -q 'Connected: yes'
+}
+# Returns successful exit if bluetooth is powered on (enabled)
+is_power_on() {
+    bluetoothctl show | grep -q 'Powered: yes'
+}
+
 # Run subcommand
 case "$1" in
     'c'|'connect')
+        is_connected && exit 0 # already connected
         pactl set-sink-volume @DEFAULT_SINK@ 0%
         bluetoothctl power on
         scan_and_wait
@@ -32,11 +42,18 @@ case "$1" in
 
     'mac') echo $mac ;;
 
-    'status') bluetoothctl info $mac | grep -q 'Connected: yes' ;;
+    'status') is_connected ;;
+    'power')  is_power_on ;;
+
+    'display')
+        if ! is_power_on;    then echo '󰂲'
+        elif ! is_connected; then echo ''
+                             else echo ''
+        fi ;;
 
     *)
         echo 'bt: please provide valid subcommand'
-        echo 'usage: [ connect | disconnect | mac | status ]'
+        echo 'usage: [ connect | disconnect | mac | status | power | display ]'
         ;;
 esac
 
