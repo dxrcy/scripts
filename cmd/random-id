@@ -1,0 +1,11 @@
+#!/bin/sh
+#~~~ return a random 4-letter id
+
+if [ "$1" ]; then
+    len="$1"
+else
+    len=4
+fi
+
+tr -dc '[:lower:]' < /dev/urandom | head -c "$len"
+
