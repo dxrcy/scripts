@@ -11,8 +11,10 @@ if [ ! "$date" ]; then
     exit 1
 fi
 
-input="$src/$date.png"
+# Use filename if date is image path
+date=$(basename "$date" .png)
 
+input="$src/$date.png"
 if [ ! -f "$input" ]; then
     echo 'garf make: not the date of a real comic'
     exit 1
