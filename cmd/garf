@@ -60,6 +60,9 @@ case "$cmd" in
     '+organize')
         "$dir/organize" "$@"
         ;;
+    '+old')
+        "$dir/old" "$@"
+        ;;
 
     *)
         echo "garf: unknown subcommand: '$cmd'"
