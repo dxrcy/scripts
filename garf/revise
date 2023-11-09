@@ -60,8 +60,6 @@ cp "$post/title"  "$unedited/$post/title" || exit 1
 if [ -f "$post/props" ]; then
     cp "$post/props"  "$unedited/$post/props" || exit 1
 fi
-# Append 'revised' to properties file
-echo 'revised' >> "$unedited/$post/props" || exit 1
 
 # Move old post to old
 printf 'Move old post to old folder? (CTRL-C to cancel) '
