@@ -1,5 +1,5 @@
 #!/bin/sh
-#~~~ print random name for note file, with date
+#~~~ print random name for Neorg note file, with date
 
 # Directory of notes
 dir="$HOME/docs/notes"
@@ -15,5 +15,5 @@ id=$(tr -dc '[:lower:]' < /dev/urandom | head -c 4)
 name="${now}_${id}"
 
 # Full path of non-existant file
-echo "$dir/$name"
+echo "$dir/$name.norg"
 
