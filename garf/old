@@ -1,10 +1,16 @@
 #!/bin/sh
 
-old="$(~/scripts/cmd/garf +dir 'old' || exit 1)"
+posts="$(~/scripts/cmd/garf +dir 'posts' || exit 1)"
+old="$(  ~/scripts/cmd/garf +dir 'old'   || exit 1)"
 
 id="$1"
+
 if [ ! "$id" ]; then
     echo 'garf old: no post id given'
+    exit 1
+fi
+if [ ! -d "$posts/$id" ]; then
+    echo 'garf revise: no post with that id'
     exit 1
 fi
 
@@ -18,5 +24,6 @@ for folder in "$old/$id:"*; do
     fi
 done
 
-echo "$old/$id:$number"
+mv "$posts/$id" "$old/$id:$number" || exit 1
+echo "Moved $id to old folder as version :$number"
 

@@ -64,8 +64,5 @@ fi
 # Move old post to old
 printf 'Move old post to old folder? (CTRL-C to cancel) '
 read -r
-
-old=$(~/scripts/cmd/garf +old "$post" || exit "$?")
-mv "$post" "$old" || exit 1
-echo "Moved $post to old folder ($(basename "$old"))"
+~/scripts/cmd/garf +old "$post" || exit "$?"
 
