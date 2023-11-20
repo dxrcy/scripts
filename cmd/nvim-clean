@@ -1,8 +1,12 @@
 #!/bin/sh
 #~~~ clear all cache for nvim
 
+# All cache
+trash ~/.cache/nvim
 trash ~/.local/share/nvim
 trash ~/.local/state/nvim
-trash ~/.cache/nvim
+# Packer
 trash ~/dotfiles/nvim/.config/nvim/plugin/packer_compiled.lua
+# Lazy
+trash ~/dotfiles/nvim/.config/nvim/lazy-lock.json
 
