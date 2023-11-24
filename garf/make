@@ -11,6 +11,15 @@ if [ ! "$date" ]; then
     exit 1
 fi
 
+# Use recently shown comic, instead of date
+if [ "$date" = '-r' ]||[ "$date" = '--recent' ]; then
+    date="$(~/scripts/cmd/garf +recent || exit 1)"
+    if [ ! "$date" ]; then
+        echo 'garf make: no recent comic'
+        exit 1
+    fi
+fi
+
 # Use filename if date is image path
 date=$(basename "$date" .png)
 

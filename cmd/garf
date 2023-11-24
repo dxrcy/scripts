@@ -63,6 +63,9 @@ case "$cmd" in
     '+old')
         "$dir/old" "$@"
         ;;
+    '+recent')
+        "$dir/recent" "$@"
+        ;;
 
     *)
         echo "garf: unknown subcommand: '$cmd'"

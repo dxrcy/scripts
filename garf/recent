@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cache_file="$(~/scripts/cmd/garf +dir 'cache' || exit 1)"
+[ -f "$cache_file" ] && tail -n1 "$cache_file"
+

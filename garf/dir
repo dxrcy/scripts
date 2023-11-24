@@ -20,6 +20,8 @@ case "$name" in
         echo "$HOME/pics/eo/sundays" ;;
     old)
         echo "$HOME/pics/eo/old" ;;
+    cache)
+        echo "$HOME/.cache/garf" ;;
 
     *)
         echo "garf dir: unknown directory name '$name'"
