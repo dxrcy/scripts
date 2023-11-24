@@ -1,7 +1,7 @@
 #!/bin/sh
 
 src="$(~/scripts/cmd/garf +dir 'src' || exit 1)"
-cache_file="$HOME/.cache/garf"
+cache_file="$(~/scripts/cmd/garf +dir 'cache' || exit 1)"
 
 date="$1"
 
