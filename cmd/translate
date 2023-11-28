@@ -26,7 +26,7 @@ fi
 
 # Everything else is text to translate
 shift 2
-input="$@"
+input="$*"
 # Empty input
 if [ ! "$input" ]; then
     echo
