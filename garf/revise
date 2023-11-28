@@ -15,10 +15,19 @@ if [ ! "$post" ]; then
             break
         fi
     done
+    # If none with errors, get first post id with no SVG file
+    if [ ! "$post" ]; then
+        for i in *; do
+            if [ ! -f "$i/esperanto.svg" ]; then
+                post="$i"
+                break
+            fi
+        done
+    fi
 
     # No post to revise!
     if [ ! "$post" ]; then
-        echo 'garf revise: no posts with errors'
+        echo 'garf revise: no posts with errors or missing SVG file'
         exit 0
     fi
 
