@@ -14,12 +14,15 @@ for arg in "$@"; do
             echo '        -e  --existing   fail if directory is not a git repo'
             echo '        -f  --fancy      print output inside brackets'
             echo '        -b  --branch     only echo current git branch'
+            echo '        -l  --list       list info for all repos in directory'
+            echo '        -a  --all        include directories without repo or info (with --list)'
             exit 0
             ;;
         -e|--existing) must_be_repo=1 ;;
         -f|--fancy)    fancy_output=1 ;;
         -b|--branch)   only_branch=1 ;;
         -l|--list)     list_dirs=1 ;;
+        -a|--all)      list_all=1 ;;
         -*)
             echo "git-info: unknown option '$arg'."
             exit 1
@@ -46,22 +49,39 @@ fi
 
 # Run command for each subdirectory
 if [ -n "$list_dirs" ]; then
-    if [ -n "$must_be_repo" ]||[ -n "$fancy_output" ]||[ -n "$only_branch" ]; then
-        echo "git-info: cannot use other options with '--list'"
+    if [ -n "$must_be_repo" ]; then
+        echo "git-info: cannot use '--existing' options with '--list'"
         exit 1
     fi
     for i in *; do
+        # Must be directory
         [ -d "$i" ] || continue
-        info="$($0 "$i")"
-        [ "$info" ] || continue
+        # Run command
+        [ -n "$only_branch" ] && args='--branch'
+        info="$($0 "$i" $args)"
 
-        printf '\x1b[31m%s\x1b[0m' "$info"
-        for _ in $(seq $((3 - ${#info}))); do
+        # Must have information (unless --all)
+        [ "$info" -o -n "$list_all" ] || continue
+
+        # Print info
+        [ -n "$fancy_output" ] \
+            && printf '\x1b[31m%s\x1b[0m' "$info" \
+            || printf '%s' "$info"
+        # Pad with spacing
+        [ -n "$only_branch" ] \
+            && len=9 \
+            || len=3
+        for _ in $(seq $((len - ${#info}))); do
             printf ' '
         done
+        # Print directory name
         printf '%s\n' "$i"
     done
     exit 0
+fi
+if [ -n "$list_all" ]; then
+    echo "git-info: cannot use '--all' options without '--list'"
+    exit 1
 fi
 
 # Not a git repo
@@ -78,7 +98,7 @@ fi
 if [ -n "$only_branch" ]; then
     branch="$(git branch --show-current)"
     if [ -n "$fancy_output" ]; then
-        echo " $branch]"
+        echo " $branch"
     else
         echo "$branch"
     fi
