@@ -1,0 +1,98 @@
+#!/bin/sh
+#~~~ get information about Git repo status for a directory
+
+# Parse arguments
+for arg in "$@"; do
+    case "$arg" in 
+        -h|--help)
+            whatscript 'git-info'
+            echo '    USAGE:'
+            echo '        git-info [DIRECTORY] [OPTIONS]'
+            echo '    ARGUMENTS:'
+            echo '        DIRECTORY (optional)'
+            echo '    OPTIONS:'
+            echo '        -e  --existing   fail if directory is not a git repo'
+            echo '        -f  --fancy      print output inside brackets'
+            echo '        -b  --branch     only echo current git branch'
+            exit 0
+            ;;
+        -e|--existing) must_be_repo=1 ;;
+        -f|--fancy)    use_fancy_output=1 ;;
+        -b|--branch)   only_branch=1 ;;
+        -*)
+            echo "git-info: unknown option '$arg'."
+            exit 1
+            ;;
+        *)
+            if [ ! "$dir"]; then
+                dir="$arg"
+            else
+                echo "git-info: unexpected argument '$arg'."
+                exit 1
+            fi
+        ;;
+    esac
+done
+
+# Change directory
+if [ "$dir" ]; then
+    cd "$1" || {
+        echo 'git-info: directory not found.'
+        exit 1
+    }
+fi
+
+# Not a git repo
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+    if [ -n "$must_be_repo" ]; then
+        echo 'git-info: directory is not a git repo.'
+        exit 1
+    else
+        exit 0
+    fi
+fi
+
+# Current branch
+if [ -n "$only_branch" ]; then
+    branch="$(git branch --show-current)"
+    if [ -n "$use_fancy_output" ]; then
+        echo " $branch]"
+    else
+        echo "$branch"
+    fi
+    exit 0
+fi
+
+# Uncommitted changes
+changes_status()  {
+    if [ -n "$(git status --porcelain)" ]; then
+        echo '?'
+    fi
+}
+# Current branch synced with remote (unpulled, unpushed)
+sync_status() {
+    branch="$(git branch --show-current)"
+    # branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+    if [ -z "$branch" ]; then
+        echo '*'
+        return
+    fi
+    if ! git rev-parse --verify "origin/$branch" >/dev/null 2>&1; then
+        echo '↓' 
+        return
+    fi
+    if [ -n "$(git log origin/$branch..$branch)" ]; then
+        echo '↑'
+    fi
+}
+
+# Print output
+info="$(changes_status)$(sync_status)"
+if [ -n "$info" ]; then
+    if [ -n "$use_fancy_output" ]; then
+        echo " [$info]"
+    else
+        echo "$info"
+    fi
+fi
+
