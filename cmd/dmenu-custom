@@ -12,16 +12,20 @@ alias pvz='wine start /unix "/home/darcy/.wine/drive_c/Program Files/Plants vs Z
 alias tel='telegram-desktop'
 alias cam='guvcview'
 alias ls='localsend'
+# Full names
+alias gimp='gimp'
+alias inkscape='inkscape'
+alias minecraft='minecraft-launcher'
 
 # Set paths to look for executables
 # Similar to $PATH, but more narrow
 # Order is priority
 path="
 $HOME/scripts/cmd
-$HOME/.cargo/bin
-/usr/bin
-/bin
 "
+# $HOME/.cargo/bin
+# /usr/bin
+# /bin
 
 # Path to cache executables
 # Because looking for files in $path is SLOW
