@@ -27,6 +27,7 @@ for arg in "$@"; do
             echo "git-info: unknown option '$arg'."
             exit 1
             ;;
+        '') ;;
         *)
             if [ ! "$dir" ]; then
                 dir="$arg"
@@ -56,12 +57,15 @@ if [ -n "$list_dirs" ]; then
     for i in *; do
         # Must be directory
         [ -d "$i" ] || continue
+
         # Run command
         [ -n "$only_branch" ] && args='--branch'
-        info="$($0 "$i" $args)"
+        info="$($0 "$i" "$args")"
+        # Failed
+        [ $? = 0 ] || { echo "$info"; exit "$?"; }
 
         # Must have information (unless --all)
-        [ "$info" -o -n "$list_all" ] || continue
+        [ ! "$info" ] && [ ! -n "$list_all" ] && continue
 
         # Print info
         [ -n "$fancy_output" ] \
