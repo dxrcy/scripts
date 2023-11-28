@@ -17,8 +17,9 @@ for arg in "$@"; do
             exit 0
             ;;
         -e|--existing) must_be_repo=1 ;;
-        -f|--fancy)    use_fancy_output=1 ;;
+        -f|--fancy)    fancy_output=1 ;;
         -b|--branch)   only_branch=1 ;;
+        -l|--list)     list_dirs=1 ;;
         -*)
             echo "git-info: unknown option '$arg'."
             exit 1
@@ -43,6 +44,26 @@ if [ -n "$dir" ]; then
     cd "$dir" || exit 1
 fi
 
+# Run command for each subdirectory
+if [ -n "$list_dirs" ]; then
+    if [ -n "$must_be_repo" ]||[ -n "$fancy_output" ]||[ -n "$only_branch" ]; then
+        echo "git-info: cannot use other options with '--list'"
+        exit 1
+    fi
+    for i in *; do
+        [ -d "$i" ] || continue
+        info="$($0 "$i")"
+        [ "$info" ] || continue
+
+        printf '\x1b[31m%s\x1b[0m' "$info"
+        for _ in $(seq $((3 - ${#info}))); do
+            printf ' '
+        done
+        printf '%s\n' "$i"
+    done
+    exit 0
+fi
+
 # Not a git repo
 if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     if [ -n "$must_be_repo" ]; then
@@ -56,7 +77,7 @@ fi
 # Current branch
 if [ -n "$only_branch" ]; then
     branch="$(git branch --show-current)"
-    if [ -n "$use_fancy_output" ]; then
+    if [ -n "$fancy_output" ]; then
         echo " $branch]"
     else
         echo "$branch"
@@ -82,7 +103,7 @@ sync_status() {
         echo '↓' 
         return
     fi
-    if [ -n "$(git log origin/$branch..$branch)" ]; then
+    if [ -n "$(git log "origin/$branch..$branch")" ]; then
         echo '↑'
     fi
 }
@@ -90,7 +111,7 @@ sync_status() {
 # Print output
 info="$(changes_status)$(sync_status)"
 if [ -n "$info" ]; then
-    if [ -n "$use_fancy_output" ]; then
+    if [ -n "$fancy_output" ]; then
         echo " [$info]"
     else
         echo "$info"
