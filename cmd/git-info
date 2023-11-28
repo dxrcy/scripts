@@ -24,7 +24,7 @@ for arg in "$@"; do
             exit 1
             ;;
         *)
-            if [ ! "$dir"]; then
+            if [ ! "$dir" ]; then
                 dir="$arg"
             else
                 echo "git-info: unexpected argument '$arg'."
@@ -35,11 +35,12 @@ for arg in "$@"; do
 done
 
 # Change directory
-if [ "$dir" ]; then
-    cd "$1" || {
-        echo 'git-info: directory not found.'
+if [ -n "$dir" ]; then
+    if [ ! -d "$dir" ]; then
+        echo "git-info: not a directory: '$dir'."
         exit 1
-    }
+    fi
+    cd "$dir" || exit 1
 fi
 
 # Not a git repo
