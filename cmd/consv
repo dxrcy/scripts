@@ -1,5 +1,5 @@
 #!/bin/sh
-#~~~ enable or disable battery conservation with tlp
+INFO='enable or disable battery conservation with tlp'
 
 case "$1" in
     'off')

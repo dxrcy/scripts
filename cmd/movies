@@ -1,5 +1,5 @@
 #!/bin/sh
-#~~~ index all files in movies directory
+INFO='index all files in movies directory'
 
 # Location of movies folder 
 drive=/mnt/media/Movies/

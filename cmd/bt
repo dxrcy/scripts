@@ -1,5 +1,5 @@
 #!/bin/sh
-#~~~ connect or disconnect a particular bluetooth device
+INFO='connect or disconnect a particular bluetooth device'
 
 mac='40:DE:17:43:2F:49'
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-#~~~ shuffle backgrounds every so often
+INFO='shuffle backgrounds every so often'
 
 dir="$HOME/pics/wallpapers"
 delay=300 # 5 minutes

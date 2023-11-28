@@ -1,5 +1,5 @@
 #!/bin/sh
-#~~~ custom version of dmenu_run to use aliases
+INFO='custom version of dmenu_run to use aliases'
 
 # Set aliases
 # Priority before $path

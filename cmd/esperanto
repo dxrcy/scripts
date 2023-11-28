@@ -1,5 +1,5 @@
 #!/bin/sh
-#~~~ switch between english and esperanto keyboard
+INFO='switch between english and esperanto keyboard'
 
 turn_on() {
     xmodmap -e 'keycode 24 = scircumflex Scircumflex'

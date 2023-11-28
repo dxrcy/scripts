@@ -1,5 +1,5 @@
 #!/bin/sh
-#~~~ print the help comment for a user script
+INFO='print the help comment for a user script'
 
 dir="$HOME/scripts/cmd"
 name="$1"
@@ -15,14 +15,16 @@ if [ ! -f "$dir/$name" ]; then
 fi
 
 # Help comment identifier
-ident='^#~~~ '
+ident='^INFO='
 
 # Find message
 # First line beginning with identifier
 msg=$(
     < "$dir/$name" \
-    grep "$ident" | head -n 1 |\
-    sed "s/$ident//"
+    grep "$ident" \
+        | head -n 1 \
+        | sed "s/$ident//" \
+        | sed "s/^['\"]\(.*\)['\"]$/\1/"
 )
 
 # Print message if found

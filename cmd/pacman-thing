@@ -1,5 +1,5 @@
 #!/bin/sh
-#~~~ use pacman/paru with a 'nicer' sytax
+INFO="use pacman/paru with a 'nicer' sytax"
 
 # Pacman subcommand (like -Syu) is first argument
 cmd="$1"

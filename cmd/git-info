@@ -1,11 +1,11 @@
 #!/bin/sh
-#~~~ get information about Git repo status for a directory
+INFO='get information about Git repo status for a directory'
 
 # Parse arguments
 for arg in "$@"; do
     case "$arg" in 
         -h|--help)
-            whatscript 'git-info'
+            echo "git-info: $INFO"
             echo '    USAGE:'
             echo '        git-info [DIRECTORY] [OPTIONS]'
             echo '    ARGUMENTS:'

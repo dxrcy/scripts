@@ -1,5 +1,5 @@
 #!/bin/sh
-#~~~ check all user scripts for bashisms or linting errors
+INFO='check all user scripts for bashisms or linting errors'
 
 # Get location of scripts folder
 scripts="$(readlink -f "$(dirname "$0")/..")"

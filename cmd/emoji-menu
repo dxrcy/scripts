@@ -1,5 +1,5 @@
 #!/bin/sh
-#~~~ open dmenu to find an emoji
+INFO='open dmenu to find an emoji'
 # https://github.com/LukeSmithxyz/voidrice/blob/master/.local/bin/dmenuunicode
 
 # Get user selection via dmenu from emoji file.

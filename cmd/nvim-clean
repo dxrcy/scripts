@@ -1,5 +1,5 @@
 #!/bin/sh
-#~~~ clear all cache for nvim
+INFO='clear all cache for nvim'
 
 # All cache
 trash ~/.cache/nvim

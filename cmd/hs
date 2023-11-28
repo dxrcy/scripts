@@ -1,5 +1,5 @@
 #!/bin/sh
-#~~~ compile and run a Haskell program with ghc
+INFO='compile and run a Haskell program with ghc'
 
 name="$1"
 
