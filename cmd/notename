@@ -10,8 +10,8 @@ if [ ! -d "$dir" ]; then
 fi
 
 # Get name with date and random string
-now=$(date +'%y%m%d')
-id=$(tr -dc '[:lower:]' < /dev/urandom | head -c 4)
+now=$(date +'%y_%m_%d')
+id=$(~/scripts/cmd/random-name)
 name="${now}_${id}"
 
 # Full path of non-existant file

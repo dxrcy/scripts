@@ -1,0 +1,8 @@
+#!/bin/sh
+INFO='display a random color and noun combination'
+
+color=$(shuf ~/scripts/share/colors -n1)
+noun=$(shuf ~/scripts/share/nouns -n1)
+
+echo "${color}_$noun"
+
