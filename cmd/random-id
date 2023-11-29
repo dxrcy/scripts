@@ -1,5 +1,5 @@
 #!/bin/sh
-INFO='return a random 4-letter id'
+export INFO='return a random 4-letter id'
 
 if [ "$1" ]; then
     len="$1"

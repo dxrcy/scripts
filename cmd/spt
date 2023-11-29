@@ -1,5 +1,5 @@
 #!/bin/sh
-INFO='open Spotify tui, starting spotifyd if necessary'
+export INFO='open Spotify tui, starting spotifyd if necessary'
 
 # Handle arguments
 while getopts 'kdh' opt; do

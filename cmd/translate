@@ -1,5 +1,5 @@
 #!/bin/sh
-INFO='translate text, using Glosbe.com API'
+export INFO='translate text, using Glosbe.com API'
 
 # Source language code
 src="$1"

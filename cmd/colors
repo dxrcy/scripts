@@ -1,5 +1,5 @@
 #!/bin/sh
-INFO='print a nice rainbow color pattern'
+export INFO='print a nice rainbow color pattern'
 
 bg=-1
 while [ "$bg" -le 7 ]; do

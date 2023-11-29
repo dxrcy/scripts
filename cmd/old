@@ -1,5 +1,5 @@
 #!/bin/sh
-INFO="move file to '.old/'"
+export INFO="move file to '.old/'"
 
 # Help
 if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then

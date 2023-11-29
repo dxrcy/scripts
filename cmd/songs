@@ -1,5 +1,5 @@
 #!/bin/sh
-INFO='download all songs from a particular Spotify playlist'
+export INFO='download all songs from a particular Spotify playlist'
 
 # Directory to download to
 location="$HOME/music/songs"

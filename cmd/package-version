@@ -1,5 +1,5 @@
 #!/bin/sh
-INFO='print package version for a project (Rust)'
+export INFO='print package version for a project (Rust)'
 
 [ "$1" ] && { cd "$1" || exit "$?"; }
 

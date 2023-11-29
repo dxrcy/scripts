@@ -1,5 +1,5 @@
 #!/bin/sh
-INFO='show, find, or make Garfield comics (garf help)'
+export INFO='show, find, or make Garfield comics (garf help)'
 
 dir="$HOME/scripts/garf"
 

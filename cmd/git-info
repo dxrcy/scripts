@@ -1,5 +1,5 @@
 #!/bin/sh
-INFO='get information about Git repo status for a directory'
+export INFO='get information about Git repo status for a directory'
 
 # Parse arguments
 for arg in "$@"; do

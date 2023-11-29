@@ -1,5 +1,5 @@
 #!/bin/sh
-INFO='print the help comment for a user script'
+export INFO='print the help comment for a user script'
 
 dir="$HOME/scripts/cmd"
 name="$1"
@@ -15,7 +15,7 @@ if [ ! -f "$dir/$name" ]; then
 fi
 
 # Help comment identifier
-ident='^INFO='
+ident='^ *\(export\)\? *INFO='
 
 # Find message
 # First line beginning with identifier
