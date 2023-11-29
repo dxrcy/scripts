@@ -58,7 +58,7 @@ fi
 i=0
 while [ "$i" -lt "${#string}" ]; do
     i=$((i + 1))
-    digit=$(expr substr "$string" "$i" 1)
+    digit=$(echo "$string" | cut -c "$i")
     case "$digit:$mode" in
 
         '0:subscript')   printf "\u2080" ;; 
@@ -138,7 +138,7 @@ while [ "$i" -lt "${#string}" ]; do
         '8:segmented')   printf "\U1FBF8" ;; 
         '9:segmented')   printf "\U1FBF9" ;; 
 
-        *) [ -n "$ignore_other" ] || printf "$digit" ;;
+        *) [ -n "$ignore_other" ] || printf '%s' "$digit" ;;
     esac
 done
 echo

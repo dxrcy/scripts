@@ -29,10 +29,10 @@ for arg in "$@"; do
             ;;
         '') ;;
         *)
-            [ ! "$dir" ] && dir="$arg" || {
+            [ ! "$dir" ] || {
                 echo "git-info: unexpected argument '$arg'."
                 exit 1
-            }
+            } && dir="$arg"
         ;;
     esac
 done
@@ -58,12 +58,14 @@ if [ -n "$list_dirs" ]; then
 
         # Run command
         [ -n "$only_branch" ] && args='--branch'
-        info="$($0 "$i" "$args")"
-        # Failed
-        [ $? = 0 ] || { echo "$info"; exit "$?"; }
+        if ! info="$($0 "$i" "$args")"; then
+            # Failed
+            echo "$info"
+            exit 1
+        fi
 
         # Must have information (unless --all)
-        [ ! "$info" ] && [ ! -n "$list_all" ] && continue
+        [ ! "$info" ] && [ -z "$list_all" ] && continue
 
         # Print info
         [ -n "$fancy_output" ] \
@@ -71,13 +73,13 @@ if [ -n "$list_dirs" ]; then
             || printf '%s' "$info"
         # Pad with spacing
         [ -n "$only_branch" ] \
-            && len=9 \
-            || len=3
+            && len=8 \
+            || len=2
         for _ in $(seq $((len - ${#info}))); do
             printf ' '
         done
         # Print directory name
-        printf '%s\n' "$i"
+        printf ' %s\n' "$i"
     done
     exit 0
 fi
