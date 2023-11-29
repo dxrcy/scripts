@@ -1,14 +1,28 @@
 #!/bin/sh
 INFO='convert digits of a number into different codepoint set'
 
+string=""
 for arg in "$@"; do
+    if [ -n "$mode" ]; then
+        case "$arg" in
+            -s|--subscript|\
+            -S|--superscript|\
+            -b|--bold|\
+            -B|--boldserif|\
+            -o|--outline|\
+            -c|--circled|\
+            -e|--segmented)
+                echo 'fancy-digits: too many mode arguments given.'
+                exit 1
+                ;;
+        esac
+    fi
+
     case "$arg" in
         -h|--help)
             echo "fancy-digits: $INFO"
             echo '    USAGE:'
-            echo '        fancy-digits [MODE] [STRING]'
-            echo '    ARGUMENTS:'
-            echo '        STRING'
+            echo '        fancy-digits [MODE] [OPTIONS] [..TEXT]'
             echo '    MODE:'
             echo '        -s  --substring    [₀₁₂₃₄₅₆₇₈₉] (default)'
             echo '        -S  --superscript  [⁰¹²³⁴⁵⁶⁷⁸⁹]'
@@ -17,29 +31,26 @@ for arg in "$@"; do
             echo '        -o  --outline      [⓪①②③④⑤⑥⑦⑧⑨]'
             echo '        -c  --circled      [⓿➊➋➌➍➎➏➐➑➒]'
             echo '        -e  --segmented    [🯰🯱🯲🯳🯴🯵🯶🯷🯸🯹]'
+            echo '    OPTIONS:'
+            echo '        -i  --ignore       only print characters in the set'
             exit 0
             ;;
-        *) ;;
+        -s|--subscript)   mode='subscript'   ;;
+        -S|--superscript) mode='superscript' ;;
+        -b|--bold)        mode='bold'        ;;
+        -B|--boldserif)   mode='boldserif'   ;;
+        -o|--outline)     mode='outline'     ;;
+        -c|--circled)     mode='circled'     ;;
+        -e|--segmented)   mode='segmented'   ;;
+        -i|--ignore) ignore_other=1 ;;
+        -*)
+            echo 'fancy-digits: unknown mode.'
+            exit 1
+            ;;
+        *) [ "$string" ] && string="$string $arg" || string="$arg" ;;
     esac
 done
 
-mode='subscript' # Default
-case "$1" in
-    -s|--subscript)   shift ;;
-    -S|--superscript) mode='superscript'; shift ;;
-    -b|--bold)        mode='bold';        shift ;;
-    -B|--boldserif)   mode='boldserif';   shift ;;
-    -o|--outline)     mode='outline';     shift ;;
-    -c|--circled)     mode='circled';     shift ;;
-    -e|--segmented)   mode='segmented';   shift ;;
-    -*)
-        echo 'fancy-digits: unknown codepoint argument.'
-        exit 1
-        ;;
-    *) ;;
-esac
-
-string="$*"
 if [ ! "$string" ]; then
     exit 0
 fi
@@ -127,7 +138,7 @@ while [ "$i" -lt "${#string}" ]; do
         '8:segmented')   printf "\U1FBF8" ;; 
         '9:segmented')   printf "\U1FBF9" ;; 
 
-        *) printf "$digit" ;;
+        *) [ -n "$ignore_other" ] || printf "$digit" ;;
     esac
 done
 echo
