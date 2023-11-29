@@ -12,7 +12,7 @@ for arg in "$@"; do
             echo '        DIRECTORY (optional)'
             echo '    OPTIONS:'
             echo '        -e  --existing   fail if directory is not a git repo'
-            echo '        -f  --fancy      print output inside brackets'
+            echo '        -f  --fancy      print output with color'
             echo '        -b  --branch     only echo current git branch'
             echo '        -l  --list       list info for all repos in directory'
             echo '        -a  --all        include directories without repo or info (with --list)'
@@ -29,12 +29,10 @@ for arg in "$@"; do
             ;;
         '') ;;
         *)
-            if [ ! "$dir" ]; then
-                dir="$arg"
-            else
+            [ ! "$dir" ] && dir="$arg" || {
                 echo "git-info: unexpected argument '$arg'."
                 exit 1
-            fi
+            }
         ;;
     esac
 done
@@ -82,6 +80,11 @@ if [ -n "$list_dirs" ]; then
         printf '%s\n' "$i"
     done
     exit 0
+fi
+if [ -n "$fancy_output" ]; then
+    echo "git-info: cannot use '--fancy' options without '--list'"
+    echo "  (not yet implemented)"
+    exit 1
 fi
 if [ -n "$list_all" ]; then
     echo "git-info: cannot use '--all' options without '--list'"
@@ -135,10 +138,6 @@ sync_status() {
 # Print output
 info="$(changes_status)$(sync_status)"
 if [ -n "$info" ]; then
-    if [ -n "$fancy_output" ]; then
-        echo " [$info]"
-    else
-        echo "$info"
-    fi
+    echo "$info"
 fi
 
