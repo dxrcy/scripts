@@ -12,8 +12,11 @@ for arg in "$@"; do
             echo '    MODE:'
             echo '        -s  --substring    [₀₁₂₃₄₅₆₇₈₉] (default)'
             echo '        -S  --superscript  [⁰¹²³⁴⁵⁶⁷⁸⁹]'
-            echo '        -b  --bold         []'
-            echo '        -B  --boldserif    []'
+            echo '        -b  --bold         [𝟬𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵]'
+            echo '        -B  --boldserif    [𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗]'
+            echo '        -o  --outline      [⓪①②③④⑤⑥⑦⑧⑨]'
+            echo '        -c  --circled      [⓿➊➋➌➍➎➏➐➑➒]'
+            echo '        -e  --segmented    [🯰🯱🯲🯳🯴🯵🯶🯷🯸🯹]'
             exit 0
             ;;
         *) ;;
@@ -26,6 +29,9 @@ case "$1" in
     -S|--superscript) mode='superscript'; shift ;;
     -b|--bold)        mode='bold';        shift ;;
     -B|--boldserif)   mode='boldserif';   shift ;;
+    -o|--outline)     mode='outline';     shift ;;
+    -c|--circled)     mode='circled';     shift ;;
+    -e|--segmented)   mode='segmented';   shift ;;
     -*)
         echo 'fancy-digits: unknown codepoint argument.'
         exit 1
@@ -87,6 +93,39 @@ while [ "$i" -lt "${#string}" ]; do
         '7:boldserif')   printf "\U1D7D5" ;; 
         '8:boldserif')   printf "\U1D7D6" ;; 
         '9:boldserif')   printf "\U1D7D7" ;; 
+
+        '0:outline')     printf "\u24EA" ;; 
+        '1:outline')     printf "\u2460" ;; 
+        '2:outline')     printf "\u2461" ;; 
+        '3:outline')     printf "\u2462" ;; 
+        '4:outline')     printf "\u2463" ;; 
+        '5:outline')     printf "\u2464" ;; 
+        '6:outline')     printf "\u2465" ;; 
+        '7:outline')     printf "\u2466" ;; 
+        '8:outline')     printf "\u2467" ;; 
+        '9:outline')     printf "\u2468" ;; 
+
+        '0:circled')     printf "\u24FF" ;; 
+        '1:circled')     printf "\u278A" ;; 
+        '2:circled')     printf "\u278B" ;; 
+        '3:circled')     printf "\u278C" ;; 
+        '4:circled')     printf "\u278D" ;; 
+        '5:circled')     printf "\u278E" ;; 
+        '6:circled')     printf "\u278F" ;; 
+        '7:circled')     printf "\u2790" ;; 
+        '8:circled')     printf "\u2791" ;; 
+        '9:circled')     printf "\u2792" ;; 
+
+        '0:segmented')   printf "\U1FBF0" ;; 
+        '1:segmented')   printf "\U1FBF1" ;; 
+        '2:segmented')   printf "\U1FBF2" ;; 
+        '3:segmented')   printf "\U1FBF3" ;; 
+        '4:segmented')   printf "\U1FBF4" ;; 
+        '5:segmented')   printf "\U1FBF5" ;; 
+        '6:segmented')   printf "\U1FBF6" ;; 
+        '7:segmented')   printf "\U1FBF7" ;; 
+        '8:segmented')   printf "\U1FBF8" ;; 
+        '9:segmented')   printf "\U1FBF9" ;; 
 
         *) printf "$digit" ;;
     esac
