@@ -1,0 +1,11 @@
+#!/bin/sh
+INFO='print package version for a project (Rust)'
+
+[ "$1" ] && { cd "$1" || exit "$?"; }
+
+# Rust
+[ -f Cargo.toml ] && sed -n 's/^ *version *= *"\(.*\)" *$/\1/p' Cargo.toml
+
+# Other languages
+# ....
+
