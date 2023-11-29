@@ -1,0 +1,95 @@
+#!/bin/sh
+INFO='convert digits of a number into different codepoint set'
+
+for arg in "$@"; do
+    case "$arg" in
+        -h|--help)
+            echo "fancy-digits: $INFO"
+            echo '    USAGE:'
+            echo '        fancy-digits [MODE] [STRING]'
+            echo '    ARGUMENTS:'
+            echo '        STRING'
+            echo '    MODE:'
+            echo '        -s  --substring    [₀₁₂₃₄₅₆₇₈₉] (default)'
+            echo '        -S  --superscript  [⁰¹²³⁴⁵⁶⁷⁸⁹]'
+            echo '        -b  --bold         []'
+            echo '        -B  --boldserif    []'
+            exit 0
+            ;;
+        *) ;;
+    esac
+done
+
+mode='subscript' # Default
+case "$1" in
+    -s|--subscript)   shift ;;
+    -S|--superscript) mode='superscript'; shift ;;
+    -b|--bold)        mode='bold';        shift ;;
+    -B|--boldserif)   mode='boldserif';   shift ;;
+    -*)
+        echo 'fancy-digits: unknown codepoint argument.'
+        exit 1
+        ;;
+    *) ;;
+esac
+
+string="$*"
+if [ ! "$string" ]; then
+    exit 0
+fi
+
+i=0
+while [ "$i" -lt "${#string}" ]; do
+    i=$((i + 1))
+    digit=$(expr substr "$string" "$i" 1)
+    case "$digit:$mode" in
+
+        '0:subscript')   printf "\u2080" ;; 
+        '1:subscript')   printf "\u2081" ;; 
+        '2:subscript')   printf "\u2082" ;; 
+        '3:subscript')   printf "\u2083" ;; 
+        '4:subscript')   printf "\u2084" ;; 
+        '5:subscript')   printf "\u2085" ;; 
+        '6:subscript')   printf "\u2086" ;; 
+        '7:subscript')   printf "\u2087" ;; 
+        '8:subscript')   printf "\u2088" ;; 
+        '9:subscript')   printf "\u2089" ;; 
+
+        '0:superscript') printf "\u2070" ;; 
+        '1:superscript') printf "\u00B9" ;; 
+        '2:superscript') printf "\u00B2" ;; 
+        '3:superscript') printf "\u00B3" ;; 
+        '4:superscript') printf "\u2074" ;; 
+        '5:superscript') printf "\u2075" ;; 
+        '6:superscript') printf "\u2076" ;; 
+        '7:superscript') printf "\u2077" ;; 
+        '8:superscript') printf "\u2078" ;; 
+        '9:superscript') printf "\u2079" ;; 
+
+        '0:bold')        printf "\U1D7EC" ;; 
+        '1:bold')        printf "\U1D7ED" ;; 
+        '2:bold')        printf "\U1D7EE" ;; 
+        '3:bold')        printf "\U1D7EF" ;; 
+        '4:bold')        printf "\U1D7F0" ;; 
+        '5:bold')        printf "\U1D7F1" ;; 
+        '6:bold')        printf "\U1D7F2" ;; 
+        '7:bold')        printf "\U1D7F3" ;; 
+        '8:bold')        printf "\U1D7F4" ;; 
+        '9:bold')        printf "\U1D7F5" ;; 
+
+        '0:boldserif')   printf "\U1D7CE" ;; 
+        '1:boldserif')   printf "\U1D7CF" ;; 
+        '2:boldserif')   printf "\U1D7D0" ;; 
+        '3:boldserif')   printf "\U1D7D1" ;; 
+        '4:boldserif')   printf "\U1D7D2" ;; 
+        '5:boldserif')   printf "\U1D7D3" ;; 
+        '6:boldserif')   printf "\U1D7D4" ;; 
+        '7:boldserif')   printf "\U1D7D5" ;; 
+        '8:boldserif')   printf "\U1D7D6" ;; 
+        '9:boldserif')   printf "\U1D7D7" ;; 
+
+        *) printf "$digit" ;;
+    esac
+done
+echo
+
