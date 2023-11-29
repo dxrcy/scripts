@@ -1,0 +1,5 @@
+#!/bin/sh
+INFO='remove all ANSI escape codes from stdin'
+
+sed "s/\x1b\[[^m]*m//g"
+
