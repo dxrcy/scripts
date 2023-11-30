@@ -124,15 +124,19 @@ changes_status()  {
 # Current branch synced with remote (unpulled, unpushed)
 sync_status() {
     branch="$(git branch --show-current)"
-    # branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+    # Unknown branch
     if [ -z "$branch" ]; then
         echo '*'
         return
     fi
+    # No remotes exist
+    [ "$(git remote -v)" ] || return
+    # Unpulled ?
     if ! git rev-parse --verify "origin/$branch" >/dev/null 2>&1; then
         echo '↓' 
         return
     fi
+    # Unpushed
     if [ -n "$(git log "origin/$branch..$branch")" ]; then
         echo '↑'
     fi
