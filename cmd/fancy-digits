@@ -2,9 +2,9 @@
 export INFO='convert digits of a number into different codepoint set'
 
 string=""
-for arg in "$@"; do
+while [ "$#" -gt 0 ]; do
     if [ -n "$mode" ]; then
-        case "$arg" in
+        case "$1" in
             -s|--subscript|\
             -S|--superscript|\
             -b|--bold|\
@@ -18,7 +18,7 @@ for arg in "$@"; do
         esac
     fi
 
-    case "$arg" in
+    case "$1" in
         -h|--help)
             echo "fancy-digits: $INFO"
             echo '    USAGE:'
@@ -32,7 +32,8 @@ for arg in "$@"; do
             echo '        -c  --circled      [⓿➊➋➌➍➎➏➐➑➒]'
             echo '        -e  --segmented    [🯰🯱🯲🯳🯴🯵🯶🯷🯸🯹]'
             echo '    OPTIONS:'
-            echo '        -i  --ignore       only print characters in the set'
+            echo '        -i  --ignore       ignores characters other than numbers and whitespace'
+            echo '        -I  --ignore-all   ignores characters other than numbers'
             exit 0
             ;;
         -s|--subscript)   mode='subscript'   ;;
@@ -42,13 +43,18 @@ for arg in "$@"; do
         -o|--outline)     mode='outline'     ;;
         -c|--circled)     mode='circled'     ;;
         -e|--segmented)   mode='segmented'   ;;
-        -i|--ignore) ignore_other=1 ;;
+        -i|--ignore)      ignore=1 ;;
+        -I|--ignore-all)  ignore=2 ;;
         -*)
             echo 'fancy-digits: unknown mode.'
             exit 1
             ;;
-        *) [ "$string" ] && string="$string $arg" || string="$arg" ;;
+        *) [ "$string" ] \
+            && string="$string $1" \
+            || string="$1"
+            ;;
     esac
+    shift
 done
 
 if [ ! "$string" ]; then
@@ -138,7 +144,8 @@ while [ "$i" -lt "${#string}" ]; do
         '8:segmented')   printf "\U1FBF8" ;; 
         '9:segmented')   printf "\U1FBF9" ;; 
 
-        *) [ -n "$ignore_other" ] || printf '%s' "$digit" ;;
+        ' :'*) [ "$ignore" -ge 2 ] || printf '%s' "$digit" ;;
+        *)     [ "$ignore" -ge 1 ] || printf '%s' "$digit" ;;
     esac
 done
 echo
