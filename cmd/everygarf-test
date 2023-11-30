@@ -1,0 +1,53 @@
+#!/bin/sh
+
+# Csv file to save data to 
+output_file="$HOME/docs/everygarf.csv"
+# Temporary directory to download images to
+download_dir='/tmp/garfield'
+
+# Independent variable
+jobs_min=5     # Minimimum concurrent jobs
+jobs_max=100   # Maximum concurrent jobs
+jobs_step=5
+# Control variables
+timeout=5      # Timeout for request (seconds)
+attempts=10    # Amount of attempts allowed, per request, before failing
+image_count=50 # Amount of images to download per test
+test_count=10  # Amount of times to run test, per job count
+# Dependent variable = time
+
+# Create csv file with table header, if doesn't exist
+[ -f "$output_file" ] || echo "jobs, seconds" >> "$output_file"
+
+j="$jobs_min"
+while [ "$j" -le "$jobs_max" ]; do
+    for _ in $(seq 0 "$test_count"); do
+        # Remove existing file
+        # Don't use everygarf --remove-all, this will skew data
+        [ -e "$download_dir" ] && {
+            rm -rf "$download_dir" || exit 1
+        }
+
+        # Run download
+        then=$(date +'%s')
+        everygarf "$download_dir" \
+            --notify-fail \
+            --timeout "$timeout" \
+            --attempts "$attempts" \
+            --max "$image_count" \
+            --jobs "$j" \
+            || {
+            echo 'Download failed: exiting.'
+            exit 1
+        }
+
+        # Add elapsed time to log
+        now=$(date +'%s')
+        time=$((now - then))
+        echo "$j, $time" >> "$output_file"
+    done
+
+    j=$((j + $jobs_step))
+done
+printf '\n\x1b[1;33mAll done!\x1b[0m\n'
+
