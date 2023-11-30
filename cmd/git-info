@@ -2,8 +2,8 @@
 export INFO='get information about Git repo status for a directory'
 
 # Parse arguments
-for arg in "$@"; do
-    case "$arg" in 
+while [ "$#" -gt 0 ]; do
+    case "$1" in 
         -h|--help)
             echo "git-info: $INFO"
             echo '    USAGE:'
@@ -11,30 +11,31 @@ for arg in "$@"; do
             echo '    ARGUMENTS:'
             echo '        DIRECTORY (optional)'
             echo '    OPTIONS:'
+            echo '        -b  --branch     only echo current git branch'
             echo '        -e  --existing   fail if directory is not a git repo'
             echo '        -f  --fancy      print output with color'
-            echo '        -b  --branch     only echo current git branch'
             echo '        -l  --list       list info for all repos in directory'
             echo '        -a  --all        include directories without repo or info (with --list)'
             exit 0
             ;;
+        -b|--branch)   only_branch=1 ;;
         -e|--existing) must_be_repo=1 ;;
         -f|--fancy)    fancy_output=1 ;;
-        -b|--branch)   only_branch=1 ;;
         -l|--list)     list_dirs=1 ;;
         -a|--all)      list_all=1 ;;
         -*)
-            echo "git-info: unknown option '$arg'."
+            echo "git-info: unknown option '$1'."
             exit 1
             ;;
         '') ;;
         *)
             [ ! "$dir" ] || {
-                echo "git-info: unexpected argument '$arg'."
+                echo "git-info: unexpected argument '$1'."
                 exit 1
-            } && dir="$arg"
+            } && dir="$1"
         ;;
     esac
+    shift
 done
 
 # Change directory
