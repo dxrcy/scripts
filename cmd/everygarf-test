@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Csv file to save data to 
-output_file="$HOME/docs/everygarf.csv"
+output_file="$HOME/docs/everygarf-stats/latest.csv"
 # Temporary directory to download images to
 download_dir='/tmp/garfield'
 
@@ -12,7 +12,7 @@ jobs_step=1     # Increase job count by this
 # Control variables
 timeout=10      # Timeout for request (seconds)
 attempts=20     # Amount of attempts allowed, per request, before failing
-image_count=100 # Amount of images to download per test (must be higher that $jobs_max)
+image_count=200 # Amount of images to download per test (must be higher that $jobs_max)
 test_count=1    # Amount of times to run test, per job count
 # Dependent variable = time
 
