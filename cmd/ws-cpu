@@ -1,0 +1,16 @@
+#!/bin/sh
+
+pname='windscribe'
+
+pid=$(pgrep "$pname")
+
+[ -z "$pid" ] && {
+    echo "$pname is not running."
+    exit 1
+}
+
+cpu_usage=$(top -b -n 2 -d 0.2 -p "$pid" | tail -1 | awk '{print $9}')
+
+echo "$cpu_usage%"
+
+
