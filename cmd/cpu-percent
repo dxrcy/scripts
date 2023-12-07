@@ -1,19 +1,21 @@
 #!/bin/sh
 
-pname='windscribe'
-thread_count=16
+CPU_COUNT=16
+
+pname="$1"
+[ "$1" ] || {
+    echo 'missing process name.'
+    exit 1
+}
 
 pid=$(pgrep "$pname")
-
-[ -z "$pid" ] && {
+[ -n "$pid" ] || {
     echo "$pname is not running."
     exit 1
 }
 
 cpu_usage=$(top -b -n 2 -d 0.2 -p "$pid" | tail -1 | awk '{print $9}')
-
-cpu_usage=$((${cpu_usage%.*} / thread_count))
-
+cpu_usage=$((${cpu_usage%.*} / CPU_COUNT))
 echo "$cpu_usage%"
 
 
