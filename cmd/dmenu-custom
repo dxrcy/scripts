@@ -3,6 +3,7 @@ export INFO='custom version of dmenu_run to use aliases'
 
 # Set aliases
 # Priority before $path
+alias l='librewolf'
 alias lw='librewolf'
 alias lo='libreoffice'
 alias th='thunar'
@@ -64,9 +65,9 @@ if [ ! -f "$cache_file" ] || [ "$1" = 'refresh' ]; then
 
     # Exit only if manual refresh was requsted
     # Not if creating cache automatically due to missing file
-    if [ "$1" = 'refresh' ]; then
-        exit
-    fi
+    # if [ "$1" = 'refresh' ]; then
+        # exit
+    # fi
 fi
 
 # Read cache file
