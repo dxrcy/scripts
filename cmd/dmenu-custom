@@ -16,6 +16,7 @@ alias ls='localsend'
 # Full names
 alias gimp='gimp'
 alias inkscape='inkscape'
+alias krita='krita'
 alias minecraft='minecraft-launcher'
 
 # Set paths to look for executables
