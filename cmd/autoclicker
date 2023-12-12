@@ -1,0 +1,31 @@
+#!/bin/sh
+
+name='^Minecraft '
+
+wid="$(xdotool search --name "$name" | head -n1)"
+if [ -z "$wid" ]; then
+    echo 'No window found.'
+    exit 1
+fi
+
+echo "Running autoclicker..."
+echo "Window ID: $wid"
+
+trap stop INT ABRT TERM
+stop() {
+    # Raise right click
+    xdotool mouseup --window "$wid" 3
+    echo
+    echo 'Stopped autoclicker.'
+    exit 0
+}
+
+while true; do
+    sleep 1
+
+    # Hold down right click
+    xdotool mousedown --window "$wid" 3
+    # Short left click
+    xdotool click --window "$wid" 1
+done
+
