@@ -3,6 +3,14 @@
 name='^Minecraft '
 timeout=1
 
+# Must be single instance
+for pid in $(pgrep "$(basename $0)"); do
+    if [ ! "$pid" = "$$" ]; then
+        kill "$pid"
+        echo 'Killed previous instance.'
+    fi
+done
+
 wid="$(xdotool search --name "$name" | head -n1)"
 if [ -z "$wid" ]; then
     echo 'No window found.'
