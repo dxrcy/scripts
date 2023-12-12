@@ -1,6 +1,7 @@
 #!/bin/sh
 
 name='^Minecraft '
+timeout=1
 
 wid="$(xdotool search --name "$name" | head -n1)"
 if [ -z "$wid" ]; then
@@ -20,12 +21,13 @@ stop() {
     exit 0
 }
 
-while true; do
-    sleep 1
-
+while sleep "$timeout"; do
     # Hold down right click
     xdotool mousedown --window "$wid" 3
     # Short left click
     xdotool click --window "$wid" 1
+
+    # Reset screensaver timeout
+    xset s reset
 done
 
