@@ -6,7 +6,7 @@ timeout=1
 # Must be single instance
 for pid in $(pgrep "$(basename $0)"); do
     if [ ! "$pid" = "$$" ]; then
-        kill "$pid"
+        kill "$pid" -INT
         echo 'Killed previous instance.'
     fi
 done
