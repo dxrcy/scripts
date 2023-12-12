@@ -16,18 +16,24 @@ trap stop INT
 stop() {
     # Raise right click
     xdotool mouseup --window "$wid" 3
+    # Re-enable screensaver
+    # xset s on
+    xdg-screensaver resume "$wid"
+
     echo
     echo 'Stopped.'
     exit 0
 }
+
+# Disable screensaver
+# xset s off
+# xset s noblank
+xdg-screensaver suspend "$wid"
 
 while sleep "$timeout"; do
     # Hold down right click
     xdotool mousedown --window "$wid" 3
     # Short left click
     xdotool click --window "$wid" 1
-
-    # Reset screensaver timeout
-    xset s reset
 done
 
