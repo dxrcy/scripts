@@ -11,12 +11,12 @@ fi
 echo "Running autoclicker..."
 echo "Window ID: $wid"
 
-trap stop INT ABRT TERM
+trap stop SIGINT
 stop() {
     # Raise right click
     xdotool mouseup --window "$wid" 3
     echo
-    echo 'Stopped autoclicker.'
+    echo 'Stopped.'
     exit 0
 }
 
