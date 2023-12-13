@@ -1,47 +1,81 @@
 #!/bin/sh
 
 name='^Minecraft '
-timeout=1
+click_timeout=1
 
 # Must be single instance
-for pid in $(pgrep "$(basename $0)"); do
+for pid in $(pgrep "$(basename "$0")"); do
     if [ ! "$pid" = "$$" ]; then
-        kill "$pid" -INT
-        echo 'Killed previous instance.'
+        # Kill older instance with SIGINT (for cleanup)
+        if kill -TERM "$pid"; then
+            echo 'Killed previous instance.'
+        else
+            echo "autoclicker: failed to kill previous instance"
+            exit 1
+        fi
     fi
 done
 
-wid="$(xdotool search --name "$name" | head -n1)"
+# Only kill previous instances, do not start new instance
+if [ "$1" = 'stop' ]; then
+    exit 0
+fi
+
+print_window() {
+    wid="$1"
+    printf "%s  " "$wid"
+    xdotool getwindowname "$wid"
+}
+
+# Find one window ID
+wids=$(xdotool search --name "$name")
+if [ "$(echo "$wids" | wc -w)" -gt 1 ]; then
+    echo 'autoclicker: multiple available windows found:'
+    echo "$wids" | while IFS= read -r wid; do
+        print_window "$wid"
+    done
+    exit 1
+fi
+wid="$(echo "$wids" | head -n1)"
 if [ -z "$wid" ]; then
-    echo 'No window found.'
+    echo 'autoclicker: no window found.'
     exit 1
 fi
 
-echo "Running autoclicker..."
-echo "Window ID: $wid"
+start() {
+    # Disable screensaver
+    xdg-screensaver suspend "$wid"
 
-trap stop INT
-stop() {
+    # Repeatedly hold down right click and short left click
+    while sleep "$click_timeout"; do
+        xdotool mousedown --window "$wid" 3
+        xdotool click     --window "$wid" 1
+    done
+}
+
+cleanup() {
+    # Re-enable screensaver
+    xdg-screensaver resume "$wid"
     # Raise right click
     xdotool mouseup --window "$wid" 3
-    # Re-enable screensaver
-    # xset s on
-    xdg-screensaver resume "$wid"
+}
 
+stop_int() {
     echo
-    echo 'Stopped.'
+    echo 'Stopped by keyboard interrupt.'
+    exit 0
+}
+stop_term() {
+    echo 'Stopped by new instance.'
     exit 0
 }
 
-# Disable screensaver
-# xset s off
-# xset s noblank
-xdg-screensaver suspend "$wid"
+echo "Running autoclicker..."
+print_window "$wid"
 
-while sleep "$timeout"; do
-    # Hold down right click
-    xdotool mousedown --window "$wid" 3
-    # Short left click
-    xdotool click --window "$wid" 1
-done
+# Disable self (SIGINT: keyboard interrupt, SIGTERM: new instance)
+trap stop_int  INT
+trap stop_term TERM
+
+start
 
