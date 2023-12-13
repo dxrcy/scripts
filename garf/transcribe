@@ -45,5 +45,3 @@ read -r
 mv "$temp_file" 'transcript'
 echo 'Saved transcript file.'
 
-bat 'transcript'
-
