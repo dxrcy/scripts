@@ -62,12 +62,13 @@ fi
 # Make post
 ~/scripts/cmd/garf make "$date" "$post" || exit "$?"
 
-# Copy title and props files
+# Copy other files
 cp "$post/title"  "$unedited/$post/title" || exit 1
-
-# Copy existing props file
 if [ -f "$post/props" ]; then
     cp "$post/props"  "$unedited/$post/props" || exit 1
+fi
+if [ -f "$post/transcript" ]; then
+    cp "$post/transcript"  "$unedited/$post/transcript" || exit 1
 fi
 
 # Move old post to old

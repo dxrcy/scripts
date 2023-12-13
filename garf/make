@@ -1,6 +1,6 @@
 #!/bin/sh
 
-src="$(~/scripts/cmd/garf +dir 'src' || exit 1)"
+src="$(     ~/scripts/cmd/garf +dir 'src' || exit 1)"
 unedited="$(~/scripts/cmd/garf +dir 'unedited' || exit 1)"
 
 date="$1"
