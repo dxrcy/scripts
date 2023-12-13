@@ -67,9 +67,6 @@ cp "$post/title"  "$unedited/$post/title" || exit 1
 if [ -f "$post/props" ]; then
     cp "$post/props"  "$unedited/$post/props" || exit 1
 fi
-if [ -f "$post/transcript" ]; then
-    cp "$post/transcript"  "$unedited/$post/transcript" || exit 1
-fi
 
 # Move old post to old
 printf 'Move old post to old folder? (CTRL-C to cancel) '
