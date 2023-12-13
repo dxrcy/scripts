@@ -44,6 +44,9 @@ case "$cmd" in
     'revise'|'r')
         "$dir/revise" "$@"
         ;;
+    'transcribe'|'t')
+        "$dir/transcribe" "$@"
+        ;;
 
     # Unlisted
     'sunday'|'sundays'|'su')

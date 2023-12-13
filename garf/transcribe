@@ -1,0 +1,49 @@
+#!/bin/sh
+
+posts="$(   ~/scripts/cmd/garf +dir 'posts'    || exit 1)"
+
+cd "$posts" || exit 1
+
+post="$1"
+
+if [ ! "$post" ]; then
+    # Get first post id with no transcript file
+    for i in *; do
+        if [ ! -f "$i/transcript" ]; then
+            post="$i"
+            break
+        fi
+    done
+
+    # No post to transcribe!
+    if [ ! "$post" ]; then
+        echo 'garf transcribe: no posts with missing trascript file'
+        exit 0
+    fi
+
+    echo "Post id: $post"
+fi
+
+# Invalid post id
+if [ ! -d "$post" ]; then
+    echo 'garf transcript: no post with that id'
+    exit 1
+fi
+
+cd "$post" || exit 1
+
+temp_file="/tmp/garf-transcript-$post"
+
+pkill -f -c 'garf-transcribe' &> /dev/null
+nsxiv 'esperanto.png' --class 'garf-transcribe' &
+nvim "$temp_file"
+pkill -f -c 'garf-transcribe' &> /dev/null
+
+printf 'Save transcript file? (CTRL-C to cancel) '
+read -r
+
+mv "$temp_file" 'transcript'
+echo 'Saved transcript file.'
+
+bat 'transcript'
+
