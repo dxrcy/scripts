@@ -62,11 +62,13 @@ cleanup() {
 }
 
 stop_int() {
+    cleanup
     echo
     echo 'Stopped by keyboard interrupt.'
     exit 0
 }
 stop_term() {
+    cleanup
     echo 'Stopped by new instance.'
     exit 0
 }
