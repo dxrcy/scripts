@@ -1,4 +1,5 @@
 #!/bin/sh
+export INFO='repeatedly send mouse clicks to a specific window'
 
 name='^Minecraft '
 click_timeout=1
