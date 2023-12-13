@@ -34,10 +34,10 @@ cd "$post" || exit 1
 
 temp_file="/tmp/garf-transcript-$post"
 
-pkill -f -c 'garf-transcribe' &> /dev/null
+pkill -f -c 'garf-transcribe' > /dev/null
 nsxiv 'esperanto.png' --class 'garf-transcribe' &
 nvim "$temp_file"
-pkill -f -c 'garf-transcribe' &> /dev/null
+pkill -f -c 'garf-transcribe' > /dev/null
 
 printf 'Save transcript file? (CTRL-C to cancel) '
 read -r
