@@ -47,6 +47,10 @@ case "$cmd" in
     'transcribe'|'t')
         "$dir/transcribe" "$@"
         ;;
+    'stats')
+        "$dir/stats" "$@"
+        ;;
+
 
     # Unlisted
     'sunday'|'sundays'|'su')

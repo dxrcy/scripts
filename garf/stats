@@ -1,0 +1,29 @@
+#!/bin/sh
+
+posts="$(~/scripts/cmd/garf +dir 'posts'    || exit 1)"
+
+cd "$posts" || exit 1
+
+total=0
+editable=0
+transcribed=0
+
+for i in *; do
+    total=$((total + 1))
+    [ -f "$i/esperanto.svg" ] && editable=$((editable + 1))
+    [ -f "$i/transcript" ] && transcribed=$((transcribed + 1))
+done
+
+print() {
+    name="$1"
+    value="$2"
+    percent=$(((value * 100) / total))
+    printf '\x1b[3m%s \x1b[0;1m%3s\x1b[0;2m / \x1b[0m%3d \x1b[2m= \x1b[0;1m%2d\x1b[2m%%\x1b[0m\n' "$name" "$value" "$total" "$percent"
+}
+
+print 'Editable:   ' "$editable"
+print 'Transcribed:' "$transcribed"
+
+percent=$((((editable + transcribed) * 100) / 2 / total))
+printf 'Total: \x1b[1m%2d\x1b[2m%%\x1b[0m\n' "$percent"
+
