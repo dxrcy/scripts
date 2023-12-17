@@ -14,22 +14,26 @@ if [ ! "$post" ]; then
             break
         fi
     done
-    # Get first post id with no transcript file
-    for i in *; do
-        if [ ! -f "$i/transcript" ]; then
-            post="$i"
-            break
+
+    if [ -z "$post" ]; then
+        # Get first post id with no transcript file
+        for i in *; do
+            if [ ! -f "$i/transcript" ]; then
+                post="$i"
+                break
+            fi
+        done
+
+        # No post to transcribe!
+        if [ -z "$post" ]; then
+            echo 'garf transcribe: no posts with missing trascript file'
+            exit 0
         fi
-    done
-
-    # No post to transcribe!
-    if [ ! "$post" ]; then
-        echo 'garf transcribe: no posts with missing trascript file'
-        exit 0
     fi
-
-    echo "Post id: $post"
 fi
+
+echo "Post id: $post"
+exit 0
 
 # Invalid post id
 if [ ! -d "$post" ]; then
