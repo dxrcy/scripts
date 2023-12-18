@@ -46,25 +46,33 @@ temp_file="/tmp/garf-transcript-$post"
 
 # Template file contents: 3 panels or 7 for Sundays
 number="$(echo "$post" | sed 's/^0*//')"
-if [ "$(((number + 1) % 7))" -eq 0 ]; then
-    file_contents="$(printf -- '---\n---\n---\n---\n---\n---')"
-else
-    file_contents="$(printf -- '---\n---')"
-fi
+[ "$(((number + 1) % 7))" -eq 0 ] \
+    || file_contents="$(printf -- '---\n---\n---\n---\n---\n---')" \
+    && file_contents="$(printf -- '---\n---')"
 
+# Show image, kill previous instance
 pkill -f -c 'garf-transcribe' > /dev/null
 nsxiv 'esperanto.png' 'english.png' --class 'garf-transcribe' &
 
-# Move image to second monitor, if connected
-if [ "$(~/scripts/cmd/monitors)" == 1 ]; then
-    i3-msg '[instance="garf-transcribe"] move to output HDMI-1'
-fi
+# Move image window, based on monitor count
+sleep 0.1
+[ "$(~/scripts/cmd/monitors)" = 1 ] \
+    || i3_cmd='move to output HDMI-1' \
+    && i3_cmd='move right, resize set 40 ppt'
+i3-msg "[instance=garf-transcribe] $i3_cmd, focus left" > /dev/null
 
+# Open file
 echo "$file_contents" > "$temp_file"
 nvim "$temp_file"
 
+# Kill image
 pkill -f -c 'garf-transcribe' > /dev/null
 
+# Confirm, if file changed, and not interrupted
+if [ "$(cat "$temp_file")" = "$file_contents" ]; then
+    echo 'No changes made.'
+    exit 0
+fi
 printf 'Save transcript file? (CTRL-C to cancel) '
 read -r
 
