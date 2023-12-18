@@ -46,9 +46,11 @@ temp_file="/tmp/garf-transcript-$post"
 
 # Template file contents: 3 panels or 7 for Sundays
 number="$(echo "$post" | sed 's/^0*//')"
-[ "$(((number + 1) % 7))" -eq 0 ] \
-    || file_contents="$(printf -- '---\n---\n---\n---\n---\n---')" \
-    && file_contents="$(printf -- '---\n---')"
+if [ "$(((number + 1) % 7))" -eq 0 ]; then
+    file_contents="$(printf -- '---\n---\n---\n---\n---\n---')"
+else
+    file_contents="$(printf -- '---\n---')"
+fi
 
 # Show image, kill previous instance
 pkill -f -c 'garf-transcribe' > /dev/null
@@ -61,7 +63,7 @@ if [ "$(~/scripts/cmd/monitors)" = 2 ]; then
     i3-msg "[instance=garf-transcribe] move to output HDMI-1" > /dev/null 2>&1
 else
     for i in $(seq 0 3); do
-        i3-msg "[instance=garf-transcribe] move left, resize set 40 ppt" > /dev/null 2>&1
+        i3-msg "[instance=garf-transcribe] move left, resize set 50 ppt" > /dev/null 2>&1
     done
 fi
 i3-msg "[con_id=${focused_window}] focus" > /dev/null 2>&1
