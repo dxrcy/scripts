@@ -53,7 +53,7 @@ else
 fi
 
 pkill -f -c 'garf-transcribe' > /dev/null
-nsxiv 'esperanto.png' --class 'garf-transcribe' &
+nsxiv 'esperanto.png' 'english.png' --class 'garf-transcribe' &
 
 echo "$file_contents" > "$temp_file"
 nvim "$temp_file"
