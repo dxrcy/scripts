@@ -55,11 +55,16 @@ pkill -f -c 'garf-transcribe' > /dev/null
 nsxiv 'esperanto.png' 'english.png' --class 'garf-transcribe' &
 
 # Move image window, based on monitor count
+focused_window=$(i3-msg -t get_tree | jq -r '.. | select(.focused?) | .id')
 sleep 0.1
-[ "$(~/scripts/cmd/monitors)" = 1 ] \
-    || i3_cmd='move to output HDMI-1' \
-    && i3_cmd='move right, resize set 40 ppt'
-i3-msg "[instance=garf-transcribe] $i3_cmd, focus left" > /dev/null
+if [ "$(~/scripts/cmd/monitors)" = 2 ]; then
+    i3-msg "[instance=garf-transcribe] move to output HDMI-1" > /dev/null 2>&1
+else
+    for i in $(seq 0 3); do
+        i3-msg "[instance=garf-transcribe] move left, resize set 40 ppt" > /dev/null 2>&1
+    done
+fi
+i3-msg "[con_id=${focused_window}] focus" > /dev/null 2>&1
 
 # Open file
 echo "$file_contents" > "$temp_file"
