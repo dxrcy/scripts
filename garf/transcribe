@@ -55,6 +55,11 @@ fi
 pkill -f -c 'garf-transcribe' > /dev/null
 nsxiv 'esperanto.png' 'english.png' --class 'garf-transcribe' &
 
+# Move image to second monitor, if connected
+if [ "$(~/scripts/cmd/monitors)" == 1 ]; then
+    i3-msg '[instance="garf-transcribe"] move to output HDMI-1'
+fi
+
 echo "$file_contents" > "$temp_file"
 nvim "$temp_file"
 
