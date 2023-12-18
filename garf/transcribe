@@ -44,9 +44,20 @@ cd "$post" || exit 1
 
 temp_file="/tmp/garf-transcript-$post"
 
+# Template file contents: 3 panels or 7 for Sundays
+number="$(echo "$post" | sed 's/^0*//')"
+if [ "$(((number + 1) % 7))" -eq 0 ]; then
+    file_contents="$(printf -- '---\n---\n---\n---\n---\n---')"
+else
+    file_contents="$(printf -- '---\n---')"
+fi
+
 pkill -f -c 'garf-transcribe' > /dev/null
 nsxiv 'esperanto.png' --class 'garf-transcribe' &
+
+echo "$file_contents" > "$temp_file"
 nvim "$temp_file"
+
 pkill -f -c 'garf-transcribe' > /dev/null
 
 printf 'Save transcript file? (CTRL-C to cancel) '
