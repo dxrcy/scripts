@@ -15,5 +15,5 @@ id=$(~/scripts/cmd/random-name)
 name="${now}_${id}"
 
 # Full path of non-existant file
-echo "$dir/$name.norg"
+echo "$dir/$name"
 
