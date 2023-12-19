@@ -51,9 +51,17 @@ case "$1" in
                              else echo '' # connected
         fi ;;
 
+    'charge')
+        suffix="$(echo "$mac" | sed 's/:/_/g')"
+        device="$(upower --enumerate | grep "$suffix$")"
+        charge="$(upower --show-info "$device" | grep 'percentage:' | awk '{print $2}')"
+        echo "$charge"
+        ;;
+
     *)
         echo 'bt: please provide valid subcommand'
-        echo 'usage: [ connect | disconnect | mac | status | power | display ]'
+        echo 'USAGE:'
+        echo '    bt [ connect | disconnect | mac | status | power | display | charge ]'
         ;;
 esac
 

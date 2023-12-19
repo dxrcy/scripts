@@ -6,16 +6,16 @@ while [ "$#" -gt 0 ]; do
     case "$1" in 
         -h|--help)
             echo "git-info: $INFO"
-            echo '    USAGE:'
-            echo '        git-info [DIRECTORY] [OPTIONS]'
-            echo '    ARGUMENTS:'
-            echo '        DIRECTORY (optional)'
-            echo '    OPTIONS:'
-            echo '        -b  --branch     only echo current git branch'
-            echo '        -e  --existing   fail if directory is not a git repo'
-            echo '        -f  --fancy      print output with color'
-            echo '        -l  --list       list info for all repos in directory'
-            echo '        -a  --all        include directories without repo or info (with --list)'
+            echo 'USAGE:'
+            echo '    git-info [DIRECTORY] [OPTIONS]'
+            echo 'ARGUMENTS:'
+            echo '    DIRECTORY (optional)'
+            echo 'OPTIONS:'
+            echo '    -b  --branch     only echo current git branch'
+            echo '    -e  --existing   fail if directory is not a git repo'
+            echo '    -f  --fancy      print output with color'
+            echo '    -l  --list       list info for all repos in directory'
+            echo '    -a  --all        include directories without repo or info (with --list)'
             exit 0
             ;;
         -b|--branch)   only_branch=1 ;;
