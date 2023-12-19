@@ -1,0 +1,9 @@
+#!/bin/sh
+export INFO='fork a process asynchronously, ignoring stdout stderr'
+
+if [ -z "$1" ]; then
+    exit 0
+fi
+
+nohup "$@" > /dev/null 2>&1 &
+
