@@ -7,7 +7,7 @@ keys() {
     xdotool key --clearmodifiers "$@"
 }
 
-thunar ~/pics &
+nohup thunar ~/pics > /dev/null 2>&1 &
     sleep 0.5
 type eo
     keys Return
@@ -17,5 +17,5 @@ type posts
 type unedited
     keys Return Home
 
-i3-msg 'layout tabbed'
+i3-msg 'layout tabbed' > /dev/null
 
