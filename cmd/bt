@@ -22,6 +22,12 @@ is_power_on() {
     bluetoothctl show | grep -q 'Powered: yes'
 }
 
+get_charge_percent() {
+    suffix="$(echo "$mac" | sed 's/:/_/g')"
+    device="$(upower --enumerate | grep "$suffix$")"
+    upower --show-info "$device" | grep 'percentage:' | awk '{print $2}'
+}
+
 # Run subcommand
 case "$1" in
     'c'|'connect')
@@ -45,23 +51,49 @@ case "$1" in
     'status') is_connected ;;
     'power')  is_power_on ;;
 
-    'display')
+    'charge') get_charge_percent ;;
+
+    'display-status')
         if ! is_power_on;    then echo '󰂲' # power off
         elif ! is_connected; then echo '' # disconnected
                              else echo '' # connected
         fi ;;
-
-    'charge')
-        suffix="$(echo "$mac" | sed 's/:/_/g')"
-        device="$(upower --enumerate | grep "$suffix$")"
-        charge="$(upower --show-info "$device" | grep 'percentage:' | awk '{print $2}')"
-        echo "$charge"
+    
+    'display-charge')
+        charge="$(get_charge_percent)"
+        charge="${charge%%%}"
+        charge=$((charge / 10))
+        #  ▁▁▂▃▄▅▆▇██
+        # 0123456789X
+        case "$charge" in
+             0) printf ' ' ;;
+             1) printf '\u2581' ;;
+             2) printf '\u2581' ;;
+             3) printf '\u2582' ;;
+             4) printf '\u2583' ;;
+             5) printf '\u2584' ;;
+             6) printf '\u2585' ;;
+             7) printf '\u2586' ;;
+             8) printf '\u2587' ;;
+             9) printf '\u2588' ;;
+            10) printf '\u2588' ;;
+             *) printf '[?]' ;;
+        esac
+        echo
         ;;
-
     *)
         echo 'bt: please provide valid subcommand'
         echo 'USAGE:'
-        echo '    bt [ connect | disconnect | mac | status | power | display | charge ]'
+        echo '    bt [SUBCOMMAND]'
+        echo 'SUBCOMMANDS:'
+        echo '    connect'
+        echo '    disconnect'
+        echo '    mac'
+        echo '    status'
+        echo '    power'
+        echo '    charge'
+        echo '    display-status'
+        echo '    display-charge'
         ;;
 esac
 
