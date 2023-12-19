@@ -1,16 +1,17 @@
 #!/bin/sh
+export INFO='get CPU usage percent for a program'
 
 CPU_COUNT=16
 
 pname="$1"
 [ "$1" ] || {
-    echo 'missing process name.'
+    echo 'cpu-percent: missing process name.'
     exit 1
 }
 
 pid=$(pgrep "$pname")
 [ -n "$pid" ] || {
-    echo "$pname is not running."
+    echo "cpu-percent: $pname is not running."
     exit 1
 }
 
