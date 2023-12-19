@@ -1,0 +1,21 @@
+#!/bin/sh
+
+type() {
+    xdotool type --clearmodifiers "$@"
+}
+keys() {
+    xdotool key --clearmodifiers "$@"
+}
+
+thunar ~/pics &
+    sleep 0.1
+type eo
+    keys Return
+type posts
+    keys Return End
+    keys Ctrl+t BackSpace
+type unedited
+    keys Return Home
+
+i3-msg 'layout tabbed'
+
