@@ -25,7 +25,7 @@ case "$cmd" in
         echo '    find:       open all comics with given month and day, or post id'
         echo '    revise:     remake next old post'
         echo '    transcribe: add a transcription to a post'
-        echo '    edit:       edit a new post'
+        echo '    edit:       edit a new post (open file manager)'
         echo '    stats:      see transcription and edit progress'
         exit 0
         ;;
