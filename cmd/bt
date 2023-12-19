@@ -62,6 +62,7 @@ case "$1" in
     'display-charge')
         charge="$(get_charge_percent)"
         charge="${charge%%%}"
+        [ -z "$charge" ] && exit 0 # No info found
         charge=$((charge / 10))
         #  ▁▁▂▃▄▅▆▇██
         # 0123456789X
