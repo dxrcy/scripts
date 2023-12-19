@@ -27,10 +27,11 @@ msg=$(
         | sed "s/^['\"]\(.*\)['\"]$/\1/"
 )
 
-# Print message if found
-if [ "$msg" ]; then
-    echo "$name: $msg"
-else
+# No message found
+if [ -z "$msg" ]; then
     echo "$name: (apparently was not worth documenting)"
+    exit 2
 fi
+
+echo "$name: $msg"
 
