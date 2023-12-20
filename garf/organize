@@ -16,7 +16,7 @@ mkdir "$dir"                   || exit 1
 cp "$img" "$dir/english.png"   || exit 1
 mv "$img" "$dir/esperanto.png" || exit 1
 touch "$dir/title"             || exit 1
-touch "$dir/transcript"        || exit 1
+# touch "$dir/transcript"        || exit 1
 
 date=$(basename "$img" .png)
 echo "$date" > "$dir/date"
