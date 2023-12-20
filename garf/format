@@ -1,4 +1,4 @@
 #!/bin/sh
 
-comic-format "$1" "$2" "garfeo" >> /dev/null
+comic-format "$1" "$2" "Garf-EO" >> /dev/null
 
