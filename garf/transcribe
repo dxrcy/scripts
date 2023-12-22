@@ -7,13 +7,23 @@ cd "$posts" || exit 1
 post="$1"
 
 if [ ! "$post" ]; then
-    # Get LAST post id with no transcript file
-    for i in $(find . -maxdepth 1 | sort -r); do
-        if [ ! -f "$i/transcript" ]; then
+    # Get FIRST post id with no transcript file, AND svg file
+    for i in *; do
+        if [ ! -f "$i/transcript" ] && [ -f "$i/esperanto.svg" ]; then
             post=$(basename "$i")
             break
         fi
     done
+
+    # Get LAST post id with no transcript file
+    if [ -z "$post" ]; then
+        for i in $(find . -maxdepth 1 | sort -r); do
+            if [ ! -f "$i/transcript" ]; then
+                post=$(basename "$i")
+                break
+            fi
+        done
+    fi
 
     # No post to transcribe!
     if [ -z "$post" ]; then
