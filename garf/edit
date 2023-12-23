@@ -8,7 +8,7 @@ keys() {
 }
 
 nohup thunar ~/pics > /dev/null 2>&1 &
-    sleep 0.8
+    sleep 0.5
 type eo
     keys Return
 type posts
