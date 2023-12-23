@@ -1,0 +1,111 @@
+#!/bin/sh
+export INFO='repeatedly send mouse clicks to a specific window'
+
+echo 'warning: very buggy'
+
+name='^Minecraft '
+click_timeout=0.5
+key_timeout=0.1
+key_steps=8
+
+# Must be single instance
+for pid in $(pgrep "$(basename "$0")"); do
+    if [ ! "$pid" = "$$" ]; then
+        # Kill older instance with SIGINT (for cleanup)
+        if kill -TERM "$pid"; then
+            echo 'Killed previous instance.'
+        else
+            echo "autoclicker: failed to kill previous instance"
+            exit 1
+        fi
+    fi
+done
+
+# Only kill previous instances, do not start new instance
+if [ "$1" = 'stop' ]; then
+    exit 0
+fi
+
+print_window() {
+    wid="$1"
+    printf "%s  " "$wid"
+    xdotool getwindowname "$wid"
+}
+
+# Find one window ID
+wids=$(xdotool search --name "$name")
+if [ "$(echo "$wids" | wc -w)" -gt 1 ]; then
+    echo 'autoclicker: multiple available windows found:'
+    echo "$wids" | while IFS= read -r wid; do
+        print_window "$wid"
+    done
+    exit 1
+fi
+wid="$(echo "$wids" | head -n1)"
+if [ -z "$wid" ]; then
+    echo 'autoclicker: no window found.'
+    exit 1
+fi
+
+start() {
+    # Disable screensaver
+    xdg-screensaver suspend "$wid"
+
+    # Repeatedly hold down right click and short left click
+    i=0
+    while sleep "$click_timeout"; do
+        if [ ! "$wid" = "$(xdotool getwindowfocus)" ]; then
+            echo "window must be focused!"
+            continue
+        fi
+    
+        # Hold down right click
+        xdotool mousedown --window "$wid" 3
+        # Tap left click
+        xdotool click     --window "$wid" 1
+
+        # Move left or right (alternates periodically)
+        [ $(((i / key_steps) % 2)) -eq 0 ] \
+            && key='d' \
+            || key='a'
+        xdotool keydown --window "$wid" "$key"
+        sleep "$key_timeout"
+        xdotool keyup   --window "$wid" "$key"
+
+        # Move forward
+        xdotool keydown --window "$wid" 'w'
+
+        i=$((i+1))
+    done
+}
+
+cleanup() {
+    # Re-enable screensaver
+    xdg-screensaver resume "$wid"
+    # Raise right click
+    xdotool mouseup --window "$wid" 3
+    # Raise forward key
+    xdotool keyup --window "$wid" 'w'
+}
+
+stop_int() {
+    cleanup
+    echo
+    echo 'Stopped by keyboard interrupt.'
+    exit 0
+}
+stop_term() {
+    cleanup
+    echo 'Stopped by new instance.'
+    exit 0
+}
+
+echo "Running autoclicker..."
+print_window "$wid"
+
+# Disable self (SIGINT: keyboard interrupt, SIGTERM: new instance)
+trap stop_int  INT
+trap stop_term TERM
+
+start
+
