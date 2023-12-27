@@ -18,7 +18,6 @@ css_dir="$2"
 if [ ! "$scss_dir" ];    then echo 'scss: missing input SCSS directory argument';          exit 1; fi
 if [ ! "$css_dir" ];     then echo 'scss: missing output CSS directory argument';          exit 1; fi
 if [ ! -d "$scss_dir" ]; then echo "scss: input SCSS directory does not exist: $scss_dir"; exit 1; fi
-if [ ! -d "$css_dir" ];  then echo "scss: output CSS directory does not exist: $css_dir";  exit 1; fi
 
 # watch for changes
 if [ "$3" = '-w' ] || [ "$3" = '--watch' ]; then
@@ -27,8 +26,12 @@ if [ "$3" = '-w' ] || [ "$3" = '--watch' ]; then
     exit 0
 fi
 
-# remove old files
-rm "$css_dir"/*
+# remove old files, or create empty folder
+if [ -d "$css_dir" ]; then
+    rm "$css_dir"/*
+else
+    mkdir -p "$css_dir"
+fi
 
 count=0
 for scss in "$scss_dir"/*; do
