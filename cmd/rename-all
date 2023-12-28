@@ -1,0 +1,19 @@
+#!/bin/sh
+
+temp_file='/tmp/rename-all'
+
+for old in *; do
+    printf "'$old' "
+    read -r
+
+    echo "$old" > "$temp_file"
+    nvim "$temp_file"
+    new="$(cat "$temp_file")"
+
+    if [ "$new" = "$old" ]; then
+        continue
+    fi
+
+    mv "$old" "$new" || exit 1
+done
+
