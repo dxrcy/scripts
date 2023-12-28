@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Synchronize database (root)
+# paru -Sy
+
+# Check for any updates
+updates=$(paru -Qu)
+
+[ -z "$updates" ]
+exit "$?"
