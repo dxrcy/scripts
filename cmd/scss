@@ -1,8 +1,7 @@
 #!/bin/sh
 export INFO='compile scss files to minified css'
 
-if [ ! -x "$(command -v grass)" ];  then echo "scss: 'grass' command not found.";  exit 1; fi
-if [ ! -x "$(command -v minify)" ]; then echo "scss: 'minify' command not found."; exit 1; fi
+~/scripts/cmd/require grass minify || exit 1
 
 if [ "$1" = '-h' ] || [ "$1" = '--help' ]; then
     echo 'scss: Compile SCSS files to minified CSS'
