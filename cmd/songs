@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='download all songs from a particular Spotify playlist'
 
+if [ ! -x "$(command -v spotdl)" ]; then echo "songs: 'spotdl' command not found.";  exit 1; fi
+
 # Directory to download to
 location="$HOME/music/songs"
 # Link to playlist to download
