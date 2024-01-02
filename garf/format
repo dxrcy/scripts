@@ -1,4 +1,14 @@
 #!/bin/sh
 
-comic-format "$1" "$2" "GarfEO" >> /dev/null
+texts="\
+GarfEO
+@garfield.eo
+Garfield-EO
+garfeo
+Garfeo
+Garfield Esperanto
+garf-eo"
+
+text="$(echo "$texts" | shuf -n1)"
+comic-format "$1" "$2" "$text" >> /dev/null
 
