@@ -97,6 +97,7 @@ run_action() {
 # This is redundant, but the best way I could think of
 info="$(udisksctl info -b "$drive")"
 [ -n "$(info_value "$info" 'MountPoints')" ] \
-    && run_action 'unmount' \
-    || run_action 'mount'
+    && action='unmount' \
+    || action='mount'
+run_action "$action"
 
