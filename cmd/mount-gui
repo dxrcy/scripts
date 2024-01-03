@@ -64,10 +64,14 @@ for drive in $(find /dev/ -maxdepth 1 | grep '/dev/sd[a-z][0-9]'); do
 
     # Format string with markdown, to display device entry
     [ -n "$mount" ] \
-        && action="<span foreground='red'  >Unmount</span>" \
-        || action="<span foreground='green'>  Mount</span>"
-    entry="$(printf '<b>%s  %-12s</b> %-12s <i>%-5s</i>   <b>%-s</b>' \
-        "$action" "$label" "$drive" "$type" "$mount")"
+        && entry="<span foreground='red' > Unmount </span>" \
+        || entry="<span foreground='lime'>  Mount  </span>"
+    entry="<b><span background='#071217'>$entry</span></b>"
+    entry="$entry$(printf '  <b>%-12s</b>'              "$label")"
+    entry="$entry$(printf ' %-12s'                      "$drive")"
+    entry="$entry$(printf ' <small><i>%-7s</i></small>' "$type")"
+    entry="$entry$(printf ' <b>%s</b>'                  "$mount")"
+    entry="<tt>$entry</tt>"
 
     # Add to list, separated by newline
     [ -n "$available" ] && available="$available
@@ -80,7 +84,7 @@ if [ -z "$available" ]; then
 fi
 
 # Read input with Rofi
-prompt='Mount or unmount a drive:'
+prompt='Mount or unmount a drive'
 answer="$(echo "$available" | rofi -dmenu -i -markup-rows -p "$prompt")"
 # Cancelled
 if [ -z "$answer" ]; then
