@@ -34,20 +34,20 @@ info_value() {
 # Wait for lockfile to be removed
 # Give up after a certain time
 if [ -e "$lock_file" ]; then
-    echo 'mount-gui: waiting for lockfile...'
+    echo 'Waiting for lockfile...'
     interval=0.1
     max_attempts=40 # 4 seconds
     attempts=0
     while [ -e "$lock_file" ]; do
         if [ "$attempts" -gt "$max_attempts" ]; then
-            msg="mount-gui: waited too long for process lock. try removing $lock_file if this error persists."
+            msg="Waited too long for process lock. try removing $lock_file if this error persists."
             finally "$msg"
             exit 1
         fi
         sleep "$interval"
         attempts=$((attempts + 1))
     done
-    echo 'mount-gui: okay.'
+    echo 'Ready.'
 fi
 
 # Find all mountable drives
