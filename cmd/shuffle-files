@@ -1,0 +1,15 @@
+#!/bin/sh
+export INFO='rename all files in directory to random strings, preserving file extensions'
+
+dir="$1"
+if [ -n "$dir" ]; then
+    cd "$dir" || exit 1
+fi
+
+for file in *; do
+    [ -d "$file" ] && continue;
+    ext="${file#*.}"
+    name="$(~/scripts/cmd/random-id 8)"
+    mv "$file" "$name.$ext" || exit 1
+done
+
