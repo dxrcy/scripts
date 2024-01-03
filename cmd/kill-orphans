@@ -1,25 +1,18 @@
-#!/bin/bash
+#!/bin/sh
 export INFO='kill all unattatched (orphaned) tmux sessions'
 
-# Get the list of all tmux sessions
-sessions=$(tmux list-sessions -F '#{session_name} #{session_attached}')
-
 count=0
-
-# Iterate through each session
-while read -r session_info; do
-  # Split the session_info into session_name and session_attached
-  IFS=' ' read -r -a info_array <<< "$session_info"
-  session_name="${info_array[0]}"
-  session_attached="${info_array[1]}"
-
-  # Check if the session is not attached
-  if [ "$session_attached" -eq "0" ]; then
-    # Kill the unattached session
-    tmux kill-session -t "$session_name"
-    count=$((count + 1))
-  fi
-done <<< "$sessions"
+# Get list of sessions
+for session in $(tmux list-sessions -F '#{session_name}:#{session_attached}'); do
+    # Split session into name and attached count
+        name="${session%:*}"
+    attached="${session#*:}"
+    # Kill if nothing is attached
+    if [ "$attached" -eq 0 ]; then
+        tmux kill-session -t "$name"
+        count=$((count + 1))
+    fi
+done
 
 if [ "$count" -gt 0 ]; then
     [ "$count" = 1 ] || s='s'
