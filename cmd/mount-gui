@@ -49,12 +49,11 @@ if [ -e "$lock_file" ]; then
     done
     echo 'mount-gui: okay.'
 fi
-touch "$lock_file"
 
 # Find all mountable drives
-# NOTE: This only searchs for `sdXX` devices!
+# NOTE: This only searchs for `sdXX` devices! (works for my system)
 available=''
-for drive in /dev/sd[a-z][0-9]; do
+for drive in $(find /dev/ -maxdepth 1 | grep '/dev/sd[a-z][0-9]'); do
     # Get device information
     info="$(udisksctl info -b "$drive")"
     type="$( info_value "$info" 'IdType'  || exit 1)"
@@ -75,13 +74,16 @@ for drive in /dev/sd[a-z][0-9]; do
 "
     available="$available$entry"
 done
+if [ -z "$available" ]; then
+    finally 'No mountable drives connected'
+    exit 0
+fi
 
 # Read input with Rofi
 prompt='Mount or unmount a drive:'
 answer="$(echo "$available" | rofi -dmenu -i -markup-rows -p "$prompt")"
 # Cancelled
 if [ -z "$answer" ]; then
-    rm "$lock_file"
     echo 'Cancelled'
     exit 0 
 fi
@@ -94,6 +96,7 @@ drive="$(echo "$answer" | grep -oP '/dev/[^ ]*')"
 run_action() {
     action="$1"
     # Capture stdout and sterr
+    touch "$lock_file"
     msg="$(udisksctl "$action" -b "$drive" 2>&1)"
     code="$?"
     finally "$msg"
