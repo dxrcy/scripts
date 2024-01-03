@@ -3,12 +3,21 @@ export INFO='mount or unmount a drive with Rofi dialog and udisksctl'
 
 ~/scripts/cmd/require udisksctl || exit 1
 
-# Echo (and notify) message (error or success)
+lock_file="$HOME/.cache/mount-gui.lock"
+log_file="$HOME/.cache/mount-gui.log"
+
+# Report final message (error or success)
+# - Print to stdout
+# - Log to file
+# - Send desktop notification (with `--notify`)
 notify_arg="$1"
 finally() {
     msg="$1"
     echo "$msg"
-    [ "$notify_arg" = '--notify' ] && notify-send "$msg"
+    echo "$msg" >> "$log_file"
+    if [ "$notify_arg" = '--notify' ]; then
+        notify-send "$msg" -t 2000
+    fi
 }
 
 # Grep for value, by key name, in `udisksctl info` output
@@ -24,15 +33,14 @@ info_value() {
 
 # Wait for lockfile to be removed
 # Give up after a certain time
-lockfile="$HOME/.cache/mount-gui.lock"
-if [ -e "$lockfile" ]; then
+if [ -e "$lock_file" ]; then
     echo 'mount-gui: waiting for lockfile...'
     interval=0.1
     max_attempts=40 # 4 seconds
     attempts=0
-    while [ -e "$lockfile" ]; do
+    while [ -e "$lock_file" ]; do
         if [ "$attempts" -gt "$max_attempts" ]; then
-            msg="mount-gui: waited too long for process lock. try removing $lockfile if this error persists."
+            msg="mount-gui: waited too long for process lock. try removing $lock_file if this error persists."
             finally "$msg"
             exit 1
         fi
@@ -41,7 +49,7 @@ if [ -e "$lockfile" ]; then
     done
     echo 'mount-gui: okay.'
 fi
-touch "$lockfile"
+touch "$lock_file"
 
 # Find all mountable drives
 # NOTE: This only searchs for `sdXX` devices!
@@ -73,7 +81,7 @@ prompt='Mount or unmount a drive:'
 answer="$(echo "$available" | rofi -dmenu -i -markup-rows -p "$prompt")"
 # Cancelled
 if [ -z "$answer" ]; then
-    rm "$lockfile"
+    rm "$lock_file"
     echo 'Cancelled'
     exit 0 
 fi
@@ -89,7 +97,7 @@ run_action() {
     msg="$(udisksctl "$action" -b "$drive" 2>&1)"
     code="$?"
     finally "$msg"
-    rm "$lockfile"
+    rm "$lock_file"
     exit "$code"
 }
 
