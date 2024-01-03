@@ -1,0 +1,50 @@
+#!/bin/bash
+export INFO='mount or unmount a drive with Rofi dialog and udisksctl'
+
+~/scripts/cmd/require udisksctl || exit 1
+
+info_value() {
+    drive="$1"
+    name="$2"
+    [ -n "$drive" ] || exit 1
+    [ -n "$name" ]  || exit 1
+
+    info="$(udisksctl info -b "$drive")"
+    [ -n "$info" ]  || exit 1
+
+    row="$(echo "$info" | grep "$name:")"
+    [ -n "$row" ]   || exit 1
+
+    echo "$row" | awk '{print $2}'
+}
+
+available=''
+for drive in /dev/sd*; do
+    type="$( info_value "$drive" 'IdType'  || exit 1)"
+    label="$(info_value "$drive" 'IdLabel' || exit 1)"
+    mount="$(info_value "$drive" 'MountPoints')"
+    [ -n "$type" ] || [ -n "$type" ] || continue
+
+    [ -n "$mount" ] \
+        && action="<span foreground='red'  >Unmount</span>" \
+        || action="<span foreground='green'>  Mount</span>"
+
+    # entry="<b>$action $label</b> $drive <i>($type)</i> <b>$mount</b>"
+    entry="$(printf '<b>%s  %-12s</b> %-12s <i>%-5s</i>   <b>%-s</b>' "$action" "$label" "$drive" "$type" "$mount")"
+
+    [ -n "$available" ] && available="$available"$'\n' # Add a newline
+    available="$available$entry"                       # Push line
+done
+
+prompt='Mount or unmount a drive:'
+answer="$(echo "${available[@]}" | rofi -dmenu -i -markup-rows -p "$prompt")"
+
+drive="$(echo "$answer" | grep -oP '/dev/[^ ]*')"
+[ -n "$drive" ] || exit 1
+
+if [ -n "$(info_value "$drive" 'MountPoints')" ]; then
+    udisksctl unmount -b "$drive" || exit 1
+else
+    udisksctl mount -b   "$drive" || exit 1
+fi
+
