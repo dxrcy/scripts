@@ -3,12 +3,12 @@ export INFO='mount or unmount a drive with Rofi dialog and udisksctl'
 
 ~/scripts/cmd/require udisksctl || exit 1
 
-notify="$1"
+# Echo (and notify) message (error or success)
+notify_arg="$1"
 finally() {
-    # Echo (and notify) message (error or success)
     msg="$1"
     echo "$msg"
-    [ "$notify" = '--notify' ] && notify-send "$msg"
+    [ "$notify_arg" = '--notify' ] && notify-send "$msg"
 }
 
 # Grep for value, by key name, in `udisksctl info` output
@@ -23,6 +23,7 @@ info_value() {
 }
 
 # Wait for lockfile to be removed
+# Give up after a certain time
 lockfile="$HOME/.cache/mount-gui.lock"
 if [ -e "$lockfile" ]; then
     echo 'mount-gui: waiting for lockfile...'
@@ -89,13 +90,13 @@ run_action() {
     code="$?"
     finally "$msg"
     rm "$lockfile"
-    # sleep 2
     exit "$code"
 }
 
+# Unmount if already mounted, otherwise mount
+# This is redundant, but the best way I could think of
 info="$(udisksctl info -b "$drive")"
 [ -n "$(info_value "$info" 'MountPoints')" ] \
-    && action='unmount' \
-    || action='mount'
-run_action "$action"
+    && run_action 'unmount' \
+    || run_action 'mount'
 
