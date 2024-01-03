@@ -16,9 +16,8 @@ done
 
 if [ "$count" -gt 0 ]; then
     [ "$count" = 1 ] || s='s'
-    notify-send "Killed $count orphan$s."
-    exit 0
+    notify-send -t 1500 "Killed $count orphan$s."
 else
-    notify-send "No orphans to kill."
+    notify-send -t 1500 "No orphans to kill."
     exit 1
 fi
