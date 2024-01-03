@@ -3,6 +3,8 @@ export INFO='mount or unmount a drive with Rofi dialog and udisksctl'
 
 ~/scripts/cmd/require udisksctl || exit 1
 
+notify_arg="$1"
+
 # Grep for value, by key name, in `udisksctl info` output
 info_value() {
     info="$1"
@@ -18,8 +20,17 @@ info_value() {
 lockfile="$HOME/.cache/mount-gui.lock"
 if [ -e "$lockfile" ]; then
     echo 'mount-gui: waiting for lockfile...'
+    interval=0.1
+    max_attempts=100 # 10 seconds
+    attempts=0
     while [ -e "$lockfile" ]; do
-        sleep 0.1;
+        if [ "$attempts" -gt "$max_attempts" ]; then
+            msg="mount-gui: waited too long for process lock. try removing $lockfile if this error persists."
+            echo "$msg"
+            exit 1
+        fi
+        sleep "$interval"
+        attempts=$((attempts + 1))
     done
     echo 'mount-gui: okay.'
 fi
@@ -68,6 +79,7 @@ run_action() {
     code="$?"
     echo "$msg"
     [ "$notify_arg" = '--notify' ] && notify-send "$msg"
+    sleep 2
     rm "$lockfile"
     exit "$code"
 }
@@ -76,6 +88,5 @@ info="$(udisksctl info -b "$drive")"
 [ -n "$(info_value "$info" 'MountPoints')" ] \
     && action='unmount' \
     || action='mount'
-notify_arg="$1"
 run_action "$action" "$notify_arg"
 
