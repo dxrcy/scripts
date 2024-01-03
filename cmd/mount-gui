@@ -3,48 +3,79 @@ export INFO='mount or unmount a drive with Rofi dialog and udisksctl'
 
 ~/scripts/cmd/require udisksctl || exit 1
 
+# Grep for value, by key name, in `udisksctl info` output
 info_value() {
-    drive="$1"
+    info="$1"
     name="$2"
-    [ -n "$drive" ] || exit 1
-    [ -n "$name" ]  || exit 1
-
-    info="$(udisksctl info -b "$drive")"
-    [ -n "$info" ]  || exit 1
-
+    [ -n "$info" ] || exit 1
+    [ -n "$name" ] || exit 1
     row="$(echo "$info" | grep "$name:")"
-    [ -n "$row" ]   || exit 1
-
+    [ -n "$row" ]  || exit 1
     echo "$row" | awk '{print $2}'
 }
 
-available=''
-for drive in /dev/sd*; do
-    type="$( info_value "$drive" 'IdType'  || exit 1)"
-    label="$(info_value "$drive" 'IdLabel' || exit 1)"
-    mount="$(info_value "$drive" 'MountPoints')"
-    [ -n "$type" ] || [ -n "$type" ] || continue
+# Wait for lockfile to be removed
+lockfile="$HOME/.cache/mount-gui.lock"
+if [ -e "$lockfile" ]; then
+    echo 'mount-gui: waiting for lockfile...'
+    while [ -e "$lockfile" ]; do
+        sleep 0.1;
+    done
+    echo 'mount-gui: okay.'
+fi
+touch "$lockfile"
 
+# Find all mountable drives
+# NOTE: This only searchs for `sdXX` devices!
+available=''
+for drive in /dev/sd[a-z][0-9]; do
+    # Get device information
+    info="$(udisksctl info -b "$drive")"
+    type="$( info_value "$info" 'IdType'  || exit 1)"
+    label="$(info_value "$info" 'IdLabel' || exit 1)"
+    mount="$(info_value "$info" 'MountPoints')"
+    # Required to mount/unmount
+    [ -n "$type" ] || continue
+
+    # Format string with markdown, to display device entry
     [ -n "$mount" ] \
         && action="<span foreground='red'  >Unmount</span>" \
         || action="<span foreground='green'>  Mount</span>"
+    entry="$(printf '<b>%s  %-12s</b> %-12s <i>%-5s</i>   <b>%-s</b>' \
+        "$action" "$label" "$drive" "$type" "$mount")"
 
-    # entry="<b>$action $label</b> $drive <i>($type)</i> <b>$mount</b>"
-    entry="$(printf '<b>%s  %-12s</b> %-12s <i>%-5s</i>   <b>%-s</b>' "$action" "$label" "$drive" "$type" "$mount")"
-
-    [ -n "$available" ] && available="$available"$'\n' # Add a newline
-    available="$available$entry"                       # Push line
+    # Add to list, separated by newline
+    [ -n "$available" ] && available="$available"$'\n'
+    available="$available$entry"
 done
 
+# Read input with Rofi
 prompt='Mount or unmount a drive:'
 answer="$(echo "${available[@]}" | rofi -dmenu -i -markup-rows -p "$prompt")"
+[ -n "$answer" ] || exit 0 # Cancelled
 
+# Extract device file path from answer
 drive="$(echo "$answer" | grep -oP '/dev/[^ ]*')"
 [ -n "$drive" ] || exit 1
 
-if [ -n "$(info_value "$drive" 'MountPoints')" ]; then
-    udisksctl unmount -b "$drive" || exit 1
-else
-    udisksctl mount -b   "$drive" || exit 1
-fi
+# Mount or unmount, and lock other instances of this script
+run_action() {
+    action="$1"
+    notify_arg="$2"
+
+    # Capture stdout and sterr
+    msg="$(udisksctl "$action" -b "$drive" 2>&1)"
+    code="$?"
+    echo "$msg"
+    [ "$notify_arg" = '--notify' ] && notify-send "$msg"
+    rm "$lockfile"
+    exit "$code"
+}
+
+info="$(udisksctl info -b "$drive")"
+[ -n "$(info_value "$info" 'MountPoints')" ] \
+    && action='unmount' \
+    || action='mount'
+notify_arg="$1"
+run_action "$action" "$notify_arg"
 
