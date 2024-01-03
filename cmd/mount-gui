@@ -1,7 +1,7 @@
 #!/bin/sh
 export INFO='mount or unmount a drive with Rofi dialog and udisksctl'
 
-~/scripts/cmd/require udisksctl || exit 1
+~/scripts/cmd/require udisksctl lsof rofi || exit 1
 
 lock_file="$HOME/.cache/mount-gui.lock"
 log_file="$HOME/.cache/mount-gui.log"
@@ -53,6 +53,7 @@ fi
 # Find all mountable drives
 # NOTE: This only searchs for `sdXX` devices! (works for my system)
 available=''
+busy=''
 for drive in $(find /dev/ -maxdepth 1 | grep '/dev/sd[a-z][0-9]'); do
     # Get device information
     info="$(udisksctl info -b "$drive")"
@@ -63,9 +64,17 @@ for drive in $(find /dev/ -maxdepth 1 | grep '/dev/sd[a-z][0-9]'); do
     [ -n "$type" ] || continue
 
     # Format string with markdown, to display device entry
-    [ -n "$mount" ] \
-        && entry="<span foreground='red' > Unmount </span>" \
-        || entry="<span foreground='lime'>  Mount  </span>"
+    is_busy=
+    entry=
+    if [ -n "$mount" ]; then
+        # If in use (has open files): disable, and show as message
+        if [ -n "$(lsof +f -- "$mount")" ]; then
+            is_busy=true
+        else
+            entry="<span foreground='yellow'> Unmount </span>"
+        fi; else
+            entry="<span foreground='lime'  >  Mount  </span>"
+    fi
     entry="<b><span background='#071217'>$entry</span></b>"
     entry="$entry$(printf '  <b>%-12s</b>'              "$label")"
     entry="$entry$(printf ' %-12s'                      "$drive")"
@@ -74,18 +83,29 @@ for drive in $(find /dev/ -maxdepth 1 | grep '/dev/sd[a-z][0-9]'); do
     entry="<tt>$entry</tt>"
 
     # Add to list, separated by newline
-    [ -n "$available" ] && available="$available
+    if [ -n "$is_busy" ]; then
+        [ -z "$busy" ] && busy='Some devices are in use:'
+        busy="$busy
+$entry"
+    else
+        available="$available$entry
 "
-    available="$available$entry"
+    fi
 done
-if [ -z "$available" ]; then
-    finally 'No mountable drives connected'
-    exit 0
-fi
 
 # Read input with Rofi
 prompt='Mount or unmount a drive'
-answer="$(echo "$available" | rofi -dmenu -i -markup-rows -p "$prompt")"
+rofi_cmd() {
+    printf '%s' "$available" \
+        | rofi -dmenu -i -markup-rows -p "$prompt" "$@"
+}
+# Run with 'message' for busy devices
+if [ -n "$busy" ]; then
+    answer="$(rofi_cmd -mesg "$busy")"
+else
+    answer="$(rofi_cmd)"
+fi
+
 # Cancelled
 if [ -z "$answer" ]; then
     echo 'Cancelled'
