@@ -8,7 +8,7 @@ list_copy="$HOME/docs/movies.txt"
 # Location of semdir folder
 semdir="$HOME/docs/semdir/"
 
-cd $drive || exit 1
+cd "$drive" || exit 1
 
 tree . --filesfirst > '.meta/movies.txt' || exit 1
 cp '.meta/movies.txt' "$list_copy"       || exit 1

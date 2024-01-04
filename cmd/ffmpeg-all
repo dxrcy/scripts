@@ -1,18 +1,21 @@
 #!/bin/sh
 export INFO='run ffmpeg on all files in current directory, converting one filetype to another'
 
-if [ ! "$1" ]; then
+in="$1"
+out="$2"
+shift 2
+if [ ! "$in" ]; then
     echo "ffmpegall: no input filetype given"
     exit 1
 fi
-if [ ! "$2" ]; then
+if [ ! "$out" ]; then
     echo "ffmpegall: no output filetype given"
     exit 1
 fi
 
-for file in *."$1"; do
-    echo "$file"
-    ffmpeg -i "$file" "${file%.*}.$2" -loglevel error || exit 1
-    trash "$file"
+for old in $(find . -maxdepth 1 | grep ".*\\.$in"); do
+    basename "$old"
+    ffmpeg -i "$old" "${old%.*}.$out" -loglevel error "$@" || exit 1
+    trash "$old" || exit 1
 done
 
