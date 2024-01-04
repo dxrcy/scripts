@@ -2,15 +2,17 @@
 export INFO='index all files in movies directory'
 
 # Location of movies folder 
-drive=/mnt/media/Movies/
+drive="/run/media/$(whoami)/MOVIES/Movies"
 # Filepath of movies list backup
 list_copy="$HOME/docs/movies.txt"
 # Location of semdir folder
 semdir="$HOME/docs/semdir/"
 
-cd $drive || exit 1 \
-    && tree . --filesfirst > .meta/movies.txt \
-    && cp .meta/movies.txt "$list_copy" \
-    && cp "$semdir/README.md" .meta/SEMDIR.md \
-    && echo 'Done.'
+cd $drive || exit 1
+
+tree . --filesfirst > '.meta/movies.txt' || exit 1
+cp '.meta/movies.txt' "$list_copy"       || exit 1
+cp "$semdir/README.md" '.meta/SEMDIR.md' || exit 1
+
+echo 'Done.'
 
