@@ -4,12 +4,21 @@ src="$(     ~/scripts/cmd/garf +dir 'src')"      || { code="$?"; echo "$src";   
 unedited="$(~/scripts/cmd/garf +dir 'unedited')" || { code="$?"; echo "$unedited"; exit "$code"; }
 
 date="$1"
-name="$2" # Optional
-
 if [ ! "$date" ]; then
     echo 'garf make: date not given'
     exit 1
 fi
+shift
+
+# Optional
+twothirds="$1"
+if [ -n "$twothirds" ]; then
+    shift
+else
+    twothirds='0'
+fi
+
+name="$1"
 
 # Use recently shown comic, instead of date
 if [ "$date" = '-r' ]||[ "$date" = '--recent' ]; then
@@ -46,7 +55,7 @@ for folder in "$unedited/"*; do
 done
 
 # Convert image to square format, with watermark
-~/scripts/cmd/garf +format "$input" "$unedited/$date.png" 1 || exit 1
+~/scripts/cmd/garf +format "$input" "$unedited/$date.png" "$twothirds" || exit 1
 
 # Create unique name for folder, if not specified as argument
 if [ ! "$name" ]; then

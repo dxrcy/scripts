@@ -44,7 +44,7 @@ date="$(cat "$post/date")"
 echo "Date: $date"
 
 # Make post
-~/scripts/cmd/garf make "$date" "$post" || exit "$?"
+~/scripts/cmd/garf make "$date" '0' "$post" || exit "$?"
 
 # Copy other files
 cp "$post/title"  "$unedited/$post/title" || exit 1
