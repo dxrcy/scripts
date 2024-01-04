@@ -11,7 +11,7 @@ log_file="$HOME/.cache/mount-gui.log"
 # - Log to file
 # - Send desktop notification (with `--notify`)
 notify_arg="$1"
-finally() {
+report_msg() {
     msg="$1"
     echo "$msg"
     echo "$msg" >> "$log_file"
@@ -41,7 +41,7 @@ if [ -e "$lock_file" ]; then
     while [ -e "$lock_file" ]; do
         if [ "$attempts" -gt "$max_attempts" ]; then
             msg="Waited too long for process lock. try removing $lock_file if this error persists."
-            finally "$msg"
+            report_msg "$msg"
             exit 1
         fi
         sleep "$interval"
@@ -116,23 +116,23 @@ fi
 drive="$(echo "$answer" | grep -oP '/dev/[^ ]*')"
 [ -n "$drive" ] || exit 1
 
-# Mount or unmount, and lock other instances of this script
-run_action() {
-    action="$1"
-    # Capture stdout and sterr
-    touch "$lock_file"
-    msg="$(udisksctl "$action" -b "$drive" 2>&1)"
-    code="$?"
-    finally "$msg"
-    rm "$lock_file"
-    exit "$code"
-}
-
-# Unmount if already mounted, otherwise mount
+# Get information of drive
 # This is redundant, but the best way I could think of
 info="$(udisksctl info -b "$drive")"
-[ -n "$(info_value "$info" 'MountPoints')" ] \
-    && action='unmount' \
-    || action='mount'
-run_action "$action"
+type="$( info_value "$info" 'IdType'  || exit 1)"
+mount="$(info_value "$info" 'MountPoints')"
+
+# Lock other instances of this script
+touch "$lock_file"
+
+# Unmount if already mounted, otherwise mount
+# Capture both stdout and sterr
+[ -n "$mount" ] \
+    && msg="$(udisksctl unmount -b "$drive" 2>&1)" \
+    || msg="$(udisksctl mount -b "$drive" -t "$type" 2>&1)"
+code="$?"
+
+report_msg "$msg"
+rm "$lock_file"
+exit "$code"
 
