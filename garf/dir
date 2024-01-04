@@ -15,7 +15,7 @@ case "$name" in
     find)
         echo "$HOME/pics/eo/find" ;;
     unedited)
-        echo "$HOME/pics/eo/unedited" ;;
+        echo "$HOME/pics/eo/unedited-test" ;;
     sundays)
         echo "$HOME/pics/eo/sundays" ;;
     old)

@@ -1,6 +1,14 @@
 #!/bin/sh
 
-texts="\
+input="$1"
+output="$2"
+twothirds="$3"
+if [ "$#" -lt 3 ]; then
+    echo 'garf format: not enough arguments'
+    exit 1
+fi
+
+watermarks="\
 GarfEO
 @garfield.eo
 Garfield-EO
@@ -9,6 +17,6 @@ Garfeo
 Garfield Esperanto
 garf-eo"
 
-text="$(echo "$texts" | shuf -n1)"
-comic-format "$1" "$2" "$text" >> /dev/null
+watermark="$(echo "$watermarks" | shuf -n1)"
+comic-format "$input" "$output" "$text" --twothirds-adjust "$twothirds" >> /dev/null
 
