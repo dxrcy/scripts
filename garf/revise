@@ -63,3 +63,14 @@ printf 'Move old post to old folder? (CTRL-C to cancel) '
 read -r
 ~/scripts/cmd/garf +old "$post" || exit "$?"
 
+# Wait until edited
+echo '(waiting until done...)'
+until [ -d "$post" ]; do
+    sleep 0.5
+done
+
+# Transcribe
+printf 'Transcribe now? (CTRL-C to cancel) '
+read -r
+~/scripts/cmd/garf transcribe "$post" || exit "$?"
+
