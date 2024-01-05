@@ -1,7 +1,7 @@
 #!/bin/sh
 
-posts="$(~/scripts/cmd/garf +dir 'posts' || exit 1)"
-old="$(  ~/scripts/cmd/garf +dir 'old'   || exit 1)"
+posts="$(~/scripts/cmd/garf +dir 'posts')" || { code="$?"; echo "$posts"; exit "$code"; }
+old="$(  ~/scripts/cmd/garf +dir 'old')"   || { code="$?"; echo "$old";   exit "$code"; }
 
 id="$1"
 

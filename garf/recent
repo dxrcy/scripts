@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cache_file="$(~/scripts/cmd/garf +dir 'cache' || exit 1)"
+cache_file="$(~/scripts/cmd/garf +dir 'cache')" || { code="$?"; echo "$cache_file"; exit "$code"; }
 
 count="$1"
 [ "$count" ] || count='1'

@@ -1,8 +1,8 @@
 #!/bin/sh
 
-src="$(  ~/scripts/cmd/garf +dir 'src'   || exit 1)"
-find="$( ~/scripts/cmd/garf +dir 'find'  || exit 1)"
-posts="$(~/scripts/cmd/garf +dir 'posts' || exit 1)"
+src="$(  ~/scripts/cmd/garf +dir 'src')"   || { code="$?"; echo "$src";   exit "$code"; }
+find="$( ~/scripts/cmd/garf +dir 'find')"  || { code="$?"; echo "$find";  exit "$code"; }
+posts="$(~/scripts/cmd/garf +dir 'posts')" || { code="$?"; echo "$posts"; exit "$code"; }
 
 # Show post and read input
 if [ "$1" = '-p' ] || [ "$1" = '--post' ]; then

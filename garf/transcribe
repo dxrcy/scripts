@@ -1,6 +1,6 @@
 #!/bin/sh
 
-posts="$(~/scripts/cmd/garf +dir 'posts'    || exit 1)"
+posts="$(~/scripts/cmd/garf +dir 'posts')" || { code="$?"; echo "$posts"; exit "$code"; }
 
 cd "$posts" || exit 1
 

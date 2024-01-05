@@ -1,7 +1,7 @@
 #!/bin/sh
 
-src="$(~/scripts/cmd/garf +dir 'src' || exit 1)"
-cache_file="$(~/scripts/cmd/garf +dir 'cache' || exit 1)"
+src="$(       ~/scripts/cmd/garf +dir 'src')"   || { code="$?"; echo "$src";        exit "$code"; }
+cache_file="$(~/scripts/cmd/garf +dir 'cache')" || { code="$?"; echo "$cache_file"; exit "$code"; }
 
 date="$1"
 

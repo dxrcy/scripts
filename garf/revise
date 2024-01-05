@@ -1,7 +1,7 @@
 #!/bin/sh
 
-posts="$(   ~/scripts/cmd/garf +dir 'posts'    || exit 1)"
-unedited="$(~/scripts/cmd/garf +dir 'unedited' || exit 1)"
+posts="$(   ~/scripts/cmd/garf +dir 'posts')"    || { code="$?"; echo "$posts";    exit "$code"; }
+unedited="$(~/scripts/cmd/garf +dir 'unedited')" || { code="$?"; echo "$unedited"; exit "$code"; }
 
 cd "$posts" || exit 1
 
