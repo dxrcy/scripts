@@ -70,7 +70,7 @@ if [ "$(cat "$temp_file")" = "$file_contents" ]; then
     echo 'No changes made.'
     exit 0
 fi
-printf 'Save transcript file? (CTRL-C to cancel) '
+printf 'Save transcript file? '
 read -r
 
 mv "$temp_file" 'transcript'

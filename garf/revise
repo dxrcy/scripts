@@ -59,7 +59,7 @@ if [ -f "$post/special" ]; then
 fi
 
 # Move old post to old
-printf 'Move old post to old folder? (CTRL-C to cancel) '
+printf 'Move old post to old folder? '
 read -r
 ~/scripts/cmd/garf +old "$post" || exit "$?"
 
@@ -70,7 +70,7 @@ until [ -d "$post" ]; do
 done
 
 # Transcribe
-printf 'Transcribe now? (CTRL-C to cancel) '
+printf 'Transcribe now? '
 read -r
 ~/scripts/cmd/garf transcribe "$post" || exit "$?"
 
