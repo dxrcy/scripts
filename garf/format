@@ -18,5 +18,5 @@ Garfield Esperanto
 garf-eo"
 
 watermark="$(echo "$watermarks" | shuf -n1)"
-comic-format "$input" "$output" "$text" --twothirds-adjust "$twothirds" >> /dev/null
+comic-format "$input" "$output" --watermark "$text" --twothirds-adjust "$twothirds" >> /dev/null
 
