@@ -13,6 +13,7 @@ nohup thunar ~/pics > /dev/null 2>&1 &
 until xdotool search --onlyvisible --class 'thunar' > /dev/null; do
     sleep 0.1
 done
+sleep 0.1
 
 # Navigate to directories
 type eo
