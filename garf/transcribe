@@ -9,10 +9,10 @@ post="$1"
 if [ ! "$post" ]; then
     # Get FIRST post id with no transcript file, AND an svg file
     for i in *; do
-        if [ ! -f "$i/transcript" ] && [ -f "$i/esperanto.svg" ]; then
-            post=$(basename "$i")
-            break
-        fi
+        [ -f "$i/transcript" ]    && continue
+        [ -f "$i/esperanto.svg" ] || continue
+        post=$(basename "$i")
+        break
     done
 
     # No post to transcribe!
