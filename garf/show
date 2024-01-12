@@ -9,13 +9,6 @@ date="$1"
 while getopts 'rh' opt; do
     case "$opt" in
 
-    # Replace prevous instance of `display`
-    r)
-        pkill -f -c 'garf-show'
-        # Set date to next argument, after switch
-        date="$2"
-        ;;
-
     # Help
     *)
         echo 'garf show'
@@ -43,6 +36,8 @@ fi
 
 echo "$file"
 echo "$file" >> "$cache_file"
+
+pkill -f -c 'garf-show'
 
 # feh "$file" --fullscreen --auto-zoom --class 'garf-show'
 nsxiv "$file" --fullscreen --scale-mode f --class 'garf-show'
