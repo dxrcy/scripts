@@ -32,14 +32,14 @@ get_charge_percent() {
 case "$1" in
     'c'|'connect')
         is_connected && exit 0 # already connected
-        # pactl set-sink-volume @DEFAULT_SINK@ 0%
         bluetoothctl power on
         scan_and_wait
-        bluetoothctl connect $mac
+        bluetoothctl connect "$mac" && playerctl play
         ;;
 
     'd'|'disconnect')
-        bluetoothctl disconnect $mac
+        playerctl pause
+        bluetoothctl disconnect "$mac"
         bluetoothctl power off
         # Mute audio when bluetooth disconnected
         sleep 1
