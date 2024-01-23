@@ -1,5 +1,5 @@
 #!/bin/sh
-INFO='show description of currently playing song'
+export INFO='show description of currently playing song'
 
 player="$1"
 if [ -z "$player" ]; then

@@ -1,0 +1,20 @@
+#!/bin/sh
+export INFO='choose a power-off method with Rofi dialog'
+
+menu="\
+ Cancel
+ Shutdown
+ Reboot
+ Logout
+ Suspend"
+
+answer="$(echo "$menu" | rofi -dmenu -i -markup-rows -p 'Powermenu')"
+
+case "$answer" in
+    ' Shutdown') systemctl poweroff ;;
+    ' Reboot')   systemctl reboot ;;
+    ' Suspend')  systemctl suspend ;;
+    ' Logout')   i3-msg exit ;;
+    *) notify-send -t 1000 '(cancelled)' ;;
+esac
+
