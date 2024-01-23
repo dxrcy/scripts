@@ -4,6 +4,8 @@ export INFO='connect or disconnect a particular bluetooth device'
 mac='40:DE:17:43:2F:49'
 # mac='53:48:46:C6:01:6A'
 
+player='spotify'
+
 # Start scanning for all devices, until given MAC address is found
 scan_and_wait() {
     bluetoothctl scan on &
@@ -34,11 +36,11 @@ case "$1" in
         is_connected && exit 0 # already connected
         bluetoothctl power on
         scan_and_wait
-        bluetoothctl connect "$mac" && playerctl play
+        bluetoothctl connect "$mac" && playerctl -p "$player" play
         ;;
 
     'd'|'disconnect')
-        playerctl pause
+        playerctl -p "$player" pause
         bluetoothctl disconnect "$mac"
         bluetoothctl power off
         # Mute audio when bluetooth disconnected
