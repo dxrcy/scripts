@@ -1,0 +1,35 @@
+#!/bin/sh
+INFO='show description of currently playing song'
+
+player="$1"
+if [ -z "$player" ]; then
+    echo 'player-info: missing player argument.'
+    exit 1
+fi
+if [ "$2" = 'notify' ]; then
+    notify=1
+fi
+
+bar_color="#7f7fff"
+
+song="$(playerctl -p "$player" metadata -f '{{title}} - {{artist}}')"
+time="$(playerctl -p "$player" metadata -f '{{duration(position)}} / {{duration(mpris:length)}}')"
+percent="$(playerctl -p "$player" metadata -f '{{position / mpris:length * 100}}')"
+percent="${percent%.*}"
+status=''
+[ "$(playerctl -p "$player" status)" = 'Playing' ] && status=''
+
+if ~/scripts/cmd/bt status; then
+    charge="|  $(~/scripts/cmd/bt charge)"
+fi
+
+desc="$status $time $charge" 
+
+if [ -z "$notify" ]; then
+    echo "$song"
+    echo "$desc"
+    echo "$percent%"
+else
+    dunstify -r 9238 -t 1000 "$song" "$desc" -h int:value:"$percent" -h string:hlcolor:"$bar_color"
+fi
+
