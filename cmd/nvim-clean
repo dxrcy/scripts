@@ -1,5 +1,14 @@
 #!/bin/sh
-export INFO='clear all cache for nvim'
+export INFO='trash all cache/state (not config) for Neovim'
+
+if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
+    echo "nvim-clean: $INFO"
+    echo 'USAGE:'
+    echo '    nvim-clean [--all]'
+    echo 'ARGUMENTS:'
+    echo '    --all     removes all files, including undo history'
+    exit 0
+fi
 
 # All cache
 trash ~/.cache/nvim
@@ -9,4 +18,12 @@ trash ~/.local/state/nvim
 trash ~/dotfiles/nvim/.config/nvim/plugin/packer_compiled.lua
 # Lazy
 trash ~/dotfiles/nvim/.config/nvim/lazy-lock.json
+
+# Only remove all files, if argument is passed
+if [ ! "$1" = '--all' ]; then
+    exit 0
+fi
+
+# Undo history
+trash ~/.local/state/nvim-undodir
 
