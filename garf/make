@@ -45,12 +45,12 @@ fi
 
 # Check if folder already exists ending in same date
 #   or has date file with same date
-for file in "$posts/"*'/date'; do
-    if [ "$(cat "$file")" = "$date" ]; then
-        echo 'garf make: comic has already been translated with that date'
-        exit 1
-    fi
-done
+# for file in "$posts/"*'/date'; do
+#     if [ "$(cat "$file")" = "$date" ]; then
+#         echo 'garf make: comic has already been translated with that date'
+#         exit 1
+#     fi
+# done
 for folder in "$unedited"/*; do
     if [ "$(expr "$folder" : '.*_\(.*\)')" = "$date" ] \
         || { [ -f "$folder/date" ] && [ "$(cat "$folder/date")" = "$date" ] ;} \
