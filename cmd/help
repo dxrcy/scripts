@@ -1,0 +1,32 @@
+#!/bin/sh
+# shellcheck disable=SC2016
+export INFO='find help with `man [cmd]`, or `[cmd] --help`'
+
+if [ -z "$1" ] || echo "$1" | grep -q '^-.*'; then
+    echo "help: $INFO"
+    echo 'USAGE:'
+    echo '    help --help'
+    echo '        shows this message'
+    echo '    help [COMMAND]'
+    echo '        tries `man`, `--help`, then `whatscript`'
+    exit 0
+fi
+
+# Check if is user script (skip `man`)
+[ -f "$HOME/scripts/cmd/$1" ] && user_script=1
+
+# Generic help pages
+if [ -z "$user_script" ]; then
+    man "$1" 2>/dev/null       && { echo 'man';    exit 0; }
+fi
+"$1" --help 2>/dev/null | less && { echo '--help'; exit 0; }
+"$1" -help  2>/dev/null | less && { echo '-help';  exit 0; }
+"$1" -h     2>/dev/null | less && { echo '-h';     exit 0; }
+
+# User script
+if [ -n "$user_script" ]; then
+    whatscript "$1" | less     && { echo 'whatscript'; exit 0; }
+fi
+
+echo 'help: no information found.'
+
