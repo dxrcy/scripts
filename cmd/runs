@@ -12,6 +12,10 @@ if [ -z "$filename" ]; then
     echo 'runs: missing filename.'
     exit 1
 fi
+if [ ! -f "$filename" ]; then
+    echo "runs: cannot find file $filename."
+    exit 1
+fi
 
 filebase="${filename%.*}"
 filetype="${filename##*.}"
