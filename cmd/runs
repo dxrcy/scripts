@@ -1,0 +1,40 @@
+#!/bin/sh
+INFO='watch a file for changes, to compile and run'
+
+if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
+    echo "runs: $INFO"
+    echo 'USAGE:'
+    echo '    runs [FILENAME]'
+fi
+
+filename="$1"
+if [ -z "$filename" ]; then
+    echo 'runs: missing filename.'
+    exit 1
+fi
+
+filebase="${filename%.*}"
+filetype="${filename##*.}"
+
+case "$filetype" in
+    'zig')
+        command="zig run $filename" ;;
+    'hs')
+        command="
+            ghc $filename \
+                -dynamic \
+                -Wall \
+                -XScopedTypeVariables \
+                > /dev/null || exit 2 \
+            && ./$filebase\
+        " ;;
+    *)
+        echo "runs: unknown file type '$filetype'"
+        exit 1
+        ;;
+esac
+
+echo "$command"
+
+echo "$filename" | entr -c sh -c "$command"
+
