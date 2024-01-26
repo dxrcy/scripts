@@ -10,14 +10,18 @@ if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
     exit 0
 fi
 
+remove() {
+    [ -e "$1" ] && trash "$1"
+}
+
 # All cache
-trash ~/.cache/nvim
-trash ~/.local/share/nvim
-trash ~/.local/state/nvim
+remove ~/.cache/nvim
+remove ~/.local/share/nvim
+remove ~/.local/state/nvim
 # Packer
-trash ~/dotfiles/nvim/.config/nvim/plugin/packer_compiled.lua
+remove ~/dotfiles/nvim/.config/nvim/plugin/packer_compiled.lua
 # Lazy
-trash ~/dotfiles/nvim/.config/nvim/lazy-lock.json
+remove ~/dotfiles/nvim/.config/nvim/lazy-lock.json
 
 # Only remove all files, if argument is passed
 if [ ! "$1" = '--all' ]; then
@@ -25,5 +29,5 @@ if [ ! "$1" = '--all' ]; then
 fi
 
 # Undo history
-trash ~/.local/state/nvim-undodir
+remove ~/.local/state/nvim-undodir
 
