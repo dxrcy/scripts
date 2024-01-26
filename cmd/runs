@@ -1,5 +1,7 @@
 #!/bin/sh
-INFO='watch a file for changes, to compile and run'
+export INFO='watch a file for changes, to compile and run'
+
+~/scripts/cmd/require entr || exit 1
 
 if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
     echo "runs: $INFO"
@@ -22,8 +24,10 @@ filetype="${filename##*.}"
 
 case "$filetype" in
     'zig')
+        ~/scripts/cmd/require zig || exit 1
         command="zig run $filename" ;;
     'hs')
+        ~/scripts/cmd/require ghc || exit 1
         command="
             ghc $filename \
                 -dynamic \
