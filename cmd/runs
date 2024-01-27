@@ -9,40 +9,33 @@ if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
     echo '    runs [FILENAME]'
 fi
 
-filename="$1"
-if [ -z "$filename" ]; then
-    echo 'runs: missing filename.'
+file="$1"
+if [ -z "$file" ]; then
+    echo 'runs: missing file.'
     exit 1
 fi
-if [ ! -f "$filename" ]; then
-    echo "runs: cannot find file $filename."
+if [ ! -f "$file" ]; then
+    echo "runs: cannot find file $file."
     exit 1
 fi
 
-filebase="${filename%.*}"
-filetype="${filename##*.}"
+shift
+command=$*
+if [ -z "$command" ]; then
+    echo 'runs: missing command.'
+    exit 1
+fi
 
-case "$filetype" in
-    'zig')
-        ~/scripts/cmd/require zig || exit 1
-        command="zig run $filename" ;;
-    'hs')
-        ~/scripts/cmd/require ghc || exit 1
-        command="
-            ghc $filename \
-                -dynamic \
-                -Wall \
-                -XScopedTypeVariables \
-                > /dev/null || exit 2 \
-            && ./$filebase\
-        " ;;
-    *)
-        echo "runs: unknown file type '$filetype'"
-        exit 1
-        ;;
-esac
+name="${file%.*}"
+type="${file##*.}"
+
+command="$(echo "$command" \
+    | sed "s/%f/$file/g" \
+    | sed "s/%n/$name/g" \
+    | sed "s/%t/$type/g" \
+)"
 
 echo "$command"
 
-echo "$filename" | entr -c sh -c "$command"
+echo "$file" | entr -c sh -c "$command"
 
