@@ -6,7 +6,14 @@ export INFO='watch a file for changes, to compile and run'
 if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
     echo "runs: $INFO"
     echo 'USAGE:'
-    echo '    runs [FILENAME]'
+    echo '    runs [FILENAME] [...COMMAND]'
+    echo 'ARGUMENTS:'
+    echo '    FILENAME'
+    echo '    COMMAND: Shell command to run on change, with substitutions:'
+    echo '        %f  Full filename (hello.c)'
+    echo '        %n  Filename without extension (hello)'
+    echo '        %t  File extension (c)'
+    exit 0
 fi
 
 file="$1"
