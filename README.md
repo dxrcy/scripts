@@ -22,5 +22,5 @@ Command scripts are in `/cmd`, which can be added to `$PATH`.
 
 Other files are put in separate folders.
 
-Help comment is defined in a script with `#~~~ `, view with `whatscript [CMD]`
+Help comment is defined in a script with `export INFO=`, view with `whatscript [CMD]`
 
