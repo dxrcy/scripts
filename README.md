@@ -7,7 +7,7 @@ Some POSIX-compliant scripts.
 Clone repository:
 
 ```sh
-git clone https://github.com/darccyy/scripts ~/scripts
+git clone https://github.com/dxrcy/scripts ~/scripts
 ```
 
 Add line to shell rc:
