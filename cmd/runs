@@ -1,7 +1,8 @@
 #!/bin/sh
 export INFO='watch a file for changes, to compile and run'
 
-~/scripts/cmd/require entr || exit 1
+# REQUIRES ZSH (for now?..)
+~/scripts/cmd/require entr zsh || exit 1
 
 if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
     echo "runs: $INFO"
@@ -44,5 +45,10 @@ command="$(echo "$command" \
 
 echo "$command"
 
-echo "$file" | entr -c sh -c "$command"
+# entr:
+#   -c  Clear screen on change
+#   -i  Use an interactive shell (inherit aliases)
+# zsh:
+#   -c  Run argument as command
+echo "$file" | entr -c zsh -i -c "$command"
 
