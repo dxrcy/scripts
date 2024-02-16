@@ -54,7 +54,7 @@ fi
 # NOTE: This only searchs for `sdXX` devices! (works for my system)
 available=''
 busy=''
-for drive in $(find /dev/ -maxdepth 1 | grep '/dev/sd[a-z][0-9]'); do
+for drive in $(find /dev/ -maxdepth 1 | grep '/dev/sd[a-z][0-9]*'); do
     # Get device information
     info="$(udisksctl info -b "$drive")"
     type="$( info_value "$info" 'IdType'  || exit 1)"
