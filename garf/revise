@@ -62,7 +62,7 @@ if [ -f "$post/props" ]; then
     cp "$post/props"  "$unedited/$post/props" || exit 1
 fi
 if [ -f "$post/transcript" ]; then
-    cp "$post/transcript"  "$unedited/$post/transcript.old" || exit 1
+    cp "$post/transcript"  "$unedited/$post/transcript" || exit 1
 fi
 if [ -f "$post/special" ]; then
     cp "$post/special"  "$unedited/$post/special" || exit 1

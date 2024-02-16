@@ -34,14 +34,6 @@ cd "$post" || exit 1
 
 temp_file="/tmp/garf-transcript-$post"
 
-# Template file contents: 3 panels or 7 for Sundays
-number="$(echo "$post" | sed 's/^0*//')"
-if [ "$(((number + 1) % 7))" -eq 0 ]; then
-    file_contents="$(printf -- '---\n---\n---\n---\n---\n---')"
-else
-    file_contents="$(printf -- '---\n---')"
-fi
-
 # Show image, kill previous instance
 pkill -f -c 'garf-transcribe' > /dev/null
 nsxiv 'esperanto.png' 'english.png' --class 'garf-transcribe' &
@@ -53,6 +45,20 @@ for i in $(seq 0 3); do
     i3-msg "[instance=garf-transcribe] move left, resize set 50 ppt" > /dev/null 2>&1
 done
 i3-msg "[con_id=${focused_window}] focus" > /dev/null 2>&1
+
+# Copy existing file, or create new from template
+if [ -f "transcript" ]; then
+    echo "(transcript file already exists)"
+    file_contents="$(cat "transcript")"
+else
+    # Template file contents: 3 panels or 7 for Sundays
+    number="$(echo "$post" | sed 's/^0*//')"
+    if [ "$(((number + 1) % 7))" -eq 0 ]; then
+        file_contents="$(printf -- '---\n---\n---\n---\n---\n---')"
+    else
+        file_contents="$(printf -- '---\n---')"
+    fi
+fi
 
 # Open file
 echo "$file_contents" > "$temp_file"
