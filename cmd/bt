@@ -6,15 +6,6 @@ mac='40:DE:17:43:2F:49'
 
 player='spotify'
 
-# Start scanning for all devices, until given MAC address is found
-scan_and_wait() {
-    bluetoothctl scan on &
-    while ! bluetoothctl devices | grep -q "$mac"; do
-        sleep 1
-    done
-    bluetoothctl scan off
-    killall bluetoothctl
-}
 # Returns successful exit if bluetooth device is connected
 is_connected() {
     bluetoothctl info $mac | grep -q 'Connected: yes'
@@ -34,17 +25,29 @@ get_charge_percent() {
 case "$1" in
     'c'|'connect')
         is_connected && exit 0 # already connected
-        bluetoothctl power on
-        scan_and_wait
-        bluetoothctl connect "$mac" && playerctl -p "$player" play
+
+        bluetoothctl power on       || exit 1
+        bluetoothctl connect "$mac" || exit 1
+
+        while ! is_connected; do
+            sleep 0.1
+        done
+
+        playerctl -p "$player" play
         ;;
 
     'd'|'disconnect')
         playerctl -p "$player" pause
-        bluetoothctl disconnect "$mac"
-        bluetoothctl power off
+
+        bluetoothctl disconnect "$mac" || exit 1
+        bluetoothctl power off         || exit 1
+
+        # Is this needed ???
+        while is_connected; do
+            sleep 0.1
+        done
+
         # Mute audio when bluetooth disconnected
-        sleep 1
         pactl set-sink-volume @DEFAULT_SINK@ 0%
         ;;
 
