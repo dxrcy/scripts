@@ -33,7 +33,7 @@ case "$1" in
             sleep 0.1
         done
 
-        playerctl -p "$player" play
+        # playerctl -p "$player" play
         ;;
 
     'd'|'disconnect')
