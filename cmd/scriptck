@@ -4,9 +4,17 @@ export INFO='check all user scripts for bashisms or linting errors'
 # Get location of scripts folder
 scripts="$(readlink -f "$(dirname "$0")/..")"
 
-# Check each folder, or fail
-shellcheck "$scripts/cmd/"*  || exit 1
-shellcheck "$scripts/garf/"* || exit 1
+# Check each file in directory, or fail
+check_dir() {
+    for file in "$1/"*; do
+        printf '%s' "$file"
+        shellcheck "$file" || exit 1
+        printf "\r\033[K"
+    done
+}
+
+check_dir "$scripts/cmd"
+check_dir "$scripts/garf"
 
 echo 'No issues found.'
 
