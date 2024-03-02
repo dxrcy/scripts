@@ -6,7 +6,7 @@ export INFO='download all songs from a particular Spotify playlist'
 # Directory to download to
 location="$HOME/music/songs"
 # Link to playlist to download
-playlist='https://open.spotify.com/playlist/6mczz83X2b8KZSYyp3vWFr?si=5dc50a06f2014f4e'
+playlist='https://open.spotify.com/playlist/6lE0EKzv2S2S2SUHIbUDbh?si=19822f08519846b8'
 # Filename of track
 trackname='{list-position} {title} - {artists}'
 
