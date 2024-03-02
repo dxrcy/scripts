@@ -3,6 +3,8 @@
 posts="$(~/scripts/cmd/garf +dir 'posts')" || { code="$?"; echo "$posts"; exit "$code"; }
 old="$(  ~/scripts/cmd/garf +dir 'old')"   || { code="$?"; echo "$old";   exit "$code"; }
 
+old1="${old}1"
+
 id="$1"
 
 if [ ! "$id" ]; then
@@ -10,20 +12,15 @@ if [ ! "$id" ]; then
     exit 1
 fi
 if [ ! -d "$posts/$id" ]; then
-    echo 'garf revise: no post with that id'
+    echo 'garf old: no post with that id'
     exit 1
 fi
 
-number=0
-for folder in "$old/$id:"*; do
-    if [ -d "$folder" ]; then
-        prev="$(echo "$folder" | sed "s|^$old/$id:||")"
-        if [ "$prev" -ge "$number" ]; then
-            number=$((prev + 1))
-        fi
-    fi
-done
+if [ -d "$old/$id" ]; then
+    echo '(revision already exists)'
+    mv "$old/$id" "$old1/$id" || exit 1
+fi
 
-mv "$posts/$id" "$old/$id:$number" || exit 1
-echo "Moved $id to old folder as version :$number"
+mv "$posts/$id" "$old/$id" || exit 1
+echo "Moved $id to old folder"
 
