@@ -38,12 +38,12 @@ name="${file%.*}"
 type="${file##*.}"
 
 command="$(echo "$command" \
-    | sed "s/%f/$file/g" \
-    | sed "s/%n/$name/g" \
-    | sed "s/%t/$type/g" \
+    | sed "s|%f|$file|g" \
+    | sed "s|%n|$name|g" \
+    | sed "s|%t|$type|g" \
 )"
 
-echo "$command"
+printf "\033[1m$command\033[0m\n"
 
 # entr:
 #   -c  Clear screen on change
