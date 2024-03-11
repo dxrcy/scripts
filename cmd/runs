@@ -43,7 +43,7 @@ command="$(echo "$command" \
     | sed "s|%t|$type|g" \
 )"
 
-printf "\033[1m$command\033[0m\n"
+printf "\033[1m%s\033[0m\n" "$command"
 
 # entr:
 #   -c  Clear screen on change
