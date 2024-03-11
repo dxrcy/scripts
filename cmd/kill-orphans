@@ -7,11 +7,14 @@ for session in $(tmux list-sessions -F '#{session_name}:#{session_attached}'); d
     # Split session into name and attached count
         name="${session%:*}"
     attached="${session#*:}"
+    printf "$name -- $attached"
     # Kill if nothing is attached
-    if [ "$attached" -eq 0 ]; then
+    if [ "$attached" = 0 ]; then
+        printf " KILL!"
         tmux kill-session -t "$name"
         count=$((count + 1))
     fi
+    echo
 done
 
 if [ "$count" -gt 0 ]; then
