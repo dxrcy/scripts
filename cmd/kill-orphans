@@ -1,26 +1,35 @@
 #!/bin/sh
 export INFO='kill all unattatched (orphaned) tmux sessions'
 
+log() {
+    echo "$1" >>"$HOME/.cache/kill-orphans.log" 
+    if [ "$2" = --notify ]; then
+        notify-send -t 1500 "$1"
+    fi
+
+}
+
+log '------------------'
+
 count=0
 # Get list of sessions
 for session in $(tmux list-sessions -F '#{session_name}:#{session_attached}'); do
     # Split session into name and attached count
         name="${session%:*}"
     attached="${session#*:}"
-    printf "$name -- $attached"
+    log "$name -- $attached"
     # Kill if nothing is attached
     if [ "$attached" = 0 ]; then
-        printf " KILL!"
+        log " KILL!"
         tmux kill-session -t "$name"
         count=$((count + 1))
     fi
-    echo
 done
 
 if [ "$count" -gt 0 ]; then
     [ "$count" = 1 ] || s='s'
-    notify-send -t 1500 "Killed $count orphan$s."
+    log "Killed $count orphan$s." --notify
 else
-    notify-send -t 1500 "No orphans to kill."
+    log "No orphans to kill." --notify
     exit 1
 fi
