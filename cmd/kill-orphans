@@ -22,7 +22,7 @@ for session in $(tmux list-sessions -F '#{session_name}:#{session_attached}'); d
     # Kill if nothing is attached
     if [ "$attached" = 0 ]; then
         log " -> KILL!"
-        # tmux kill-session -t "$name"
+        tmux kill-session -t "$name"
         count=$((count + 1))
     fi
 done
