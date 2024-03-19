@@ -11,21 +11,26 @@ log() {
 
 log '------------------'
 
-count=0
-# Get list of sessions
-for session in $(tmux list-sessions -F '#{session_name}:#{session_attached}'); do
-    # Split session into name and attached count
-        name="${session%:*}"
-    attached="${session#*:}"
-    log "$session"
-    log "<$name> <$attached>"
-    # Kill if nothing is attached
-    if [ "$attached" = 0 ]; then
-        log " -> KILL!"
-        tmux kill-session -t "$name"
-        count=$((count + 1))
-    fi
-done
+count=9999
+tmux list-sessions -F '#{session_attached} #{session_id}' | \
+  awk '/^0/{print $2}' | \
+  xargs -n 1 tmux kill-session -t
+
+# count=0
+# # Get list of sessions
+# for session in $(tmux list-sessions -F '#{session_name}:#{session_attached}'); do
+#     # Split session into name and attached count
+#         name="${session%:*}"
+#     attached="${session#*:}"
+#     log "$session"
+#     log "<$name> <$attached>"
+#     # Kill if nothing is attached
+#     if [ "$attached" = 0 ]; then
+#         log " -> KILL!"
+#         tmux kill-session -t "$name"
+#         count=$((count + 1))
+#     fi
+# done
 
 if [ "$count" -gt 0 ]; then
     [ "$count" = 1 ] || s='s'
