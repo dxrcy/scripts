@@ -28,7 +28,7 @@ info_value() {
     [ -n "$name" ] || exit 1
     row="$(echo "$info" | grep "$name:")"
     [ -n "$row" ]  || exit 1
-    echo "$row" | awk '{print $2}'
+    echo "$row" | tr -s ' ' | cut -d ' ' -f3-
 }
 
 # Wait for lockfile to be removed
@@ -68,6 +68,7 @@ for drive in $(find /dev/ -maxdepth 1 | grep '/dev/sd[a-z][0-9]*'); do
     entry=
     if [ -n "$mount" ]; then
         # If in use (has open files): disable, and show as message
+        echo "$mount"
         if [ -n "$(lsof +f -- "$mount")" ]; then
             is_busy=true
         else
