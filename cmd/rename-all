@@ -4,7 +4,7 @@ temp_file='/tmp/rename-all'
 
 for old in *; do
     printf "'%s' " "$old"
-    read -r
+    read -r _
 
     echo "$old" > "$temp_file"
     nvim "$temp_file"

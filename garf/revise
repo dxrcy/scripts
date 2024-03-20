@@ -70,7 +70,7 @@ fi
 
 # Move old post to old
 printf 'Move old post to old folder? '
-read -r
+read -r _
 ~/scripts/cmd/garf +old "$post" || exit "$?"
 
 # Wait until edited
@@ -81,6 +81,6 @@ done
 
 # Transcribe
 printf 'Transcribe now? '
-read -r
+read -r _
 ~/scripts/cmd/garf transcribe "$post" || exit "$?"
 

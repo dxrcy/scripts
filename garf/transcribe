@@ -73,7 +73,7 @@ if [ "$(cat "$temp_file")" = "$file_contents" ]; then
     exit 0
 fi
 printf 'Save transcript file? '
-read -r
+read -r _
 
 mv "$temp_file" 'transcript'
 echo 'Saved transcript file.'
