@@ -1,62 +1,80 @@
 #!/bin/sh
 export INFO='enable or disable battery conservation with tlp'
 
-case "$1" in
-    'off')
-        sudo tlp setcharge 0 0 BAT0 && echo 'Success'
-        ;;
+battery='BAT0'
+driver='/sys/bus/platform/drivers/ideapad_acpi/VPC2004:00'
 
-    'on')
-        sudo tlp setcharge 1 1 BAT0 && echo 'Success'
-        ;;
+get_status() {
+    [ "$(cat "$driver/conservation_mode" || exit $?)" = '1' ]
+}
+
+case "$1" in
+    'off') sudo tlp setcharge 0 0 "$battery" ;;
+    'on')  sudo tlp setcharge 1 1 "$battery" ;;
+
+    'status') get_status ;;
 
     'gui')
-        if $0 status; then
-            state='ENABLED'
+        if get_status; then
+            state='Enabled'
         else
-            state='DISABLED'
+            state='Disabled'
         fi
-        ans="$( zenity --info \
-            --text="Change conservation Mode\n(Currently $state)" \
-            --ok-label 'Disable' \
-            --extra-button 'Enable' \
-            --title 'Conservation Mode'
+
+        title='Conservation mode'
+        option_enable='Enable - for AC power'
+        option_disable='Disable - for battery'
+
+        # Sort options, inactive first
+        # Perhaps this is should always be same order
+        if [ "$state" = 'Enabled' ]; then
+            option_1="$option_disable"
+            option_2="$option_enable"
+        else
+            option_1="$option_enable"
+            option_2="$option_disable"
+        fi
+
+        answer="$(
+            printf "$option_1\n$option_2" \
+            | rofi -dmenu -i \
+                -p "$title" \
+                -mesg "Currently $state"
         )"
-        case "$?-$ans" in
-            '0-')
-                gksu tlp setcharge 0 0 BAT0 \
-                    && notify-send -t 1500 -a 'Conservation Mode' 'Conservation mode DISABLED'
+
+        case "$answer" in
+            'Disable'*)
+                gksu tlp setcharge 0 0 "$battery" \
+                    || notify-send -t 3000 -a "$title" 'Failed to disable conservation mode' \
+                    && notify-send -t 1500 -a "$title" 'Conservation mode DISABLED'
                 ;;
-            '1-Enable')
-                gksu tlp setcharge 1 1 BAT0 \
-                    && notify-send -t 1500 -a 'Conservation Mode' 'Conservation mode ENABLED'
+            'Enable'*)
+                gksu tlp setcharge 1 1 "$battery" \
+                    || notify-send -t 3000 -a "$title" 'Failed to enable conservation mode' \
+                    && notify-send -t 1500 -a "$title" 'Conservation mode ENABLED'
                 ;;
             *)
-                exit
+                echo 'Cancelled'
+                exit 0
                 ;;
         esac
-        ;;
-
-    'status')
-        status="$(cat /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/conservation_mode || exit $?)"
-        [ "$status" = '1' ]
         ;;
 
     'h'|'help'|'-h'|'--help')
         echo 'Conservation mode'
         echo '    Usage:'
-        echo '        consv [SUBCOMMAND]'
+        echo '        conservation [SUBCOMMAND]'
         echo '    Subcommands:'
         echo '      - on     Enable'
         echo '      - off    Disable'
-        echo '      - gui    Ask using zenity gui'
+        echo '      - gui    Ask using rofi gui'
         echo '      - status Get current state (as exit code)'
         echo '      - help   Show this message'
         ;;
 
     *)
-        echo 'consv: please provide subcommand: [ on | off | gui | status | help ]'
-        exit
+        echo 'conservation: please provide subcommand: [ on | off | gui | status | help ]'
+        exit 1
         ;;
 esac
 
