@@ -1,7 +1,7 @@
 #!/bin/sh
 
-src="$(~/scripts/cmd/garf +dir 'src')" || { code="$?"; echo "$src"; exit "$code"; }
-out="$(~/scripts/cmd/garf +dir 'out')" || { code="$?"; echo "$out"; exit "$code"; }
+src="$(~/scripts/cmd/garf +dir 'src')"     || { code="$?"; echo "$src"; exit "$code"; }
+out="$(~/scripts/cmd/garf +dir 'sundays')" || { code="$?"; echo "$out"; exit "$code"; }
 
 # Create out folder if it does not exist
 if [ ! -d "$out" ]; then
@@ -20,7 +20,4 @@ for file in "$src"/*; do
     fi
     count=$((count + 1))
 done
-
-# Open dolphin and ignore stdout/stderr
-nohup dolphin "$out" >> /dev/null 2>&1
 
