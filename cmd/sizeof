@@ -1,13 +1,22 @@
 #!/bin/sh
-export INFO='prints size of directory'
+export INFO='prints size of file or directory in SI-prefixed bytes'
 
-dir=${1:-'.'}
+file="$1"
 
-# Count of files and folders
-count=$(find "$dir" | wc -l)
+if [ -z "$file" ]; then
+    echo 'sizeof: missing file argument.'
+    exit 1
+fi
+if [ ! -e "$file" ]; then
+    echo 'sizeof: no such file or directory.'
+    exit 2
+fi
 
-# Get total size, human readable (SI)
-size=$(du "$dir" -ch | tail -n 1 | awk '{print $1}')
+# -s    only show total
+# -b    --block-size=1 
+# --si  use powers of 1000, not 1024
 
-echo "$count files, ${size}iB"
+size="$(du -sb --si "$file" | awk '{print $1}')"
+
+printf "%sB\n" "$size" 
 
