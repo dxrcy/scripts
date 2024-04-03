@@ -36,7 +36,7 @@ case "$1" in
         fi
 
         answer="$(
-            printf "$option_1\n$option_2" \
+            printf '%s\n%s' "$option_1" "$option_2" \
             | rofi -dmenu -i \
                 -p "$title" \
                 -mesg "Currently $state"
