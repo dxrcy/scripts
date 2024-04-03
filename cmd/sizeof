@@ -23,12 +23,22 @@ print_size() {
     fi
 }
 
-if [ -n "$2" ]; then
+if [ "$1" = '-s' ]; then
+    # Read from stdin
+    cat | while IFS= read -r file; do
+        print_size "$file" 1
+    done
+
+elif [ -n "$2" ]; then
+    # Multiple arguments
     for file in "$@"; do
         print_size "$file" 1
     done
+
 elif [ -n "$1" ]; then
+    # Single argument
     print_size "$1"
+
 else
     echo 'sizeof: missing file argument.'
     exit 1
