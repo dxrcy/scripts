@@ -18,9 +18,10 @@ fi
 
 if [ -d "$old/$id" ]; then
     echo '(revision already exists)'
-    mv "$old/$id" "$old1/$id" || exit 1
+    mv "$posts/$id" "$old1/$id" || exit 1
+else
+    mv "$posts/$id" "$old/$id" || exit 1
 fi
 
-mv "$posts/$id" "$old/$id" || exit 1
 echo "Moved $id to old folder"
 
