@@ -1,22 +1,36 @@
 #!/bin/sh
 export INFO='prints size of file or directory in SI-prefixed bytes'
 
-file="$1"
+print_size() {
+    file="$1"
+    show_filename="$2"
 
-if [ -z "$file" ]; then
+    if [ ! -e "$file" ]; then
+        printf "sizeof: no such file or directory '%s'.\n" "$file"
+        exit 2
+    fi
+
+    # -s    only show total
+    # -b    --block-size=1 
+    # --si  use powers of 1000, not 1024
+    # ...and append 'B'
+    size="$(du -sb --si "$file" | awk '{print $1}')B"
+
+    if [ -n "$show_filename" ]; then
+        printf "%-7s %s\n" "$size" "$file"
+    else
+        printf "%s\n" "$size" 
+    fi
+}
+
+if [ -n "$2" ]; then
+    for file in "$@"; do
+        print_size "$file" 1
+    done
+elif [ -n "$1" ]; then
+    print_size "$1"
+else
     echo 'sizeof: missing file argument.'
     exit 1
 fi
-if [ ! -e "$file" ]; then
-    echo 'sizeof: no such file or directory.'
-    exit 2
-fi
-
-# -s    only show total
-# -b    --block-size=1 
-# --si  use powers of 1000, not 1024
-
-size="$(du -sb --si "$file" | awk '{print $1}')"
-
-printf "%sB\n" "$size" 
 
