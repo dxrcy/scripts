@@ -1,5 +1,5 @@
 #!/bin/sh
 export INFO='remove all ANSI escape codes from stdin'
 
-sed "s/\033\[[^m]*m//g"
+sed "s/\x1b\[[^m]*m//g"
 
