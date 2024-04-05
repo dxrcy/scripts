@@ -8,13 +8,13 @@ while [ "$bg" -le 7 ]; do
         fg=0
         while [ "$fg" -le 7 ]; do
             if [ "$bg" -lt 0 ]; then
-                printf '\x1b[0m'
+                printf '\033[0m'
             else
-                printf '\x1b[48;5;%sm' "$((bg + offset * 8))"
+                printf '\033[48;5;%sm' "$((bg + offset * 8))"
             fi
-            printf '\x1b[38;5;%sm' "$((fg + offset * 8))"
+            printf '\033[38;5;%sm' "$((fg + offset * 8))"
             printf '* '
-            printf '\x1b[0m'
+            printf '\033[0m'
             fg=$((fg + 1))
         done
         offset=$((offset + 1))
@@ -29,9 +29,9 @@ offset=0
 while [ "$offset" -le 1 ]; do
     bg=0
     while [ "$bg" -le 7 ]; do
-        printf '\x1b[48;5;%sm' "$((bg + offset * 8))"
+        printf '\033[48;5;%sm' "$((bg + offset * 8))"
         printf '   '
-        printf '\x1b[0m'
+        printf '\033[0m'
 
         bg=$((bg + 1))
     done
@@ -40,6 +40,6 @@ while [ "$offset" -le 1 ]; do
 done
 
 echo
-printf 'Normal    \x1b[1mBold\n'
-printf '\x1b[0;3mItalic \x1b[1mBoldItalic\n'
+printf 'Normal    \033[1mBold\n'
+printf '\033[0;3mItalic \033[1mBoldItalic\n'
 

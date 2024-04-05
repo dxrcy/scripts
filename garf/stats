@@ -18,12 +18,12 @@ print() {
     name="$1"
     value="$2"
     percent=$(((value * 100) / total))
-    printf '\x1b[3m%s \x1b[0;1m%3s\x1b[0;2m / \x1b[0m%3d \x1b[2m= \x1b[0;1m%2d\x1b[2m%%\x1b[0m\n' "$name" "$value" "$total" "$percent"
+    printf '\033[3m%s \033[0;1m%3s\033[0;2m / \033[0m%3d \033[2m= \033[0;1m%2d\033[2m%%\033[0m\n' "$name" "$value" "$total" "$percent"
 }
 
 print 'Editable:   ' "$editable"
 print 'Transcribed:' "$transcribed"
 
 percent=$((((editable + transcribed) * 100) / 2 / total))
-printf 'Total: \x1b[1m%2d\x1b[2m%%\x1b[0m\n' "$percent"
+printf 'Total: \033[1m%2d\033[2m%%\033[0m\n' "$percent"
 

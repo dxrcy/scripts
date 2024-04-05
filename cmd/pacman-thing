@@ -45,8 +45,8 @@ fi
 
 # Print a confirmation message to switch to 'sudo' mode
 use_sudo() {
-    printf '\x1b[33mthis operation requires root privilege.\x1b[0m\n'
-    printf "use '\x1b[1msudo\x1b[0m'? [Y/n] "
+    printf '\033[33mthis operation requires root privilege.\033[0m\n'
+    printf "use '\033[1msudo\033[0m'? [Y/n] "
     read -r confirm
     case "$confirm" in
         'y'|'Y'|'') mode='sudo' ;;
@@ -81,6 +81,6 @@ case "$mode" in
 esac
 
 # Show command, and run
-printf '\x1b[2m%s\x1b[0m\n' "$final"
+printf '\033[2m%s\033[0m\n' "$final"
 eval "$final"
 

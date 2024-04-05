@@ -53,5 +53,5 @@ while [ "$j" -le "$jobs_max" ]; do
 
     j=$((j + jobs_step))
 done
-printf '\n\x1b[1;33mAll done!\x1b[0m\n'
+printf '\n\033[1;33mAll done!\033[0m\n'
 

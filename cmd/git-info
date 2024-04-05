@@ -70,7 +70,7 @@ if [ -n "$list_dirs" ]; then
 
         # Print info
         [ -n "$fancy_output" ] \
-            && printf '\x1b[31m%s\x1b[0m' "$info" \
+            && printf '\033[31m%s\033[0m' "$info" \
             || printf '%s' "$info"
         # Pad with spacing
         [ -n "$only_branch" ] \
