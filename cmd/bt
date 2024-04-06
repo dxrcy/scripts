@@ -6,6 +6,9 @@ mac='40:DE:17:43:2F:49'
 
 player='spotify'
 
+# Override built-in printf, for Unicode support with narrowly-compliant shells
+printf() { /bin/printf "$@"; }
+
 # Returns successful exit if bluetooth device is connected
 is_connected() {
     bluetoothctl info $mac | grep -q 'Connected: yes'

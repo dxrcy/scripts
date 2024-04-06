@@ -1,6 +1,9 @@
 #!/bin/sh
 export INFO='convert digits of a number into different codepoint set'
 
+# Override built-in printf, for Unicode support with narrowly-compliant shells
+printf() { /bin/printf "$@"; }
+
 string=""
 while [ "$#" -gt 0 ]; do
     if [ -n "$mode" ]; then
