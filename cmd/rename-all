@@ -1,4 +1,5 @@
 #!/bin/sh
+export INFO='rename all files in current directory, using Neovim'
 
 temp_file='/tmp/rename-all'
 
