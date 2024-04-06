@@ -1,0 +1,11 @@
+#!/bin/sh
+export INFO='randomly select a command line argument given'
+
+if [ -z "$1" ]; then
+    exit 1
+fi
+
+for arg in "$@"; do
+    echo "$arg"
+done | shuf -n 1
+
