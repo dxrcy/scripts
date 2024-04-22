@@ -7,9 +7,6 @@ dir="$1"
 if [ -z "$dir" ]; then
     echo "backup-dir: missing argument."
     exit 1
-elif [ ! -d "$dir" ]; then
-    echo "backup-dir: argument $dir is not a directory."
-    exit 1
 fi
 
 if [ ! -e "$location" ]; then
