@@ -42,4 +42,5 @@ done
 echo
 printf 'Normal    \033[1mBold\n'
 printf '\033[0;3mItalic \033[1mBoldItalic\n'
+printf '\033[0m'
 
