@@ -1,0 +1,33 @@
+#!/bin/sh
+export INFO='quickly backup a directory locally'
+
+location='.backups'
+
+dir="$1"
+if [ -z "$dir" ]; then
+    echo "backup-file: missing argument."
+    exit 1
+fi
+
+if [ ! -e "$location" ]; then
+    mkdir -p "$location"
+elif [ ! -d "$location" ]; then
+    echo "backup-dir: $location exists and is not a directory."
+    exit 1
+fi
+
+timecode="$(date '+%Y-%m-%d-%H%M')"
+dir="$location/$timecode"
+
+if [ ! -e "$dir" ]; then
+    mkdir -p "$dir"
+elif [ ! -d "$dir" ]; then
+    echo "backup-dir: $dir exists and is not a directory."
+    exit 2
+fi
+
+for file in "$@"; do
+    cp -a "$file" "$dir/$file" || exit 2
+    echo "$dir/$file"
+done
+

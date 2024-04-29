@@ -5,7 +5,8 @@ dir="$HOME/pics/wallpapers"
 delay=300 # 5 minutes
 
 change() {
-    feh --randomize --bg-scale "$dir/"*
+    feh --randomize --bg-scale "$HOME/pics/SIGMA_WALLPAPER.jpg"
+    # feh --randomize --bg-scale "$dir/"*
 }
 
 if [ "$1" = '--forever' ]; then
