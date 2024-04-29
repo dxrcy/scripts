@@ -1,20 +1,28 @@
 #!/bin/sh
 export INFO='shuffle backgrounds every so often'
 
-dir="$HOME/pics/wallpapers"
-delay=300 # 5 minutes
+dir="$HOME/.config/wallpapers"
+
+delay="$1"
 
 change() {
-    # feh --randomize --bg-scale "$HOME/pics/SIGMA_WALLPAPER.jpg"
     feh --randomize --bg-scale "$dir/"*
 }
 
-if [ "$1" = '--forever' ]; then
-    while true; do
-        change
-        sleep "$delay"
-    done
-else
+# Just change once
+if [ -z "$delay" ]; then
     change
+    exit 0
 fi
+
+# Kill running instances
+for pid in $(pgrep -f "$(basename "$0")"); do
+    [ "$pid" != "$$" ] || kill "$pid"
+done
+
+# Loop forever
+while true; do
+    change
+    sleep "$delay"
+done
 
