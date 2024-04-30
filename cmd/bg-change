@@ -17,7 +17,7 @@ fi
 
 # Kill running instances
 for pid in $(pgrep -f "$(basename "$0")"); do
-    [ "$pid" != "$$" ] || kill "$pid"
+    [ "$pid" != "$$" ] && kill "$pid"
 done
 
 # Loop forever
