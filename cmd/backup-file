@@ -1,13 +1,17 @@
 #!/bin/sh
-export INFO='quickly backup a directory locally'
+export INFO='quickly backup a multiple files locally'
 
-location='.backups'
+# Destination directory
+LOCATION='.backups'
+timecode="$(date '+%Y-%m-%d-%H%M')"
+dest="$LOCATION/$timecode"
 
 if [ -z "$1" ]; then
     echo "backup-file: missing argument." >&2
     exit 1
 fi
 
+# Single argument `.` is same as backing up cwd to `../$dest`
 files="$*"
 if [ "$#" -eq 1 ] && [ "$1" = '.' ]; then
     files="$(basename "$PWD")"
@@ -15,27 +19,25 @@ if [ "$#" -eq 1 ] && [ "$1" = '.' ]; then
     cd ..
 fi
 
-if [ ! -e "$location" ]; then
-    mkdir -p "$location"
-elif [ ! -d "$location" ]; then
-    echo "backup-dir: $location exists and is not a directory." >&2
+if [ ! -e "$LOCATION" ]; then
+    mkdir -p "$LOCATION"
+elif [ ! -d "$LOCATION" ]; then
+    echo "backup-dir: $LOCATION exists and is not a directory." >&2
     exit 1
 fi
 
-timecode="$(date '+%Y-%m-%d-%H%M')"
-dir="$location/$timecode"
-
-if [ ! -e "$dir" ]; then
-    mkdir -p "$dir"
-elif [ ! -d "$dir" ]; then
-    echo "backup-dir: $dir exists and is not a directory." >&2
+if [ ! -e "$dest" ]; then
+    mkdir -p "$dest"
+elif [ ! -d "$dest" ]; then
+    echo "backup-dir: $dest exists and is not a directory." >&2
     exit 2
 fi
 
 for file in $files; do
-    rsync --archive --exclude="$location" "$file" "$dir/$file" || exit 2
+    # Do not copy $LOCATION sub-backups
+    rsync --archive --exclude="$LOCATION" "$file" "$dest/$file" || exit 2
 
     [ -n "$is_cwd" ] && printf '../'
-    echo "$dir/$file"
+    echo "$dest/$file"
 done
 
