@@ -33,9 +33,7 @@ elif [ ! -d "$dir" ]; then
 fi
 
 for file in $files; do
-    [ "$file" = '.location' ] && continue
-
-    cp -a "$file" "$dir/$file" || exit 2
+    rsync --archive --exclude="$location" "$file" "$dir/$file" || exit 2
 
     [ -n "$is_cwd" ] && printf '../'
     echo "$dir/$file"
