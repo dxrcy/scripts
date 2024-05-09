@@ -3,16 +3,22 @@ export INFO='quickly backup a directory locally'
 
 location='.backups'
 
-dir="$1"
-if [ -z "$dir" ]; then
-    echo "backup-file: missing argument."
+if [ -z "$1" ]; then
+    echo "backup-file: missing argument." >&2
     exit 1
+fi
+
+files="$*"
+if [ "$#" -eq 1 ] && [ "$1" = '.' ]; then
+    files="$(basename "$PWD")"
+    is_cwd=1
+    cd ..
 fi
 
 if [ ! -e "$location" ]; then
     mkdir -p "$location"
 elif [ ! -d "$location" ]; then
-    echo "backup-dir: $location exists and is not a directory."
+    echo "backup-dir: $location exists and is not a directory." >&2
     exit 1
 fi
 
@@ -22,12 +28,16 @@ dir="$location/$timecode"
 if [ ! -e "$dir" ]; then
     mkdir -p "$dir"
 elif [ ! -d "$dir" ]; then
-    echo "backup-dir: $dir exists and is not a directory."
+    echo "backup-dir: $dir exists and is not a directory." >&2
     exit 2
 fi
 
-for file in "$@"; do
+for file in $files; do
+    [ "$file" = '.location' ] && continue
+
     cp -a "$file" "$dir/$file" || exit 2
+
+    [ -n "$is_cwd" ] && printf '../'
     echo "$dir/$file"
 done
 
