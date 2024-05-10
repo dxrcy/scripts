@@ -1,0 +1,14 @@
+#!/bin/sh
+export INFO='get the current logged in GitHub user'
+
+status="$(gh auth status)"
+echo "$status" | while IFS= read -r line; do
+    if user="$(echo "$line" | pcregrep -o1 'Logged in to github.com account ([^ ]+)')"; then
+        prev_user="$user"
+    else
+        if echo "$line" | grep -q 'Active account: true'; then
+            echo "$prev_user"
+        fi
+    fi
+done
+
