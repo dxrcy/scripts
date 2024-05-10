@@ -1,8 +1,9 @@
 #!/bin/sh
 export INFO='connect or disconnect a particular bluetooth device'
 
-mac='40:DE:17:43:2F:49'
+# mac='40:DE:17:43:2F:49'
 # mac='53:48:46:C6:01:6A'
+mac='68:E6:5C:A6:66:F1'
 
 player='spotify'
 
