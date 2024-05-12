@@ -1,28 +1,44 @@
 #!/bin/sh
 export INFO='connect or disconnect a particular bluetooth device'
 
-mac='40:DE:17:43:2F:49'
-# mac='53:48:46:C6:01:6A'
-# mac='68:E6:5C:A6:66:F1'
+MAC='40:DE:17:43:2F:49'
+# MAC='53:48:46:C6:01:6A'
+# MAC='68:E6:5C:A6:66:F1'
 
-player='spotify'
+PLAYER='spotify'
 
 # Override built-in printf, for Unicode support with narrowly-compliant shells
 printf() { /bin/printf "$@"; }
 
 # Returns successful exit if bluetooth device is connected
 is_connected() {
-    bluetoothctl info $mac | grep -q 'Connected: yes'
+    bluetoothctl info $MAC | grep -q 'Connected: yes'
 }
 # Returns successful exit if bluetooth is powered on (enabled)
 is_power_on() {
     bluetoothctl show | grep -q 'Powered: yes'
 }
-
+# Get battery charge as percentage (including percentage sign)
 get_charge_percent() {
-    suffix="$(echo "$mac" | sed 's/:/_/g')"
+    suffix="$(echo "$MAC" | sed 's/:/_/g')"
     device="$(upower --enumerate | grep "$suffix$")"
     upower --show-info "$device" | grep 'percentage:' | awk '{print $2}'
+}
+
+print_help() {
+    echo "bt: $INFO"
+    echo 'USAGE:'
+    echo '    bt [SUBCOMMAND]'
+    echo 'SUBCOMMANDS:'
+    echo '    connect'
+    echo '    disconnect'
+    echo '    reconnect'
+    echo '    mac'
+    echo '    status'
+    echo '    power'
+    echo '    charge'
+    echo '    display-status'
+    echo '    display-charge'
 }
 
 # Run subcommand
@@ -31,18 +47,19 @@ case "$1" in
         is_connected && exit 0 # already connected
 
         bluetoothctl power on || exit 1
-        bluetoothctl connect "$mac" || exit 1
+        bluetoothctl connect "$MAC" || exit 1
         while ! is_connected; do
             sleep 0.1
         done
 
-        # playerctl -p "$player" play
+        # Play on connect
+        # playerctl -p "$PLAYER" play
         ;;
 
     'd'|'disconnect')
-        playerctl -p "$player" pause
+        playerctl -p "$PLAYER" pause
 
-        bluetoothctl disconnect "$mac" || exit 1
+        bluetoothctl disconnect "$MAC" || exit 1
         bluetoothctl power off || exit 1
         while is_connected; do # Is this needed ???
             sleep 0.1
@@ -55,27 +72,25 @@ case "$1" in
     'r'|'reconnect')
         bluetoothctl power on || exit 1
 
-        play_status="$(playerctl -p "$player" status)"
-        playerctl -p "$player" pause
+        play_status="$(playerctl -p "$PLAYER" status)"
+        playerctl -p "$PLAYER" pause
 
-        bluetoothctl disconnect "$mac" || exit 1
+        bluetoothctl disconnect "$MAC" || exit 1
         while is_connected; do
             sleep 0.1
         done
 
-        bluetoothctl connect "$mac" || exit 1
+        bluetoothctl connect "$MAC" || exit 1
         while ! is_connected; do
             sleep 0.1
         done
 
-        [ "$play_status" = 'Playing' ] && playerctl -p "$player" play
+        [ "$play_status" = 'Playing' ] && playerctl -p "$PLAYER" play
         ;;
 
-    'mac') echo $mac ;;
-
+    'mac') echo $MAC ;;
     'status') is_connected ;;
     'power')  is_power_on ;;
-
     'charge') get_charge_percent ;;
 
     'display-status')
@@ -87,7 +102,6 @@ case "$1" in
     'display-charge')
         charge="$(get_charge_percent)"
         charge="${charge%%%}"
-        [ -z "$charge" ] && exit 0 # No info found
         charge=$((charge / 10))
         #  ▁▁▂▃▄▅▆▇██
         # 0123456789X
@@ -103,23 +117,21 @@ case "$1" in
              8) printf '\u2587' ;;
              9) printf '\u2588' ;;
             10) printf '\u2588' ;;
-             *) printf '[?]' ;;
+             *) # No info found, or invalid
+                 printf '[?]'
+                 exit 1 
+                 ;;
         esac
         echo
         ;;
+
+    'h'|'help'|'-h'|'--help')
+        print_help
+        exit 0
+        ;;
     *)
-        echo 'bt: please provide valid subcommand'
-        echo 'USAGE:'
-        echo '    bt [SUBCOMMAND]'
-        echo 'SUBCOMMANDS:'
-        echo '    connect'
-        echo '    disconnect'
-        echo '    mac'
-        echo '    status'
-        echo '    power'
-        echo '    charge'
-        echo '    display-status'
-        echo '    display-charge'
+        print_help
+        exit 1
         ;;
 esac
 
