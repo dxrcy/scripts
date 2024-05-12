@@ -30,9 +30,8 @@ case "$1" in
     'c'|'connect')
         is_connected && exit 0 # already connected
 
-        bluetoothctl power on       || exit 1
+        bluetoothctl power on || exit 1
         bluetoothctl connect "$mac" || exit 1
-
         while ! is_connected; do
             sleep 0.1
         done
@@ -44,15 +43,32 @@ case "$1" in
         playerctl -p "$player" pause
 
         bluetoothctl disconnect "$mac" || exit 1
-        bluetoothctl power off         || exit 1
-
-        # Is this needed ???
-        while is_connected; do
+        bluetoothctl power off || exit 1
+        while is_connected; do # Is this needed ???
             sleep 0.1
         done
 
         # Mute audio when bluetooth disconnected
         pactl set-sink-volume @DEFAULT_SINK@ 0%
+        ;;
+
+    'r'|'reconnect')
+        bluetoothctl power on || exit 1
+
+        play_status="$(playerctl -p "$player" status)"
+        playerctl -p "$player" pause
+
+        bluetoothctl disconnect "$mac" || exit 1
+        while is_connected; do
+            sleep 0.1
+        done
+
+        bluetoothctl connect "$mac" || exit 1
+        while ! is_connected; do
+            sleep 0.1
+        done
+
+        [ "$play_status" = 'Playing' ] && playerctl -p "$player" play
         ;;
 
     'mac') echo $mac ;;
