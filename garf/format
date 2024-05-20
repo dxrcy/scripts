@@ -16,6 +16,8 @@ Garfield-EO
 garfeo
 Garfeo
 Garfield Esperanto
+Garfildo Esperanta
+Esperanta Garfield
 garf-eo"
 
 watermark="$(echo "$watermarks" | shuf -n1)"
