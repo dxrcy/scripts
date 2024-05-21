@@ -13,7 +13,9 @@ if [ ! "$out" ]; then
     exit 1
 fi
 
-for old in $(find . -maxdepth 1 | grep ".*\\.$in"); do
+for old in *; do
+    [ -f "$old" ] || continue
+    echo "$old" | grep -q "^.*\.$in$" || continue
     basename "$old"
     ffmpeg -i "$old" "${old%.*}.$out" -loglevel error "$@" || exit 1
     trash "$old" || exit 1
