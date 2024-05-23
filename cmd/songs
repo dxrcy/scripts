@@ -10,6 +10,10 @@ playlist='https://open.spotify.com/playlist/6lE0EKzv2S2S2SUHIbUDbh?si=19822f0851
 # Filename of track
 trackname='{list-position} {title} - {artists}'
 
+# Location of spotdl binary
+spotdl='spotdl'
+[ -n "$1" ] && spotdl="$1"
+
 # Confirm
 echo 'Remove and redownload all songs'
 printf 'Are you sure? [Y/n] '
@@ -32,6 +36,6 @@ fi
 mkdir -p "$location"
 cd "$location" || exit 1
 # Downloads songs to folder, with formatted filename
-spotdl "$playlist" --output "$trackname" || exit 1
+"$spotdl" "$playlist" --output "$trackname" || exit 1
 notify-send 'Spotify download complete.'
 
