@@ -4,7 +4,7 @@ export INFO='open dmenu to find an emoji'
 add_style='s/^\([^ ]*\)/<span size="13000">\1<\/span>/'
 remove_style='s/^<[^>]*>\([^ <]*\).*$/\1/'
 
-chosen=$(cat ~/scripts/share/emojis | sed "$add_style" | rofi -dmenu -i -l 30 -markup-rows | sed "$remove_style")
+chosen=$(sed "$add_style" ~/scripts/share/emojis | rofi -dmenu -i -l 30 -markup-rows | sed "$remove_style")
 [ -n "$chosen" ] || exit 0
 
 echo "$chosen"
