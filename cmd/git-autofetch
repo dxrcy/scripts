@@ -1,0 +1,26 @@
+#!/bin/sh
+export INFO='periodically run git fetch in a repository'
+
+TIMEOUT=$((3 * 60))
+PID_DIR='/tmp/git-autofetch'
+
+# Root directory of repository, exit if not a git repo
+root="$(git rev-parse --show-toplevel)" || exit $?
+echo "$root"
+
+# Kill process if running in same root directory
+if [ ! -d "$PID_DIR" ]; then
+    mkdir -p "$PID_DIR" || exit $?
+fi
+file="$PID_DIR/$(echo "$root" | tr '/' '%').pid"
+if [ -e "$file" ]; then
+    pid="$(cat "$file")"
+    kill -0 "$pid" 2>/dev/null && kill "$pid"
+fi
+echo $$ > "$file"
+
+# Periodically run git-fetch
+while sleep "$TIMEOUT"; do
+    git fetch
+done &
+
