@@ -20,7 +20,8 @@ fi
 echo $$ > "$file"
 
 # Periodically run git-fetch
-while sleep "$TIMEOUT"; do
+while true; do
     git fetch
+    sleep "$TIMEOUT"
 done &
 
