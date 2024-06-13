@@ -45,22 +45,10 @@ if [ -z "$command_template" ]; then
     exit 1
 fi
 
-inotifywait -m -e modify $(find "$dir") 2>/dev/null \
-| while read -r basepath events filename; do
+run() {
+    basepath="$1"
+    filename="$2"
 
-    # Ignore filenames which are numbers or end with tilde
-    if echo "$filename" | grep -qE '()^[0-9]+$|~$'; then
-        continue
-   fi
-
-    # Don't run if previously ran in the last TIMEOUT milliseconds
-    now="$(date +%s%N | cut -b1-13)"
-    if [ -f "$TIMESTAMP_FILE" ] \
-        && [ "$(cat "$TIMESTAMP_FILE")" -gt "$((now - TIMEOUT))" ]; then
-        continue
-    fi
-    echo "$now" > "$TIMESTAMP_FILE"
-    
     fullpath="$basepath/$filename"
     basename="${file%.*}"
     extension="${file##*.}"
@@ -78,6 +66,25 @@ inotifywait -m -e modify $(find "$dir") 2>/dev/null \
     clear
 
     eval "$command"
+}
+
+inotifywait -m -e modify $(find "$dir") 2>/dev/null \
+| while read -r basepath events filename; do
+
+    # Ignore filenames which are numbers or end with tilde
+    if echo "$filename" | grep -qE '()^[0-9]+$|~$'; then
+        continue
+   fi
+
+    # Don't run if previously ran in the last TIMEOUT milliseconds
+    now="$(date +%s%N | cut -b1-13)"
+    if [ -f "$TIMESTAMP_FILE" ] \
+        && [ "$(cat "$TIMESTAMP_FILE")" -gt "$((now - TIMEOUT))" ]; then
+        continue
+    fi
+    echo "$now" > "$TIMESTAMP_FILE"
+    
+    run "$basepath" "$filename"
 
 done
 
