@@ -45,7 +45,7 @@ if [ -z "$command_template" ]; then
     exit 1
 fi
 
-inotifywait -m -e modify,create,delete $(find "$dir") 2>/dev/null \
+inotifywait -m -e modify $(find "$dir") 2>/dev/null \
 | while read -r basepath events filename; do
 
     # Ignore filenames which are numbers or end with tilde
