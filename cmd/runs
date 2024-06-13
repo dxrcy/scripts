@@ -1,54 +1,83 @@
 #!/bin/sh
 export INFO='watch a file for changes, to compile and run'
 
-# REQUIRES ZSH (for now?..)
-~/scripts/cmd/require entr zsh || exit 1
+~/scripts/cmd/require inotifywait || exit 1
+
+TIMEOUT=100
+TIMESTAMP_FILE="/tmp/runs-$$"
 
 if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
     echo "runs: $INFO"
+    echo
     echo 'USAGE:'
-    echo '    runs [FILENAME] [...COMMAND]'
+    echo '    runs [DIRECTORY] [...COMMAND]'
+    echo
     echo 'ARGUMENTS:'
-    echo '    FILENAME'
-    echo '    COMMAND: Shell command to run on change, with substitutions:'
-    echo '        %f  Full filename (hello.c)'
-    echo '        %n  Filename without extension (hello)'
-    echo '        %t  File extension (c)'
+    echo '    DIRECTORY'
+    echo '          File or directory to watch'
+    echo '    COMMAND:'
+    echo '        Shell command to run on event, with substitutions below'
+    echo
+    echo 'COMMAND SUBSTITUTIONS:'
+    echo '    %d  Directory of file               path/to/'
+    echo '    %n  Filename without directory      file.txt'
+    echo '    %f  Full filename and directory     path/to/file.txt'
+    echo '    %N  Filename without extension      file'
+    echo '    %e  File extension                  txt'
+    echo '    %E  Events type                     CREATE|MODIFY|DELETE'
     exit 0
 fi
 
-file="$1"
-if [ -z "$file" ]; then
-    echo 'runs: missing file.'
+dir="$1"
+if [ -z "$dir" ]; then
+    echo 'runs: missing directory argument.' >&2
     exit 1
 fi
-if [ ! -f "$file" ]; then
-    echo "runs: cannot find file $file."
+if [ ! -e "$dir" ]; then
+    echo "runs: file or directory not exist: $dir" >&2
     exit 1
 fi
 
 shift
-command=$*
-if [ -z "$command" ]; then
-    echo 'runs: missing command.'
+command_template=$*
+if [ -z "$command_template" ]; then
+    echo 'runs: missing command.' >&2
     exit 1
 fi
 
-name="${file%.*}"
-type="${file##*.}"
+inotifywait -m -e modify,create,delete $(find "$dir") 2>/dev/null \
+| while read -r basepath events filename; do
 
-command="$(echo "$command" \
-    | sed "s|%f|$file|g" \
-    | sed "s|%n|$name|g" \
-    | sed "s|%t|$type|g" \
-)"
+    # Ignore filenames which are numbers or end with tilde
+    if echo "$filename" | grep -qE '()^[0-9]+$|~$'; then
+        continue
+   fi
 
-printf "\033[1m%s\033[0m\n" "$command"
+    # Don't run if previously ran in the last TIMEOUT milliseconds
+    now="$(date +%s%N | cut -b1-13)"
+    if [ -f "$TIMESTAMP_FILE" ] \
+        && [ "$(cat "$TIMESTAMP_FILE")" -gt "$((now - TIMEOUT))" ]; then
+        continue
+    fi
+    echo "$now" > "$TIMESTAMP_FILE"
+    
+    fullpath="$basepath/$filename"
+    basename="${file%.*}"
+    extension="${file##*.}"
 
-# entr:
-#   -c  Clear screen on change
-#   -i  Use an interactive shell (inherit aliases)
-# zsh:
-#   -c  Run argument as command
-echo "$file" | entr -c zsh -i -c "$command"
+    command="$(echo "$command_template" \
+        | sed "s|%d|$basepath|g" \
+        | sed "s|%n|$filename|g" \
+        | sed "s|%f|$basepath$filename|g" \
+        | sed "s|%N|${filename%.*}|g" \
+        | sed "s|%e|${filename##*.}|g" \
+        | sed "s|%E|${events}|g" \
+    )"
+
+    printf "\n\033[1m%s\033[0m\n" "$command"
+    clear
+
+    eval "$command"
+
+done
 
