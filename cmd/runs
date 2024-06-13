@@ -6,15 +6,21 @@ export INFO='watch a file for changes, to compile and run'
 TIMEOUT=100
 TIMESTAMP_FILE="/tmp/runs-$$"
 
-if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
+show_help() {
     echo "runs: $INFO"
     echo
     echo 'USAGE:'
-    echo '    runs [DIRECTORY] [...COMMAND]'
+    echo '    runs [OPTIONS] [...COMMAND]'
+    echo
+    echo 'OPTIONS:'
+    echo '    -d, --directory DIRECTORY'
+    echo '        File or directory to watch, default: .'
+    echo '    -t, --timeout TIMEOUT'
+    echo "        Timeout in milliseconds to postpone run, default: $TIMEOUT"
+    echo '    -p, --postpone'
+    echo '        Postpone run until next event'
     echo
     echo 'ARGUMENTS:'
-    echo '    DIRECTORY'
-    echo '          File or directory to watch'
     echo '    COMMAND:'
     echo '        Shell command to run on event, with substitutions below'
     echo
@@ -26,19 +32,60 @@ if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
     echo '    %e  File extension                  txt'
     echo '    %E  Events type                     CREATE|MODIFY|DELETE'
     exit 0
-fi
+}
 
-dir="$1"
+dir=''
+timeout="$TIMEOUT"
+postpone=''
+
+while [ "$1" != "${1#-}" ]; do
+
+    flag="$1"
+    shift
+
+    case "$flag" in
+
+        -h | --help)
+            show_help
+            ;;
+
+        -d | --directory)
+            if [ -z "$1" ]; then
+                echo "runs: missing value for $flag." >&2
+                exit 1
+            fi
+            if [ -n "$dir" ]; then
+                echo "runs: cannot specify more than one directory." >&2
+                exit 1
+            fi
+            dir="$1"
+            shift
+            ;;
+
+        -t | --timeout)
+            if [ -z "$1" ]; then
+                echo "runs: missing value for $flag." >&2
+                exit 1
+            fi
+            timeout="$1"
+            shift
+            ;;
+
+        -p | --postpone) postpone=1 ;;
+
+        *)
+            echo "runs: invalid option: $flag" >&2
+            exit 1
+    esac
+done
+
 if [ -z "$dir" ]; then
-    echo 'runs: missing directory argument.' >&2
-    exit 1
-fi
-if [ ! -e "$dir" ]; then
+    dir='.'
+elif [ ! -e "$dir" ]; then
     echo "runs: file or directory not exist: $dir" >&2
     exit 1
 fi
 
-shift
 command_template=$*
 if [ -z "$command_template" ]; then
     echo 'runs: missing command.' >&2
@@ -47,7 +94,8 @@ fi
 
 run() {
     basepath="$1"
-    filename="$2"
+    events="$2"
+    filename="$3"
 
     fullpath="$basepath/$filename"
     basename="${file%.*}"
@@ -66,7 +114,16 @@ run() {
     clear
 
     eval "$command"
+
+    code="$?"
+    if [ "$code" -ne 0 ]; then
+        echo "exit: $code"
+    fi
 }
+
+if [ -z "$postpone" ]; then
+    run '' '' ''
+fi
 
 inotifywait -m -e modify $(find "$dir") 2>/dev/null \
 | while read -r basepath events filename; do
@@ -79,12 +136,12 @@ inotifywait -m -e modify $(find "$dir") 2>/dev/null \
     # Don't run if previously ran in the last TIMEOUT milliseconds
     now="$(date +%s%N | cut -b1-13)"
     if [ -f "$TIMESTAMP_FILE" ] \
-        && [ "$(cat "$TIMESTAMP_FILE")" -gt "$((now - TIMEOUT))" ]; then
+        && [ "$(cat "$TIMESTAMP_FILE")" -gt "$((now - timeout))" ]; then
         continue
     fi
     echo "$now" > "$TIMESTAMP_FILE"
     
-    run "$basepath" "$filename"
+    run "$basepath" "$events" "$filename"
 
 done
 
