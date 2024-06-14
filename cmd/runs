@@ -113,20 +113,29 @@ run() {
     printf "\n\033[1m%s\033[0m\n" "$command"
     clear
 
-    eval "$command"
-
-    code="$?"
-    if [ "$code" -ne 0 ]; then
-        echo "exit: $code"
+    # Kill previous command, and any children
+    if [ -n "$running" ] && kill -0 "$running" 2>/dev/null; then
+        kill "$running" $(pgrep -P "$running")
     fi
+
+    eval "$command" &
+    running=$!
 }
 
 if [ -z "$postpone" ]; then
     run '' '' ''
 fi
 
-inotifywait -m -e modify $(find "$dir") 2>/dev/null \
-| while read -r basepath events filename; do
+{
+    inotifywait \
+        --monitor \
+        --event modify \
+        --recursive \
+        --exclude '.*/\.git/.*' \
+        --quiet \
+        "$dir" \
+    || kill "$self"
+} | while read -r basepath events filename; do
 
     # Ignore filenames which are numbers or end with tilde
     if echo "$filename" | grep -qE '()^[0-9]+$|~$'; then
@@ -140,7 +149,7 @@ inotifywait -m -e modify $(find "$dir") 2>/dev/null \
         continue
     fi
     echo "$now" > "$TIMESTAMP_FILE"
-    
+
     run "$basepath" "$events" "$filename"
 
 done
