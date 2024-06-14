@@ -1,7 +1,13 @@
 #!/bin/sh
 export INFO='download all songs from a particular Spotify playlist'
 
-~/scripts/cmd/require spotdl || exit 1
+# Location of spotdl binary
+if [ -n "$1" ]; then
+    spotdl="$1"
+else
+    spotdl='spotdl'
+    ~/scripts/cmd/require spotdl || exit 1
+fi
 
 # Directory to download to
 location="$HOME/music/songs"
@@ -9,10 +15,6 @@ location="$HOME/music/songs"
 playlist='https://open.spotify.com/playlist/6lE0EKzv2S2S2SUHIbUDbh?si=19822f08519846b8'
 # Filename of track
 trackname='{list-position} {title} - {artists}'
-
-# Location of spotdl binary
-spotdl='spotdl'
-[ -n "$1" ] && spotdl="$1"
 
 # Confirm
 echo 'Remove and redownload all songs'
