@@ -37,6 +37,7 @@ show_help() {
 dir=''
 timeout="$TIMEOUT"
 postpone=''
+file=''
 
 while [ "$1" != "${1#-}" ]; do
 
@@ -81,6 +82,9 @@ done
 
 if [ -z "$dir" ]; then
     dir='.'
+elif [ -f "$dir" ]; then
+    file="$dir"
+    dir="$(dirname "$dir")"
 elif [ ! -e "$dir" ]; then
     echo "runs: file or directory not exist: $dir" >&2
     exit 1
@@ -136,6 +140,12 @@ fi
         "$dir" \
     || kill "$self"
 } | while read -r basepath events filename; do
+
+    if [ -n "$file" ] \
+        && [ ! "$(realpath "$basepath/$filename")" = "$(realpath "$file")" ]
+    then
+        continue
+    fi
 
     # Ignore filenames which are numbers or end with tilde
     if echo "$filename" | grep -qE '()^[0-9]+$|~$'; then
