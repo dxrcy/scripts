@@ -127,7 +127,11 @@ run() {
 }
 
 if [ -z "$postpone" ]; then
-    run '' '' ''
+    if [ -n "$file" ];
+        then filename="$file"
+        else filename=''
+    fi
+    run './' 'INITIAL' "$filename"
 fi
 
 {
