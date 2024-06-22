@@ -8,6 +8,7 @@ menu="\
  Shutdown
  Reboot
  Logout
+ Lock
  Suspend"
 
 i3-msg "focus output $monitor"
@@ -18,6 +19,7 @@ case "$answer" in
     ' Shutdown') systemctl poweroff ;;
     ' Reboot')   systemctl reboot ;;
     ' Suspend')  systemctl suspend ;;
+    ' Lock')     betterlockscreen -l ;;
     ' Logout')   i3-msg exit ;;
     *) ;;
 esac
