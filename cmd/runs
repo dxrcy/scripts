@@ -19,6 +19,8 @@ show_help() {
     echo "        Timeout in milliseconds to postpone run, default: $TIMEOUT"
     echo '    -p, --postpone'
     echo '        Postpone run until next event'
+    echo '    -s, --shell'
+    echo '        Shell to use, default: $SHELL or $(which sh)'
     echo
     echo 'ARGUMENTS:'
     echo '    COMMAND:'
@@ -38,6 +40,7 @@ dir=''
 timeout="$TIMEOUT"
 postpone=''
 file=''
+shell=''
 
 while [ "$1" != "${1#-}" ]; do
 
@@ -72,6 +75,15 @@ while [ "$1" != "${1#-}" ]; do
             shift
             ;;
 
+        -s | --shell)
+            if [ -z "$1" ]; then
+                echo "runs: missing value for $flag." >&2
+                exit 1
+            fi
+            shell="$1"
+            shift
+            ;;
+
         -p | --postpone) postpone=1 ;;
 
         *)
@@ -93,6 +105,21 @@ fi
 command_template=$*
 if [ -z "$command_template" ]; then
     echo 'runs: missing command.' >&2
+    exit 1
+fi
+
+# Find appropriate shell if none specified
+if [ -z "$shell" ]; then
+    shell="$SHELL"
+fi
+if [ -z "$shell" ]; then
+    shell="$(which sh)"
+fi
+if [ -z "$shell" ]; then
+    shell='/usr/bin/sh'
+fi
+if [ ! -x "$shell" ]; then
+    echo "runs: shell not executable: $shell" >&2
     exit 1
 fi
 
@@ -122,7 +149,8 @@ run() {
         kill "$running" $(pgrep -P "$running")
     fi
 
-    eval "$command" &
+    # Fork and run in new (interactive) shell, in new session
+    setsid "$shell" -ci "$command" &
     running=$!
 }
 
