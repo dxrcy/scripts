@@ -1,11 +1,7 @@
 #!/bin/sh
 
-type() {
-    xdotool type --clearmodifiers "$@"
-}
-keys() {
-    xdotool key --clearmodifiers "$@"
-}
+alias type='xdotool type --clearmodifiers'
+alias keys='xdotool key --clearmodifiers'
 
 # Start file explorer
 nohup thunar ~/pics > /dev/null 2>&1 &
