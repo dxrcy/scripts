@@ -65,9 +65,12 @@ done
 
 # Create unique name for folder, if not specified as argument
 if [ ! "$name" ]; then
-    now=$(date +'%m%d%H')
-    id=$(tr -dc '[:lower:]' < /dev/urandom | head -c 4)
-    name="${now}_${id}_$date"
+    if date -d "$date" +'%A' | grep -q 'Sunday';
+        then case='upper'
+        else case='lower'
+    fi
+    id=$(tr -dc "[:$case:]" < /dev/urandom | head -c 4)
+    name="$id:$date"
 fi
 
 # Create other files from image
