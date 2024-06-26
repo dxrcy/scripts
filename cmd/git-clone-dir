@@ -1,0 +1,28 @@
+#!/bin/sh
+export INFO='clone a single directory of a Git repository'
+
+url="$1"
+if [ -z "$url" ]; then
+    echo "git-clone-dir: missing url."
+    exit 1
+fi
+
+dir="$2"
+if [ -z "$dir" ]; then
+    echo "git-clone-dir: missing dir."
+    exit 1
+fi
+
+target="${url##*/}"
+target="${target%.git}"
+
+git clone --no-checkout --depth=1 --filter=tree:0 "$url" "$target" || exit 2
+
+cd "$target" || exit 3
+
+git sparse-checkout set --no-cone "$dir" || exit 2
+
+git checkout || exit 2
+
+git status
+
