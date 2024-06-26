@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='check all user scripts for bashisms or linting errors'
 
+~/scripts/cmd/require shellcheck || exit 1
+
 # Get location of scripts folder
 scripts="$(readlink -f "$(dirname "$0")/..")"
 
