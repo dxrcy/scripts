@@ -20,6 +20,7 @@ show_help() {
     echo '    -p, --postpone'
     echo '        Postpone run until next event'
     echo '    -s, --shell'
+    # shellcheck disable=SC2016
     echo '        Shell to use, default: $SHELL or $(which sh)'
     echo
     echo 'ARGUMENTS:'
@@ -123,7 +124,7 @@ if [ ! -x "$shell" ]; then
     exit 1
 fi
 
-run() {
+execute() {
     basepath="$1"
     events="$2"
     filename="$3"
@@ -135,9 +136,9 @@ run() {
     command="$(echo "$command_template" \
         | sed "s|%d|$basepath|g" \
         | sed "s|%n|$filename|g" \
-        | sed "s|%f|$basepath$filename|g" \
-        | sed "s|%N|${filename%.*}|g" \
-        | sed "s|%e|${filename##*.}|g" \
+        | sed "s|%f|$fullpath|g" \
+        | sed "s|%N|${basename}|g" \
+        | sed "s|%e|${extension}|g" \
         | sed "s|%E|${events}|g" \
     )"
 
@@ -159,8 +160,10 @@ if [ -z "$postpone" ]; then
         then filename="$file"
         else filename=''
     fi
-    run './' 'INITIAL' "$filename"
+    execute './' 'INITIAL' "$filename"
 fi
+
+self=$$
 
 {
     inotifywait \
