@@ -1,7 +1,7 @@
 #!/bin/sh
 export INFO="use pacman/paru with a 'nicer' sytax"
 
-~/scripts/cmd/require pacman paru sudo || exit 1
+~/scripts/cmd/require pacman paru sudo || exit $?
 
 # Pacman subcommand (like -Syu) is first argument
 cmd="$1"

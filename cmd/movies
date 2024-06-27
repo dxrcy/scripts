@@ -1,7 +1,7 @@
 #!/bin/sh
 export INFO='index all files in movies directory'
 
-~/scripts/cmd/require tree || exit 1
+~/scripts/cmd/require tree || exit $?
 
 # Location of movies folder 
 drive="/run/media/$(whoami)/MOVIES/Movies"

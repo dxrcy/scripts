@@ -1,9 +1,12 @@
 #!/bin/sh
 export INFO='check if commands or binaries are installed'
 
+code=199
+
 for cmd in "$@"; do
     if [ ! -x "$(command -v "$cmd")" ]; then
-        echo "required command '$cmd' not found.";  exit 1;
+        echo "required command '$cmd' not found."
+        exit "$code"
     fi
 done
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 export INFO='connect or disconnect a particular bluetooth device'
 
-~/scripts/cmd/require bluetoothctl playerctl pactl || exit 1
+~/scripts/cmd/require bluetoothctl playerctl pactl || exit $?
 
 MAC='40:DE:17:43:A1:71' # Good ones
 # MAC='40:DE:17:43:2F:49' # Broken ones

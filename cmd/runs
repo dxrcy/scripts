@@ -1,7 +1,7 @@
 #!/bin/sh
 export INFO='watch a file for changes, to compile and run'
 
-~/scripts/cmd/require inotifywait clear setsid pgrep || exit 1
+~/scripts/cmd/require inotifywait clear setsid pgrep || exit $?
 
 TIMEOUT=100
 TIMESTAMP_FILE="/tmp/runs-$$"

@@ -1,7 +1,7 @@
 #!/bin/sh
 export INFO='clone a single directory of a Git repository'
 
-~/scripts/cmd/require git || exit 1
+~/scripts/cmd/require git || exit $?
 
 url="$1"
 if [ -z "$url" ]; then

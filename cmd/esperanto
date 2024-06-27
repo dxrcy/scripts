@@ -1,7 +1,7 @@
 #!/bin/sh
 export INFO='switch between english and esperanto keyboard'
 
-~/scripts/cmd/require xmodmap || exit 1
+~/scripts/cmd/require xmodmap || exit $? 
 
 turn_on() {
     xmodmap -e 'keycode 24 = scircumflex Scircumflex'

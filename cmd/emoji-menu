@@ -1,7 +1,7 @@
 #!/bin/sh
 export INFO='open dmenu to find an emoji'
 
-~/scripts/cmd/require rofi notify-send || exit 1
+~/scripts/cmd/require rofi notify-send || exit $?
 
 add_style='s/^\([^ ]*\)/<span size="13000">\1<\/span>/'
 remove_style='s/^<[^>]*>\([^ <]*\).*$/\1/'
