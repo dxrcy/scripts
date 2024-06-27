@@ -1,7 +1,7 @@
 #!/bin/sh
 export INFO='mount or unmount a drive with Rofi dialog and udisksctl'
 
-~/scripts/cmd/require udisksctl lsof rofi || exit 1
+~/scripts/cmd/require udisksctl lsof rofi notify-send find || exit 1
 
 lock_file="$HOME/.cache/mount-gui.lock"
 log_file="$HOME/.cache/mount-gui.log"

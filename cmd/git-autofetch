@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='periodically run git fetch in a repository'
 
+~/scripts/cmd/require git || exit 1
+
 TIMEOUT=$((3 * 60))
 PID_DIR='/tmp/git-autofetch'
 

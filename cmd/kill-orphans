@@ -1,5 +1,8 @@
 #!/bin/sh
 export INFO='kill all unattatched (orphaned) tmux sessions'
+# This is a bit broken at the moment, I am not sure why...
+
+~/scripts/cmd/require tmux || exit 1
 
 log() {
     echo "$1" >>"$HOME/.cache/kill-orphans.log" 

@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='open Spotify tui, starting spotifyd if necessary'
 
+~/scripts/cmd/require spotifyd /bin/spt pgrep killall || exit 1
+
 # Handle arguments
 while getopts 'kdh' opt; do
     case "$opt" in

@@ -1,8 +1,9 @@
 #!/bin/sh
 export INFO='shuffle backgrounds every so often'
 
-dir="$HOME/.config/wallpapers"
+~/scripts/cmd/require feh pgrep || exit 1
 
+dir="$HOME/.config/wallpapers"
 delay="$1"
 
 change() {

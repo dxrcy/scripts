@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='trash all cache/state (not config) for Neovim'
 
+~/scripts/cmd/require trash || exit 1
+
 if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
     echo "nvim-clean: $INFO"
     echo 'USAGE:'

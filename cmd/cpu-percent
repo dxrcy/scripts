@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='get CPU usage percent for a program'
 
+~/scripts/cmd/require pgrep top || exit 1
+
 CPU_COUNT=16
 
 pname="$1"

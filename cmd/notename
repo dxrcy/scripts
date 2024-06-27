@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='print random name for Neorg note file, with date'
 
+~/scripts/cmd/require ~/scripts/cmd/random-name || exit 1
+
 # Directory of notes
 dir="$HOME/docs/notes"
 

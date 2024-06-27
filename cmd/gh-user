@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='get the current logged in GitHub user'
 
+~/scripts/cmd/require gh pcregrep || exit 1
+
 status="$(gh auth status)"
 echo "$status" | while IFS= read -r line; do
     if user="$(echo "$line" | pcregrep -o1 'Logged in to github.com account ([^ ]+)')"; then

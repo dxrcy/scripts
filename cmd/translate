@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='translate text, using Glosbe.com API'
 
+~/scripts/cmd/require curl jq || exit 1
+
 # Source language code
 src="$1"
 # Destination language code

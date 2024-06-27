@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='clone a single directory of a Git repository'
 
+~/scripts/cmd/require git || exit 1
+
 url="$1"
 if [ -z "$url" ]; then
     echo "git-clone-dir: missing url."

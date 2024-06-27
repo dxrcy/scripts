@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='copy image names from backgrounds folder to clipboard'
 
+~/scripts/cmd/require xclip find || exit 1
+
 # find:  List absolute filepaths
 # sed:   Add file:// to each line
 # tr:    Replace newlines with space

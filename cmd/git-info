@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='get information about Git repo status for a directory'
 
+~/scripts/cmd/require git || exit 1
+
 # Parse arguments
 while [ "$#" -gt 0 ]; do
     case "$1" in 

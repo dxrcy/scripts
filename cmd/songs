@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='download all songs from a particular Spotify playlist'
 
+~/scripts/cmd/require notify-send || exit 1
+
 # Location of spotdl binary
 if [ -n "$1" ]; then
     spotdl="$1"

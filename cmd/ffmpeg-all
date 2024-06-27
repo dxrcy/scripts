@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='run ffmpeg on all files in current directory, converting one filetype to another'
 
+~/scripts/cmd/require ffmpeg trash || exit 1
+
 in="$1"
 out="$2"
 shift 2

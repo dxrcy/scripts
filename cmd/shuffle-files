@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='rename all files in directory to random strings, preserving file extensions'
 
+~/scripts/cmd/require ~/scripts/cmd/random-id || exit 1
+
 dir="$1"
 if [ -n "$dir" ]; then
     cd "$dir" || exit 1

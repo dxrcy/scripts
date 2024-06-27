@@ -1,6 +1,8 @@
 #!/bin/sh
 export INFO='quickly backup a multiple files locally'
 
+~/scripts/cmd/require rsync || exit 1
+
 # Destination directory
 LOCATION='.backups'
 timecode="$(date '+%Y-%m-%d-%H%M')"
