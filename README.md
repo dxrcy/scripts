@@ -24,3 +24,5 @@ Other files are put in separate folders.
 
 Help comment is defined in a script with `export INFO=`, view with `whatscript [CMD]`
 
+Non-standard commands are checked to be installed with `requires`, returning code 199 if not found.
+
