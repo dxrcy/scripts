@@ -195,7 +195,7 @@ self=$$
     fi
     echo "$now" > "$TIMESTAMP_FILE"
 
-    run "$basepath" "$events" "$filename"
+    execute "$basepath" "$events" "$filename"
 
 done
 
