@@ -8,7 +8,7 @@ for old in *; do
     read -r _
 
     echo "$old" > "$temp_file"
-    nvim "$temp_file"
+    "$EDITOR" "$temp_file" || continue
     new="$(cat "$temp_file")"
 
     if [ "$new" = "$old" ]; then
