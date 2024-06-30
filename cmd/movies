@@ -8,7 +8,7 @@ drive="/run/media/$(whoami)/MOVIES/Movies"
 # Filepath of movies list backup
 list_copy="$HOME/docs/movies.txt"
 # Location of semdir folder
-semdir="$HOME/docs/semdir/"
+semdir="$HOME/docs/misc/semdir"
 
 cd "$drive" || exit 1
 
