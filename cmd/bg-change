@@ -7,7 +7,7 @@ dir="$HOME/.config/wallpapers"
 delay="$1"
 
 change() {
-    feh --randomize --bg-scale "$dir/"*
+    feh --randomize --bg-scale --no-fehbg "$dir/"*
 }
 
 # Just change once
