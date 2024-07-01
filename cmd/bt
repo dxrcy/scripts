@@ -13,9 +13,11 @@ PLAYER='spotify'
 # Override built-in printf, for Unicode support with narrowly-compliant shells
 printf() { /bin/printf "$@"; }
 
-# Returns successful exit if bluetooth device is connected
+# Returns 0 if bluetooth device is connected AND charge can be read
+# Remove second line if the device doesn't support reading battery percentage
 is_connected() {
-    bluetoothctl info $MAC | grep -q 'Connected: yes'
+    bluetoothctl info $MAC | grep -q 'Connected: yes' \
+        && [ -n "$(get_charge_percent)" ]
 }
 # Returns successful exit if bluetooth is powered on (enabled)
 is_power_on() {
@@ -50,8 +52,8 @@ case "$1" in
         is_connected && exit 0 # already connected
 
         bluetoothctl power on || exit 1
-        bluetoothctl connect "$MAC" || exit 1
-        while ! is_connected; do
+        until is_connected; do
+            bluetoothctl connect "$MAC" || exit 1
             sleep 0.1
         done
 
@@ -84,7 +86,7 @@ case "$1" in
         done
 
         bluetoothctl connect "$MAC" || exit 1
-        while ! is_connected; do
+        until is_connected; do
             sleep 0.1
         done
 
