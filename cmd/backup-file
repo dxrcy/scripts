@@ -1,5 +1,5 @@
 #!/bin/sh
-export INFO='quickly backup a multiple files locally'
+export INFO='quickly backup multiple files locally or globally'
 
 ~/scripts/cmd/require rsync || exit $?
 
@@ -13,11 +13,15 @@ timecode="$(date '+%Y-%m-%d-%H%M')"
 source_dir="$(echo "$PWD" | sed 's|/|%|g')"
 
 # Local and global backup location
-dest_local="$LOCATION_LOCAL/$source_dir/$timecode"
-dest_global="$LOCATION_GLOBAL/$timecode"
+dest_local="$LOCATION_LOCAL/$timecode"
+dest_global="$LOCATION_GLOBAL/$source_dir/$timecode"
 
 if [ "$1" = '-h' ] || [ "$1" = '--help' ]; then
-    echo 'todo: documentation'
+    echo "backup-file: $INFO"
+    echo
+    echo 'USAGE:'
+    echo '    backup-file [...FILES]'
+    exit 0
 fi
 
 if [ -z "$1" ]; then
@@ -46,6 +50,14 @@ function create_dir() {
 
 create_dir "$dest_local"
 create_dir "$dest_global"
+
+# Quickly check all files exist (non-recursively)
+for file in $files; do
+    if [ ! -e "$file" ]; then
+        echo "backup-file: $file does not exist." >&2
+        exit 2
+    fi
+done
 
 function copy() {
     file="$1"
