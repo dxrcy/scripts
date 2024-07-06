@@ -3,10 +3,22 @@ export INFO='quickly backup a multiple files locally'
 
 ~/scripts/cmd/require rsync || exit $?
 
-# Destination directory
-LOCATION='.backups'
+LOCATION_LOCAL='.backups'
+if [ -n "$XDG_DATA_HOME" ];
+    then LOCATION_GLOBAL="$XDG_DATA_HOME/backups"
+    else LOCATION_GLOBAL="$HOME/.local/share/backups"
+fi
+
 timecode="$(date '+%Y-%m-%d-%H%M')"
-dest="$LOCATION/$timecode"
+source_dir="$(echo "$PWD" | sed 's|/|%|g')"
+
+# Local and global backup location
+dest_local="$LOCATION_LOCAL/$source_dir/$timecode"
+dest_global="$LOCATION_GLOBAL/$timecode"
+
+if [ "$1" = '-h' ] || [ "$1" = '--help' ]; then
+    echo 'todo: documentation'
+fi
 
 if [ -z "$1" ]; then
     echo "backup-file: missing argument." >&2
@@ -21,25 +33,37 @@ if [ "$#" -eq 1 ] && [ "$1" = '.' ]; then
     cd ..
 fi
 
-if [ ! -e "$LOCATION" ]; then
-    mkdir -p "$LOCATION"
-elif [ ! -d "$LOCATION" ]; then
-    echo "backup-dir: $LOCATION exists and is not a directory." >&2
-    exit 1
-fi
+function create_dir() {
+    dir="$1"
+    if [ ! -e "$dir" ]; then
+        mkdir -p "$dir"
+        if [ $? -ne 0 ]; then
+            echo "backup-file: failed to create $dir." >&2
+            exit 2
+        fi
+    fi
+}
 
-if [ ! -e "$dest" ]; then
-    mkdir -p "$dest"
-elif [ ! -d "$dest" ]; then
-    echo "backup-dir: $dest exists and is not a directory." >&2
-    exit 2
-fi
+create_dir "$dest_local"
+create_dir "$dest_global"
 
+function copy() {
+    file="$1"
+    dest="$2"
+    # --exclude local location to NOT recopy sub-backups
+    rsync --archive --exclude="$LOCATION_LOCAL" "$file" "$dest/$file" \
+        || exit 2
+}
+
+# Local
 for file in $files; do
-    # Do not copy $LOCATION sub-backups
-    rsync --archive --exclude="$LOCATION" "$file" "$dest/$file" || exit 2
-
+    copy "$file" "$dest_local"
     [ -n "$is_cwd" ] && printf '../'
-    echo "$dest/$file"
+    echo "$dest_local/$file"
+done
+# Global
+for file in $files; do
+    copy "$file" "$dest_global"
+    echo "$dest_global/$file"
 done
 
