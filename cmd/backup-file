@@ -68,11 +68,11 @@ function copy() {
 }
 
 # Local
-for file in $files; do
-    copy "$file" "$dest_local"
-    [ -n "$is_cwd" ] && printf '../'
-    echo "$dest_local/$file"
-done
+# for file in $files; do
+#     copy "$file" "$dest_local"
+#     [ -n "$is_cwd" ] && printf '../'
+#     echo "$dest_local/$file"
+# done
 # Global
 for file in $files; do
     copy "$file" "$dest_global"
