@@ -1,3 +1,0 @@
-#!/bin/sh
-export INFO='returns a successful exit code'
-exit 0
