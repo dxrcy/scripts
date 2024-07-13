@@ -37,11 +37,10 @@ if [ "$#" -eq 1 ] && [ "$1" = '.' ]; then
     cd ..
 fi
 
-function create_dir() {
+create_dir() {
     dir="$1"
     if [ ! -e "$dir" ]; then
-        mkdir -p "$dir"
-        if [ $? -ne 0 ]; then
+        if ! mkdir -p "$dir"; then
             echo "backup-file: failed to create $dir." >&2
             exit 2
         fi
@@ -59,7 +58,7 @@ for file in $files; do
     fi
 done
 
-function copy() {
+copy() {
     file="$1"
     dest="$2"
     # --exclude local location to NOT recopy sub-backups
