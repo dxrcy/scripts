@@ -34,7 +34,8 @@ if [ ! "$monitor_count" = '2' ]; then
             --output DP-1 --off \
             --output DP-2 --off \
             --output DP-3 --off \
-            --output DP-4 --off
+            --output DP-4 --off \
+            || exit $?
     echo 'Applied xrandr settings for 1 monitor'
 else
     # Secondary monitor
@@ -43,6 +44,7 @@ else
             --output DP-1 --off \
             --output DP-2 --off \
             --output DP-3 --off \
-            --output DP-4 --off
+            --output DP-4 --off \
+            || exit $?
     echo 'Applied xrandr settings for 2 monitors'
 fi
