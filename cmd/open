@@ -3,14 +3,24 @@ export INFO='open a file with program based on mimetype'
 
 ~/scripts/cmd/require devour xdg-open || exit $?
 
+[ -n "$1" ] || exit 0
+
 case "$(file --mime-type --brief --dereference "$@")" in
 
-    video/* | audio/* )
-        devour mpv "$@"
+    # Do not replace window for these
+    image/svg* )
+        inkscape "$@"
+        ;;
+    image/x-xcf )
+        gimp "$@"
         ;;
 
     image/* )
         devour nsxiv "$@"
+        ;;
+
+    video/* | audio/* )
+        devour mpv "$@"
         ;;
 
     application/pdf | application/postscript )
@@ -19,7 +29,7 @@ case "$(file --mime-type --brief --dereference "$@")" in
 
     *)
         echo 'open: using xdg-open fallback.' >&2
-        xdg-open "$@"
+        xdg-open "$@" || exit $?
         ;;
 esac
 
