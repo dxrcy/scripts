@@ -1,0 +1,25 @@
+#!/bin/sh
+export INFO='open a file with program based on mimetype'
+
+~/scripts/cmd/require devour xdg-open || exit $?
+
+case "$(file --mime-type --brief --dereference "$@")" in
+
+    video/* | audio/* )
+        devour mpv "$@"
+        ;;
+
+    image/* )
+        devour nsxiv "$@"
+        ;;
+
+    application/pdf | application/postscript )
+        devour zathura "$@"
+        ;;
+
+    *)
+        echo 'open: using xdg-open fallback.' >&2
+        xdg-open "$@"
+        ;;
+esac
+
