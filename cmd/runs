@@ -3,6 +3,8 @@ export INFO='watch a file for changes, to compile and run'
 
 ~/scripts/cmd/require inotifywait clear setsid pgrep || exit $?
 
+#TODO: Add `ignore` option for outputted files ?
+
 TIMEOUT=100
 TIMESTAMP_FILE="/tmp/runs-$$"
 
