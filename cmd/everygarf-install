@@ -1,6 +1,10 @@
 #!/bin/sh
-# 1. Navigate to user systemd config
+# Configuration
 dir=~/.config/systemd/user
+cargo="$CARGO_HOME"
+[ -n "$cargo" ] || cargo="$HOME/.cargo"
+cache="$HOME/code/everygarf-cache/cache"
+# 1. Navigate to user systemd config
 [ -d "$dir" ] || { mkdir -p "$dir" || exit 1; }
 cd "$dir" || exit 1
 # 2. Create service file
@@ -10,7 +14,7 @@ echo "\
 [Unit]
 Description=Run EveryGarf program to download Garfield comics
 [Service]
-ExecStart=$HOME/.cargo/bin/everygarf --jobs 10 --max 50 --notify-on-fail --save-cache $HOME/code/everygarf-cache/cache
+ExecStart=$cargo/bin/everygarf --jobs 10 --max 50 --notify-on-fail --save-cache $cache
 [Install]
 WantedBy=everygarf.timer\
 " > everygarf.service
