@@ -22,7 +22,7 @@ case "$answer" in
     ' Reboot')   systemctl reboot ;;
     ' Suspend')  systemctl suspend ;;
     ' Lock')     betterlockscreen -l ;;
-    ' Logout')   i3-msg exit ;;
+    ' Logout')   bspc quit ;;
     *) ;;
 esac
 
