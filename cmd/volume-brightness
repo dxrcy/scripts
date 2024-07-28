@@ -21,7 +21,7 @@ show_help() {
 $(basename "$0"): $INFO
     v+  Increase volume
     v-  Decrease volume
-    v0  Mute/unmute volume
+    vm  Mute/unmute volume
     b+  Increase brightness
     b-  Decrease brightness
 EOF
@@ -82,9 +82,8 @@ case "$command" in
         # Unmute
         pactl set-sink-mute @DEFAULT_SINK@ 0
         value=$(get_volume)
-        echo "<$value>"
         # Increase or set to max value
-        if [ $(( "$value" + "$step_volume" )) -ge "$volume_max" ]; then
+        if [ $(( $value + $step_volume )) -ge "$volume_max" ]; then
             pactl set-sink-volume @DEFAULT_SINK@ "$volume_max%"
         else
             pactl set-sink-volume @DEFAULT_SINK@ "+$step_volume%"
@@ -95,7 +94,7 @@ case "$command" in
         pactl set-sink-volume @DEFAULT_SINK@ "-$step_volume%"
         notify_volume
         ;;
-    v0)
+    vm)
         pactl set-sink-mute @DEFAULT_SINK@ toggle
         notify_volume
         ;;
