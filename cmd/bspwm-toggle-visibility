@@ -1,0 +1,41 @@
+#!/bin/sh
+export INFO='toggle visibility of a window like a scratchpad (bspwm)'
+
+if [ "$1" = '-h' ] || [ "$1" = '--help' ] || [ "$#" -lt 2 ]; then
+    cat <<EOF
+Usage: $(basename "${0}") [SELECTOR] [...EXECUTABLE]
+    SELECTOR      (<class_name>|*)[:<instance_name>]
+    EXECUTABLE    As used for launching from terminal
+EOF
+    exit 0
+fi
+
+selector="$1"
+shift
+executable=$*
+
+# Split selector as `class:instance`
+class="${selector%:*}"
+instance="${selector#*:}"
+
+# Find window ID from class and/or instance
+case "$selector" in
+    '*':*) wids=$(xdo id -n "$instance" ) ;;
+    *:*)   wids=$(xdo id -N "$class" -n "$instance" ) ;;
+    *)     wids=$(xdo id -N "$selector") ;;
+esac
+
+# Take first window ID
+# wid=$(echo "$wid" | head -n1 | cut -f1 -d' ')
+
+if [ -z "$wids" ]; then
+    echo "Executing $executable"
+    ${executable}
+else
+    echo "Changing visibility"
+    for wid in $wids; do
+        # echo "Window: $wid"
+        bspc node "$wid" --flag hidden --to-monitor focused --focus
+    done
+fi
+
