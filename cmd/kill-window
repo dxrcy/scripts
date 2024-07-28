@@ -1,0 +1,32 @@
+#!/bin/sh
+
+default() {
+    xdo close
+}
+
+class="$(xdotool getactivewindow getwindowclassname)"
+
+case "$class" in
+    # Kill background process as well
+    # This program is a scratchpad
+    'discord')
+        default
+        killall 'Discord'
+        ;;
+    'vesktop')
+        default
+        killall 'electron'
+        ;;
+    'TelegramDesktop')
+        default
+        killall 'telegram-desktop'
+        ;;
+    'Windscribe2')
+        killall -KILL 'windscribe' # Close quickly (maybe this is bad?)
+        ;;
+
+    # Add custom rules here...
+
+    *) default ;;
+esac
+
