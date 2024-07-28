@@ -1,0 +1,37 @@
+#!/bin/sh
+export INFO='toggle or restart picom compositor'
+
+start() {
+    # --shadow : something to do with client-side shadows?
+    # --transparent-cliping : don't render windows below, in tabbed/stacked view
+    # Kill and restart, to fix rendering issues
+    picom --shadow --transparent-clipping & disown
+}
+
+stop() {
+    killall picom
+}
+
+case "$1" in
+
+    'restart')
+        stop
+        while pgrep -x picom; do true; done
+        start
+        ;;
+
+    'toggle')
+        if pgrep -x picom; then
+            stop
+        else
+            start
+        fi
+        ;;
+
+    *)
+        echo 'picom-exec: invalid subcommand'
+        exit 1
+        ;;
+esac
+
+
