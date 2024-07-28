@@ -33,7 +33,7 @@ fi
 files="$*"
 if [ "$#" -eq 1 ] && [ "$1" = '.' ]; then
     files="$(basename "$PWD")"
-    is_cwd=1
+    # is_cwd=1
     cd ..
 fi
 

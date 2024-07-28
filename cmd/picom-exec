@@ -5,7 +5,7 @@ start() {
     # --shadow : something to do with client-side shadows?
     # --transparent-cliping : don't render windows below, in tabbed/stacked view
     # Kill and restart, to fix rendering issues
-    picom --shadow --transparent-clipping & disown
+    picom --shadow --transparent-clipping &
 }
 
 stop() {
@@ -21,10 +21,9 @@ case "$1" in
         ;;
 
     'toggle')
-        if pgrep -x picom; then
-            stop
-        else
-            start
+        if pgrep -x picom;
+            then stop
+            else start
         fi
         ;;
 
