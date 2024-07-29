@@ -83,7 +83,7 @@ case "$command" in
         pactl set-sink-mute @DEFAULT_SINK@ 0
         value=$(get_volume)
         # Increase or set to max value
-        if [ $(( $value + $step_volume )) -ge "$volume_max" ]; then
+        if [ $(( value + step_volume )) -ge "$volume_max" ]; then
             pactl set-sink-volume @DEFAULT_SINK@ "$volume_max%"
         else
             pactl set-sink-volume @DEFAULT_SINK@ "+$step_volume%"
