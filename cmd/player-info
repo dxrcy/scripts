@@ -5,6 +5,7 @@ export INFO='show description of currently playing song'
 
 player='spotify'
 bar_color="#7f7fff"
+icons=''
 
 show_help() {
     cat << EOF
@@ -31,16 +32,24 @@ case "$1" in
         exit 1 ;;
 esac
 
-status=$(playerctl -p "$player" status) || exit $?
-if [ "$status" = 'Playing' ];
-    then icon=''
-    else icon=''
-fi
+ok_icon() {
+    if [ "$1" = 'Playing' ];
+        then echo ''
+        else echo ''
+    fi
+}
 
 if [ "$mode" = 'brief' ]; then
-    echo "$icon"
+    status=$(playerctl -p "$player" status 2>/dev/null)
+    if [ $? = 0 ];
+        then ok_icon "$status"
+        else echo ''
+    fi
     exit 0
 fi
+
+status=$(playerctl -p "$player" status) || exit $?
+icon=$(ok_icon "$status")
 
 song=$(playerctl -p "$player" metadata \
     -f '{{title}} - {{artist}}') || exit $?
