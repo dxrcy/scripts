@@ -1,0 +1,33 @@
+#!/bin/sh
+export INFO='display battery percentage with an icon'
+
+~/scripts/cmd/require acpi || exit $?
+
+icon_battery=''
+icon_plug=''
+icon_lightning=''
+icon_unknown=''
+
+if [ "$1" = '--color' ]; then
+    color='%{F#FFDD22}'
+    reset='%{F-}'
+fi
+
+info=$(acpi --battery | head -n1)
+
+if echo "$info" | grep -q "Discharging";
+    then state='discharging'
+    else state='charging'
+fi
+
+percent=$(echo "$info" | grep -o '[0-9]*%')
+percent="${percent%\%}"
+
+case "$state" in
+    'discharging') icon="$icon_battery" ;;
+    'charging') icon="$color$icon_lightning$reset $icon_plug" ;;
+    *) icon="$icon_unknown" ;;
+esac
+
+echo "$icon $color$percent%$reset"
+
