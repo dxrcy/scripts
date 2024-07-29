@@ -39,12 +39,12 @@ pkill -f -c 'garf-transcribe' > /dev/null
 nsxiv 'esperanto.png' 'english.png' --class 'garf-transcribe' &
 
 # Move image window
-focused_window=$(i3-msg -t get_tree | jq -r '.. | select(.focused?) | .id')
-sleep 0.1
-for i in $(seq 0 3); do
-    i3-msg "[instance=garf-transcribe] move left, resize set 50 ppt" > /dev/null 2>&1
-done
-i3-msg "[con_id=${focused_window}] focus" > /dev/null 2>&1
+# focused_window=$(i3-msg -t get_tree | jq -r '.. | select(.focused?) | .id')
+# sleep 0.1
+# for i in $(seq 0 3); do
+#     i3-msg "[instance=garf-transcribe] move left, resize set 50 ppt" > /dev/null 2>&1
+# done
+# i3-msg "[con_id=${focused_window}] focus" > /dev/null 2>&1
 
 # Copy existing file, or create new from template
 if [ -f "transcript" ]; then
