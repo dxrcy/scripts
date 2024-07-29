@@ -34,7 +34,7 @@ if [ -z "$wids" ]; then
 else
     echo "Changing visibility"
     for wid in $wids; do
-        # echo "Window: $wid"
+        echo "Window: $wid"
         bspc node "$wid" --flag hidden --to-monitor focused --focus
     done
 fi

@@ -9,9 +9,9 @@ class="$(xdotool getactivewindow getwindowclassname)"
 case "$class" in
     # Kill background process as well
     # This program is a scratchpad
-    'discord')
+    'ArmCord')
         default
-        killall 'Discord'
+        killall 'armcord'
         ;;
     'vesktop')
         default
