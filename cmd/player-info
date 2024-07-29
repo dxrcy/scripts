@@ -5,7 +5,6 @@ export INFO='show description of currently playing song'
 
 player='spotify'
 bar_color="#7f7fff"
-icons=''
 
 show_help() {
     cat << EOF
@@ -40,8 +39,7 @@ ok_icon() {
 }
 
 if [ "$mode" = 'brief' ]; then
-    status=$(playerctl -p "$player" status 2>/dev/null)
-    if [ $? = 0 ];
+    if status=$(playerctl -p "$player" status 2>/dev/null);
         then ok_icon "$status"
         else echo ''
     fi
