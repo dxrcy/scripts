@@ -3,35 +3,73 @@ export INFO='show description of currently playing song'
 
 ~/scripts/cmd/require playerctl ~/scripts/cmd/bt dunstify || exit $?
 
-player="$1"
-if [ -z "$player" ]; then
-    echo 'player-info: missing player argument.'
-    exit 1
-fi
-if [ "$2" = 'notify' ]; then
-    notify=1
-fi
-
+player='spotify'
 bar_color="#7f7fff"
 
-song="$(playerctl -p "$player" metadata -f '{{title}} - {{artist}}')"
-time="$(playerctl -p "$player" metadata -f '{{duration(position)}} / {{duration(mpris:length)}}')"
-percent="$(playerctl -p "$player" metadata -f '{{position / mpris:length * 100}}')"
-percent="${percent%.*}"
-status=''
-[ "$(playerctl -p "$player" status)" = 'Playing' ] && status=''
+show_help() {
+    cat << EOF
+$(basename "$0"): $INFO
+    USAGE:
+        $(basename "$0") (default|notify|brief)
+    MODE:
+        default   Echo to stdout
+        notify    Send notification with dunstify
+        brief     Only show status icon
+EOF
+}
+
+mode='default'
+case "$1" in
+    ''|default) ;;
+    brief)   mode='brief' ;;
+    notify)  mode='notify' ;;
+    -h|--help)
+        show_help
+        exit 0 ;;
+    *)
+        show_help
+        exit 1 ;;
+esac
+
+status=$(playerctl -p "$player" status) || exit $?
+if [ "$status" = 'Playing' ];
+    then icon=''
+    else icon=''
+fi
+
+if [ "$mode" = 'brief' ]; then
+    echo "$icon"
+    exit 0
+fi
+
+song=$(playerctl -p "$player" metadata \
+    -f '{{title}} - {{artist}}') || exit $?
+
+time=$(playerctl -p "$player" metadata \
+    -f '{{duration(position)}} / {{duration(mpris:length)}}') || exit $?
+
+percent=$(playerctl -p "$player" metadata \
+    -f '{{position / mpris:length * 100}}') || exit $?
 
 if ~/scripts/cmd/bt status; then
     charge="|  $(~/scripts/cmd/bt charge)"
 fi
 
-desc="$status $time $charge" 
+percent="${percent%.*}"
+desc="$icon $time $charge" 
 
-if [ -z "$notify" ]; then
-    echo "$song"
-    echo "$desc"
-    echo "$percent%"
-else
-    dunstify -r 9238 -t 1000 "$song" "$desc" -h int:value:"$percent" -h string:hlcolor:"$bar_color"
+if [ "$mode" = 'notify' ]; then
+    dunstify \
+        --replace 9238 \
+        --timeout 1000 \
+        "$song" \
+        "$desc" \
+        -h int:value:"$percent" \
+        -h string:hlcolor:"$bar_color"
+    exit 0
 fi
+
+echo "$song"
+echo "$desc"
+echo "$percent%"
 
