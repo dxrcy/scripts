@@ -1,0 +1,66 @@
+#!/bin/sh
+export INFO='setup desktops for multiple monitors (BSPWM)'
+
+~/scripts/cmd/require bspc ~/scripts/cmd/monitors || exit $?
+
+# Alternatively use actual monitor names like 'eDP-1'
+monitor1='^1'
+monitor2='^2'
+
+desktop_name() {
+    case "$1" in
+         1) echo 'I'    ;;
+         2) echo 'II'   ;;
+         3) echo 'III'  ;;
+         4) echo 'IV'   ;;
+         5) echo 'V'    ;;
+         6) echo 'VI'   ;;
+         7) echo 'VII'  ;;
+         8) echo 'VIII' ;;
+         9) echo 'IX'   ;;
+        10) echo 'X'    ;;
+        *)
+            echo "$(basename "$0"): unknown monitor" >&2
+            exit 1
+            ;;
+    esac
+}
+
+desktop_exists() {
+    name="$1"
+    bspc query --desktops "$name" >/dev/null 2>&1
+}
+
+desktop_monitor() {
+    if [ "$monitor_count" = 2 ] && [ $(($i % 2)) -eq 0 ];
+        then echo "$monitor2"
+        else echo "$monitor1"
+    fi
+}
+
+monitor_count=$(~/scripts/cmd/monitors)
+# monitor_count=1
+
+# desktops=''
+# for i in $(seq 1 10); do
+#     desktops="$desktops $(desktop_name "$i")"
+# done
+
+for i in $(seq 1 10); do
+    name=$(desktop_name "$i") || exit $?
+    monitor=$(desktop_monitor "$i")
+    echo "$i: $name on $monitor"
+
+    if ! desktop_exists "$name"; then
+        echo "CREATE"
+        bspc monitor "$monitor" --add-desktops "$name" || exit $?
+    fi
+
+    echo "MOVE"
+    echo -- bspc desktop "$name" --to-monitor "$monitor"
+    bspc desktop "$name" --to-monitor "$monitor"
+    echo $?
+done
+
+# bspc monitor "$monitor1" --reorder-desktops $desktops || exit $?
+

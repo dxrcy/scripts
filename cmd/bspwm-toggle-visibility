@@ -1,5 +1,7 @@
 #!/bin/sh
-export INFO='toggle visibility of a window like a scratchpad (bspwm)'
+export INFO='toggle visibility of a window like a scratchpad (BSPWM)'
+
+~/scripts/cmd/require bspc xdo || exit $?
 
 if [ "$1" = '-h' ] || [ "$1" = '--help' ] || [ "$#" -lt 2 ]; then
     cat <<EOF
