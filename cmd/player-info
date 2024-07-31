@@ -33,8 +33,8 @@ esac
 
 ok_icon() {
     if [ "$1" = 'Playing' ];
-        then echo ''
-        else echo ''
+        then echo ''
+        else echo ''
     fi
 }
 
