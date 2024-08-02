@@ -62,5 +62,8 @@ for i in $(seq 1 10); do
     echo $?
 done
 
+bspc desktop Desktop --remove
+bspc desktop Desktop --remove
+
 # bspc monitor "$monitor1" --reorder-desktops $desktops || exit $?
 
