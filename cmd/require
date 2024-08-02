@@ -11,7 +11,7 @@ for cmd in "$@"; do
 done
 
 if [ -n "$missing" ]; then
-    echo 'require: missing dependencies:'
+    echo 'WARNING: missing dependencies:'
     printf '\033[1m'
     echo "$missing" | sed 's/ /\n  /g' | tail -n+2
     printf '\033[0m'
