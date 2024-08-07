@@ -3,18 +3,29 @@ export INFO='toggle visibility of a window like a scratchpad (BSPWM)'
 
 ~/scripts/cmd/require bspc xdo || exit $?
 
-if [ "$1" = '-h' ] || [ "$1" = '--help' ] || [ "$#" -lt 2 ]; then
+RECENT="$XDG_CACHE_HOME/$(basename "$0").recent"
+
+if [ "$1" = '-h' ] || [ "$1" = '--help' ] || [ "$#" -lt 1 ]; then
     cat <<EOF
-Usage: $(basename "${0}") [SELECTOR] [...EXECUTABLE]
+Usage: $(basename "$0") [SELECTOR] [...EXECUTABLE]
     SELECTOR      (<class_name>|*)[:<instance_name>]
     EXECUTABLE    As used for launching from terminal
 EOF
     exit 0
 fi
 
-selector="$1"
-shift
-executable=$*
+if [ "$1" = '--recent' ]; then
+    if [ ! -f "$RECENT" ]; then
+        echo "$(basename "$0"): no recent selector"
+        exit 1
+    fi
+    selector="$(cat $RECENT)"
+else
+    selector="$1"
+    echo "$selector" > $RECENT
+    shift
+    executable=$*
+fi
 
 # Split selector as `class:instance`
 class="${selector%:*}"
