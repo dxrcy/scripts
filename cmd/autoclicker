@@ -1,0 +1,84 @@
+#!/bin/sh
+export INFO='repeatedly send mouse clicks to a specific window'
+
+name='^Minecraft '
+click_timeout=1
+
+# Must be single instance
+for pid in $(pgrep "$(basename "$0")"); do
+    if [ ! "$pid" = "$$" ]; then
+        # Kill older instance with SIGINT (for cleanup)
+        if kill -TERM "$pid"; then
+            echo 'Killed previous instance.'
+        else
+            echo "autoclicker: failed to kill previous instance"
+            exit 1
+        fi
+    fi
+done
+
+# Only kill previous instances, do not start new instance
+if [ "$1" = 'stop' ]; then
+    exit 0
+fi
+
+print_window() {
+    wid="$1"
+    printf "%s  " "$wid"
+    xdotool getwindowname "$wid"
+}
+
+# Find one window ID
+wids=$(xdotool search --name "$name")
+if [ "$(echo "$wids" | wc -w)" -gt 1 ]; then
+    echo 'autoclicker: multiple available windows found:'
+    echo "$wids" | while IFS= read -r wid; do
+        print_window "$wid"
+    done
+    exit 1
+fi
+wid="$(echo "$wids" | head -n1)"
+if [ -z "$wid" ]; then
+    echo 'autoclicker: no window found.'
+    exit 1
+fi
+
+start() {
+    # Disable screensaver
+    xdg-screensaver suspend "$wid"
+
+    # Repeatedly hold down right click and short left click
+    while sleep "$click_timeout"; do
+        xdotool mousedown --window "$wid" 3
+        xdotool click     --window "$wid" 1
+    done
+}
+
+cleanup() {
+    # Re-enable screensaver
+    xdg-screensaver resume "$wid"
+    # Raise right click
+    xdotool mouseup --window "$wid" 3
+}
+
+stop_int() {
+    cleanup
+    echo
+    echo 'Stopped by keyboard interrupt.'
+    exit 0
+}
+stop_term() {
+    cleanup
+    echo 'Stopped by new instance.'
+    exit 0
+}
+
+echo "Running autoclicker..."
+print_window "$wid"
+
+# Disable self (SIGINT: keyboard interrupt, SIGTERM: new instance)
+trap stop_int  INT
+trap stop_term TERM
+
+start
+
