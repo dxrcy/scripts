@@ -39,6 +39,7 @@ pkill -f -c 'garf-transcribe' > /dev/null
 nsxiv 'esperanto.png' 'english.png' --class 'garf-transcribe' &
 
 # Move image window
+sleep 0.1
 tabc detach $(bspc query -N -n)
 sleep 0.1
 bspc node -s west
