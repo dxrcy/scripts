@@ -69,10 +69,11 @@ if [ "$mode" = 'notify' ]; then
     dunstify \
         --replace 9238 \
         --timeout 1000 \
-        "$song" \
-        "$desc" \
         -h int:value:"$percent" \
-        -h string:hlcolor:"$bar_color"
+        -h string:hlcolor:"$bar_color" \
+        -- \
+        "$song" \
+        "$desc"
     exit 0
 fi
 
