@@ -3,17 +3,14 @@ export INFO='run ffmpeg on all files in current directory, converting one filety
 
 ~/scripts/cmd/require ffmpeg trash || exit 1
 
+if [ "$#" -le 2 ]; then
+    echo 'ffmpeg-all: missing arguments' >&2
+    exit 1
+fi
+
 in="$1"
 out="$2"
 shift 2
-if [ ! "$in" ]; then
-    echo "ffmpegall: no input filetype given"
-    exit 1
-fi
-if [ ! "$out" ]; then
-    echo "ffmpegall: no output filetype given"
-    exit 1
-fi
 
 for old in *; do
     [ -f "$old" ] || continue
