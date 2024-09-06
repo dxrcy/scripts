@@ -47,6 +47,11 @@ start() {
     # Disable screensaver
     xdg-screensaver suspend "$wid"
 
+    # xdotool keyup Super_L
+    # xdotool keydown   --window "$wid" space
+    # xdotool mousedown --window "$wid" 3
+    # return
+
     # Repeatedly hold down right click and short left click
     while sleep "$click_timeout"; do
         xdotool mousedown --window "$wid" 3
