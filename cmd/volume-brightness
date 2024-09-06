@@ -8,13 +8,20 @@ export INFO='change volume or brightness, with notification'
 # password.
 
 # Control options
-step_volume=5
-step_brightness=5
-volume_max=100
+STEP_VOLUME=5
+STEP_BRIGHTNESS=5
+VOLUME_MAX=100
 # Notification options
-bar_color="#7f7fff"
-timeout=1000
-dunst_id="2593"
+BAR_COLOR="#7f7fff"
+TIMEOUT=1000
+DUNST_ID="2593"
+# Icons
+ICON_VOLUME_MUTE=''
+ICON_VOLUME_LOW=''
+ICON_VOLUME_HIGH=''
+ICON_BRIGHTNESS=''
+ICON_MICROPHONE_MUTE=''
+ICON_MICROPHONE_ON=''
 
 show_help() {
     cat << EOF
@@ -24,18 +31,24 @@ $(basename "$0"): $INFO
     vm  Mute/unmute volume
     b+  Increase brightness
     b-  Decrease brightness
+    mt Toggle microphone
 EOF
+}
+
+# Returns 0 if muted, 1 if unmuted
+is_mute() {
+    ! pactl get-sink-mute @DEFAULT_SINK@ | grep -q 'Mute: no'
+}
+
+# Returns 0 if ALL microphones are disabled, otherwise 1
+is_any_mic_enabled() {
+    pactl list sources | grep -q 'Mute: no'
 }
 
 # Only supports mono-audio
 get_volume() {
     pactl get-sink-volume @DEFAULT_SINK@ \
         | grep -Po '[0-9]+%' | sed 's/%$//' | head -n1
-}
-
-# Returns 0 if muted, 1 if unmuted
-is_mute() {
-    ! pactl get-sink-mute @DEFAULT_SINK@ | grep -q 'Mute: no'
 }
 
 get_brightness() {
@@ -45,34 +58,65 @@ get_brightness() {
     echo "$percent"
 }
 
+# If any microphones are enabled, then disable all
+# Else, enable all
+toggle_all_mics() {
+    if is_any_mic_enabled;
+        then new_state=1 # Mute / disable
+        else new_state=0 # Unmute / enable
+    fi
+    for source in $(pactl list short sources | awk '{print $1}'); do
+        pactl set-source-mute "$source" "$new_state"
+    done
+}
+
 notify() {
+    text="$1"
+    icon="$2"
+    shift 2
+    dunstify \
+        "$icon $text" \
+        --icon none \
+        --timeout "$TIMEOUT" \
+        --replace "$DUNST_ID" \
+        --urgency normal \
+        $@
+}
+
+notify_progress() {
     value="$1"
     icon="$2"
-    dunstify \
-        "$icon $value%" \
-        --icon none \
-        --timeout "$timeout" \
-        --replace "$dunst_id" \
-        --urgency normal \
+    notify "$value%" "$icon" \
         --hints "int:value:$value" \
-        --hints "string:hlcolor:$bar_color"
+        --hints "string:hlcolor:$BAR_COLOR"
 }
 
 notify_volume() {
     value=$(get_volume)
-    if [ "$value" -eq 0 ] || is_mute ; then
-        icon=''
+    if [ "$value" -eq 0 ] || is_mute; then
+        icon="$ICON_VOLUME_MUTE"
     elif [ "$value" -lt 50 ]; then
-        icon=''
+        icon="$ICON_VOLUME_LOW"
     else
-        icon=''
+        icon="$ICON_VOLUME_HIGH"
     fi
-    notify "$value" "$icon"
+    notify_progress "$value" "$icon"
 }
 
 notify_brightness() {
     value=$(get_brightness)
-    notify "$value" ''
+    notify_progress "$value" "$ICON_BRIGHTNESS"
+}
+
+notify_microphone() {
+    if is_any_mic_enabled; then
+        text='Microphone ENABLED'
+        icon="$ICON_MICROPHONE_ON"
+    else
+        text='Microphone disabled'
+        icon="$ICON_MICROPHONE_MUTE"
+    fi
+    notify "$text" "$icon"
 }
 
 command="$1"
@@ -83,15 +127,14 @@ case "$command" in
         pactl set-sink-mute @DEFAULT_SINK@ 0
         value=$(get_volume)
         # Increase or set to max value
-        if [ $(( value + step_volume )) -ge "$volume_max" ]; then
-            pactl set-sink-volume @DEFAULT_SINK@ "$volume_max%"
-        else
-            pactl set-sink-volume @DEFAULT_SINK@ "+$step_volume%"
+        if [ $(( value + STEP_VOLUME )) -ge "$VOLUME_MAX" ];
+            then pactl set-sink-volume @DEFAULT_SINK@ "$VOLUME_MAX%"
+            else pactl set-sink-volume @DEFAULT_SINK@ "+$STEP_VOLUME%"
         fi
         notify_volume
         ;;
     v-)
-        pactl set-sink-volume @DEFAULT_SINK@ "-$step_volume%"
+        pactl set-sink-volume @DEFAULT_SINK@ "-$STEP_VOLUME%"
         notify_volume
         ;;
     vm)
@@ -100,12 +143,17 @@ case "$command" in
         ;;
 
     b+)
-        brightnessctl set "+$step_brightness% "
+        brightnessctl set "+$STEP_BRIGHTNESS% "
         notify_brightness
         ;;
     b-)
-        brightnessctl set "$step_brightness%-"
+        brightnessctl set "$STEP_BRIGHTNESS%-"
         notify_brightness
+        ;;
+
+    mt)
+        toggle_all_mics
+        notify_microphone
         ;;
 
     h|help|-h|--help)
