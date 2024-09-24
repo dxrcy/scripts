@@ -62,7 +62,7 @@ copy() {
     file="$1"
     dest="$2"
     # --exclude local location to NOT recopy sub-backups
-    rsync --archive --exclude="$LOCATION_LOCAL" "$file" "$dest/$file" \
+    rsync --archive --exclude="$LOCATION_LOCAL" "$file" "$dest" \
         || exit 2
 }
 
