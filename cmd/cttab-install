@@ -5,16 +5,18 @@ progname="$(basename "$0" || 'cttab-install')"
 
 # Must be `firefox` or `librewolf`
 browser="$1"
+path=''
 case "$browser" in
     # Valid
-    firefox|librewolf) ;;
+    firefox|librewolf) path="/usr/lib/$browser" ;;
+    floorp) path="/opt/floorp" ;;
     # Invalid - empty or unsupported browser
     *)
         echo 'please enter a supported browser name to install for'
         if [ "$browser" ]; then
             echo "'$browser' is not supported by this script"
         fi
-        echo 'options: [ firefox | librewolf ]'
+        echo 'options: [ firefox | librewolf | floorp ]'
         echo "    EXAMPLE: $progname firefox <FILEPATH>"
         echo 'or uninstall for a browser:'
         echo "    EXAMPLE: $progname firefox --uninstall"
@@ -63,11 +65,11 @@ else
 fi
 
 # Path to create all files in
-path="/usr/lib/$browser"
 # Check path exists
 if [ ! -d "$path" ]; then
     echo "ERROR: cannot find $path"
     echo 'maybe the selected browser is not installed on your system, or installed in a different directory?'
+    echo 'note that not all Firefox-based browsers use the same install directory'
     exit 4
 fi
 
