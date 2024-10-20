@@ -8,15 +8,17 @@ browser="$1"
 path=''
 case "$browser" in
     # Valid
-    firefox|librewolf) path="/usr/lib/$browser" ;;
-    floorp) path="/opt/floorp" ;;
+    firefox)   path='/usr/lib/firefox' ;;
+    librewolf) path='/usr/lib/librewolf' ;;
+    floorp)    path='/opt/floorp' ;;
+    zen)       path='/opt/zen-browser-bin' ;;
     # Invalid - empty or unsupported browser
     *)
         echo 'please enter a supported browser name to install for'
         if [ "$browser" ]; then
             echo "'$browser' is not supported by this script"
         fi
-        echo 'options: [ firefox | librewolf | floorp ]'
+        echo 'options: [ firefox | librewolf | floorp | zen ]'
         echo "    EXAMPLE: $progname firefox <FILEPATH>"
         echo 'or uninstall for a browser:'
         echo "    EXAMPLE: $progname firefox --uninstall"
