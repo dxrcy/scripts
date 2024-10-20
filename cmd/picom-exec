@@ -3,7 +3,8 @@ export INFO='toggle or restart picom compositor'
 
 start() {
     # --transparent-cliping : don't render windows below, in tabbed/stacked view
-    picom --transparent-clipping --backend glx &
+    # picom --transparent-clipping --backend glx &
+    picom --backend glx &
 }
 
 stop() {
