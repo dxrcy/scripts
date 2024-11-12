@@ -83,6 +83,11 @@ if [ -z "$date" ]; then
     echo 'garf make: date not given'
     exit 1
 fi
+date="$(basename "$date" .png)"
+if ! date -d "$date" >/dev/null 2>&1; then
+    echo "garf make: invalid date '$date'"
+    exit 1
+fi
 
 if [ -z "$twothirds" ]; then
     twothirds='0'
