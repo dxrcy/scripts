@@ -14,5 +14,4 @@ check_dir() {
 }
 
 check_dir "$scripts/cmd"
-check_dir "$scripts/garf"
 
