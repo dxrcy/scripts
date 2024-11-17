@@ -1,9 +1,0 @@
-#!/bin/sh
-
-~/scripts/garf/run date $@ || exit 1
-
-printf 'Enter full date (yyyy-mm-dd): '
-read -r date
-
-~/scripts/garf/run make "$date" "$id" || exit 1
-
