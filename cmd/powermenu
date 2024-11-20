@@ -13,7 +13,7 @@ menu="\
  Lock
  Suspend"
 
-i3-msg "focus output $monitor"
+# i3-msg "focus output $monitor"
 
 answer="$(echo "$menu" | rofi -dmenu -i -markup-rows -p 'Powermenu' -monitor "$monitor")"
 
@@ -22,7 +22,7 @@ case "$answer" in
     ' Reboot')   systemctl reboot ;;
     ' Suspend')  systemctl suspend ;;
     ' Lock')     betterlockscreen -l ;;
-    ' Logout')   bspc quit ;;
+    ' Logout')   hyprctl dispatch exit ;;
     *) ;;
 esac
 
