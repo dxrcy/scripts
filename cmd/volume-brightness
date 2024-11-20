@@ -1,7 +1,8 @@
 #!/bin/sh
 export INFO='change volume or brightness, with notification'
 
-~/scripts/cmd/require pactl brightnessctl dunstify
+~/scripts/cmd/require pactl wpctl brightnessctl dunstify
+# TODO: Implement `mt` with `wpctl` (removes `pactl` dependency)
 
 # Note: `brightnessctl` can be replaced with `xbacklight`, but this requires
 # modifying `/etc/sudoers` to allow `xbacklight` to run as root without a
@@ -37,7 +38,7 @@ EOF
 
 # Returns 0 if muted, 1 if unmuted
 is_mute() {
-    ! pactl get-sink-mute @DEFAULT_SINK@ | grep -q 'Mute: no'
+    ! wpctl get-volume @DEFAULT_SINK@ | grep -q '[MUTED]'
 }
 
 # Returns 0 if ALL microphones are disabled, otherwise 1
@@ -45,10 +46,17 @@ is_any_mic_enabled() {
     pactl list sources | grep -q 'Mute: no'
 }
 
+to_percent() {
+    echo "$1 * 100" \
+        | bc \
+        | sed 's/\.00$//'
+}
+
 # Only supports mono-audio
 get_volume() {
-    pactl get-sink-volume @DEFAULT_SINK@ \
-        | grep -Po '[0-9]+%' | sed 's/%$//' | head -n1
+    volume=$(wpctl get-volume @DEFAULT_SINK@ \
+        | awk '{print $2}')
+    to_percent "$volume"
 }
 
 get_brightness() {
@@ -124,21 +132,21 @@ case "$command" in
 
     v+)
         # Unmute
-        pactl set-sink-mute @DEFAULT_SINK@ 0
+        wpctl set-mute @DEFAULT_SINK@ 0
         value=$(get_volume)
         # Increase or set to max value
         if [ $(( value + STEP_VOLUME )) -ge "$VOLUME_MAX" ];
-            then pactl set-sink-volume @DEFAULT_SINK@ "$VOLUME_MAX%"
-            else pactl set-sink-volume @DEFAULT_SINK@ "+$STEP_VOLUME%"
+            then wpctl set-volume @DEFAULT_SINK@ "$VOLUME_MAX%"
+            else wpctl set-volume @DEFAULT_SINK@ "$STEP_VOLUME%+"
         fi
         notify_volume
         ;;
     v-)
-        pactl set-sink-volume @DEFAULT_SINK@ "-$STEP_VOLUME%"
+        wpctl set-volume @DEFAULT_SINK@ "$STEP_VOLUME%-"
         notify_volume
         ;;
     vm)
-        pactl set-sink-mute @DEFAULT_SINK@ toggle
+        wpctl set-mute @DEFAULT_SINK@ toggle
         notify_volume
         ;;
 
