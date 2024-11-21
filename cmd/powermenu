@@ -2,20 +2,25 @@
 export INFO='choose a power-off method with Rofi dialog'
 
 ~/scripts/cmd/require rofi systemctl betterlockscreen i3-msg
+# TODO: Use wayland-compatible lockscreen
 
-monitor='eDP-1'
+MONITOR='eDP-1'
 
 menu="\
  Cancel
+ Suspend
  Shutdown
  Reboot
  Logout
- Lock
- Suspend"
+ Lock"
 
-# i3-msg "focus output $monitor"
-
-answer="$(echo "$menu" | rofi -dmenu -i -markup-rows -p 'Powermenu' -monitor "$monitor")"
+# Disable cache file to use consistent order
+answer="$(echo "$menu" \
+    | wofi --show dmenu \
+        --prompt 'Powermenu' \
+        --monitor $MONITOR \
+        --cache-file=/dev/null
+)"
 
 case "$answer" in
     ' Shutdown') systemctl poweroff ;;
