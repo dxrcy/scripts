@@ -1,12 +1,17 @@
 #!/bin/sh
 export INFO='open dmenu to find an emoji'
 
-~/scripts/cmd/require rofi notify-send || exit $?
+~/scripts/cmd/require wofi notify-send || exit $?
+# TODO: Use wayland-compatible clipboard
 
-add_style='s/^\([^ ]*\)/<span size="13000">\1<\/span>/'
-remove_style='s/^<[^>]*>\([^ <]*\).*$/\1/'
+ADD_STYLE='s/^\([^ ]*\)/<span size="13000">\1<\/span>/'
+REMOVE_STYLE='s/^<[^>]*>\([^ <]*\).*$/\1/'
 
-chosen=$(sed "$add_style" ~/scripts/share/emojis | rofi -dmenu -i -l 30 -markup-rows | sed "$remove_style")
+chosen=$(sed "$ADD_STYLE" ~/scripts/share/emojis \
+    | wofi --show dmenu \
+        --allow-markup \
+    | sed "$REMOVE_STYLE"
+)
 [ -n "$chosen" ] || exit 0
 
 echo "$chosen"
