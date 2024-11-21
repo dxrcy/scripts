@@ -26,7 +26,7 @@ is_power_on() {
 }
 # Get battery charge as percentage (including percentage sign)
 get_charge_percent() {
-    suffix="$(echo "$MAC" | sed 's/:/_/g')"
+    suffix="$(echo $MAC | sed 's/:/_/g')"
     device="$(upower --enumerate | grep "$suffix$")"
     upower --show-info "$device" | grep 'percentage:' | awk '{print $2}'
 }
@@ -59,18 +59,18 @@ case "$1" in
 
         bluetoothctl power on || exit 1
         until is_connected; do
-            bluetoothctl connect "$MAC" || exit 1
+            bluetoothctl connect $MAC || exit 1
             sleep 0.1
         done
 
         # Play on connect
-        # playerctl -p "$PLAYER" play
+        # playerctl -p PLAYER play
         ;;
 
     'd'|'disconnect')
-        playerctl -p "$PLAYER" pause
+        playerctl -p $PLAYER pause
 
-        bluetoothctl disconnect "$MAC" || exit 1
+        bluetoothctl disconnect $MAC || exit 1
         bluetoothctl power off || exit 1
         while is_connected; do # Is this needed ???
             sleep 0.1
@@ -82,20 +82,20 @@ case "$1" in
     'r'|'reconnect')
         bluetoothctl power on || exit 1
 
-        play_status="$(playerctl -p "$PLAYER" status)"
-        playerctl -p "$PLAYER" pause
+        play_status="$(playerctl -p $PLAYER status)"
+        playerctl -p $PLAYER pause
 
-        bluetoothctl disconnect "$MAC" || exit 1
+        bluetoothctl disconnect $MAC || exit 1
         while is_connected; do
             sleep 0.1
         done
 
-        bluetoothctl connect "$MAC" || exit 1
+        bluetoothctl connect $MAC || exit 1
         until is_connected; do
             sleep 0.1
         done
 
-        [ "$play_status" = 'Playing' ] && playerctl -p "$PLAYER" play
+        [ "$play_status" = 'Playing' ] && playerctl -p $PLAYER play
         ;;
 
     'mute-if-disconnected')
