@@ -2,6 +2,7 @@
 export INFO='connect or disconnect a particular bluetooth device'
 
 ~/scripts/cmd/require bluetoothctl playerctl pactl || exit $?
+# TODO: Use `wpctl` instead of `pactl`
 
 MAC='40:DE:17:43:A1:71' # Good ones
 # MAC='40:DE:17:43:2F:49' # Broken ones
@@ -29,6 +30,10 @@ get_charge_percent() {
     device="$(upower --enumerate | grep "$suffix$")"
     upower --show-info "$device" | grep 'percentage:' | awk '{print $2}'
 }
+# Mute default sink (for when disconnected)
+set_mute() {
+    pactl set-sink-volume @DEFAULT_SINK@ 0%
+}
 
 print_help() {
     echo "bt: $INFO"
@@ -38,6 +43,7 @@ print_help() {
     echo '    connect'
     echo '    disconnect'
     echo '    reconnect'
+    echo '    mute-if-disconnected'
     echo '    mac'
     echo '    status'
     echo '    power'
@@ -70,8 +76,7 @@ case "$1" in
             sleep 0.1
         done
 
-        # Mute audio when bluetooth disconnected
-        pactl set-sink-volume @DEFAULT_SINK@ 0%
+        set_mute
         ;;
 
     'r'|'reconnect')
@@ -91,6 +96,10 @@ case "$1" in
         done
 
         [ "$play_status" = 'Playing' ] && playerctl -p "$PLAYER" play
+        ;;
+
+    'mute-if-disconnected')
+        is_connected || set_mute
         ;;
 
     'mac') echo $MAC ;;
