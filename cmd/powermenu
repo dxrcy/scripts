@@ -25,7 +25,7 @@ answer="$(echo "$menu" \
 case "$answer" in
     ' Shutdown') systemctl poweroff ;;
     ' Reboot')   systemctl reboot ;;
-    ' Suspend')  systemctl suspend ;;
+    ' Suspend')  systemctl suspend 2>&1 || notify-send 'Failed to suspend' ;;
     ' Lock')     betterlockscreen -l ;;
     ' Logout')   hyprctl dispatch exit ;;
     *) ;;
