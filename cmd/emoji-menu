@@ -18,6 +18,6 @@ echo "$chosen"
 
 # Type chosen emoji, or copy to clipboard
 # xdotool type "$chosen"
-printf "%s" "$chosen" | xclip -selection clipboard
+printf "%s" "$chosen" | wl-copy
 notify-send "$chosen" -t 800
 
