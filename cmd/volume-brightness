@@ -88,7 +88,7 @@ notify() {
         --timeout "$TIMEOUT" \
         --replace "$DUNST_ID" \
         --urgency normal \
-        $@
+        "$@"
 }
 
 notify_progress() {
