@@ -4,6 +4,7 @@ export INFO='convert digits of a number into different codepoint set'
 # Override built-in printf, for Unicode support with narrowly-compliant shells
 printf() { /bin/printf "$@"; }
 
+ignore=0
 string=""
 while [ "$#" -gt 0 ]; do
     if [ -n "$mode" ]; then
@@ -92,27 +93,27 @@ while [ "$i" -lt "${#string}" ]; do
         '8:superscript') printf "\u2078" ;; 
         '9:superscript') printf "\u2079" ;; 
 
-        '0:bold')        printf "\U1D7EC" ;; 
-        '1:bold')        printf "\U1D7ED" ;; 
-        '2:bold')        printf "\U1D7EE" ;; 
-        '3:bold')        printf "\U1D7EF" ;; 
-        '4:bold')        printf "\U1D7F0" ;; 
-        '5:bold')        printf "\U1D7F1" ;; 
-        '6:bold')        printf "\U1D7F2" ;; 
-        '7:bold')        printf "\U1D7F3" ;; 
-        '8:bold')        printf "\U1D7F4" ;; 
-        '9:bold')        printf "\U1D7F5" ;; 
+        '0:bold')        printf "\U0001D7EC" ;; 
+        '1:bold')        printf "\U0001D7ED" ;; 
+        '2:bold')        printf "\U0001D7EE" ;; 
+        '3:bold')        printf "\U0001D7EF" ;; 
+        '4:bold')        printf "\U0001D7F0" ;; 
+        '5:bold')        printf "\U0001D7F1" ;; 
+        '6:bold')        printf "\U0001D7F2" ;; 
+        '7:bold')        printf "\U0001D7F3" ;; 
+        '8:bold')        printf "\U0001D7F4" ;; 
+        '9:bold')        printf "\U0001D7F5" ;; 
 
-        '0:boldserif')   printf "\U1D7CE" ;; 
-        '1:boldserif')   printf "\U1D7CF" ;; 
-        '2:boldserif')   printf "\U1D7D0" ;; 
-        '3:boldserif')   printf "\U1D7D1" ;; 
-        '4:boldserif')   printf "\U1D7D2" ;; 
-        '5:boldserif')   printf "\U1D7D3" ;; 
-        '6:boldserif')   printf "\U1D7D4" ;; 
-        '7:boldserif')   printf "\U1D7D5" ;; 
-        '8:boldserif')   printf "\U1D7D6" ;; 
-        '9:boldserif')   printf "\U1D7D7" ;; 
+        '0:boldserif')   printf "\U0001D7CE" ;; 
+        '1:boldserif')   printf "\U0001D7CF" ;; 
+        '2:boldserif')   printf "\U0001D7D0" ;; 
+        '3:boldserif')   printf "\U0001D7D1" ;; 
+        '4:boldserif')   printf "\U0001D7D2" ;; 
+        '5:boldserif')   printf "\U0001D7D3" ;; 
+        '6:boldserif')   printf "\U0001D7D4" ;; 
+        '7:boldserif')   printf "\U0001D7D5" ;; 
+        '8:boldserif')   printf "\U0001D7D6" ;; 
+        '9:boldserif')   printf "\U0001D7D7" ;; 
 
         '0:outline')     printf "\u24EA" ;; 
         '1:outline')     printf "\u2460" ;; 
@@ -136,16 +137,16 @@ while [ "$i" -lt "${#string}" ]; do
         '8:circled')     printf "\u2791" ;; 
         '9:circled')     printf "\u2792" ;; 
 
-        '0:segmented')   printf "\U1FBF0" ;; 
-        '1:segmented')   printf "\U1FBF1" ;; 
-        '2:segmented')   printf "\U1FBF2" ;; 
-        '3:segmented')   printf "\U1FBF3" ;; 
-        '4:segmented')   printf "\U1FBF4" ;; 
-        '5:segmented')   printf "\U1FBF5" ;; 
-        '6:segmented')   printf "\U1FBF6" ;; 
-        '7:segmented')   printf "\U1FBF7" ;; 
-        '8:segmented')   printf "\U1FBF8" ;; 
-        '9:segmented')   printf "\U1FBF9" ;; 
+        '0:segmented')   printf "\U0001FBF0" ;; 
+        '1:segmented')   printf "\U0001FBF1" ;; 
+        '2:segmented')   printf "\U0001FBF2" ;; 
+        '3:segmented')   printf "\U0001FBF3" ;; 
+        '4:segmented')   printf "\U0001FBF4" ;; 
+        '5:segmented')   printf "\U0001FBF5" ;; 
+        '6:segmented')   printf "\U0001FBF6" ;; 
+        '7:segmented')   printf "\U0001FBF7" ;; 
+        '8:segmented')   printf "\U0001FBF8" ;; 
+        '9:segmented')   printf "\U0001FBF9" ;; 
 
         ' :'*) [ "$ignore" -ge 2 ] || printf '%s' "$digit" ;;
         *)     [ "$ignore" -ge 1 ] || printf '%s' "$digit" ;;
