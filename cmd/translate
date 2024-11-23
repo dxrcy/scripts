@@ -40,7 +40,7 @@ cache_file="$HOME/.cache/translate"
 # Cache line starts with this. Eg. `en:::eo:::Some text here:::`
 cache_prefix="$src:::$dst:::$input:::"
 # Find an existing cached translation
-cached="$(grep "^$cache_prefix" "$cache_file" | tail -n1)"
+cached="$(test -f "$cache_file" && grep "^$cache_prefix" "$cache_file" | tail -n1)"
 
 if [ "$cached" ]; then
     # Already cached
