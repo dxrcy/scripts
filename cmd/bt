@@ -62,7 +62,7 @@ case "$1" in
         done
 
         # Play on connect
-        # playerctl -p PLAYER play
+        # playerctl -p $PLAYER play
         ;;
 
     'd'|'disconnect')
@@ -70,7 +70,7 @@ case "$1" in
 
         bluetoothctl disconnect $MAC || exit 1
         bluetoothctl power off || exit 1
-        while is_connected; do # Is this needed ???
+        while is_connected; do # TODO: Is this needed ???
             sleep 0.1
         done
 
@@ -93,7 +93,9 @@ case "$1" in
             sleep 0.1
         done
 
-        [ "$play_status" = 'Playing' ] && playerctl -p $PLAYER play
+        if [ "$play_status" = 'Playing' ]; then
+            playerctl -p $PLAYER play
+        fi
         ;;
 
     'mute-if-disconnected')
@@ -106,9 +108,9 @@ case "$1" in
     'charge') get_charge_percent ;;
 
     'display-status')
-        if ! is_power_on;    then echo '󰂲' # power off
-        elif ! is_connected; then echo '' # disconnected
-                             else echo '' # connected
+        if ! is_power_on;    then echo '󰂲' # Power off
+        elif ! is_connected; then echo '' # Disconnected
+                             else echo '' # Connected
         fi ;;
 
     'display-charge')
