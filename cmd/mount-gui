@@ -110,7 +110,7 @@ fi
 # Cancelled
 if [ -z "$answer" ]; then
     echo 'Cancelled'
-    exit 0 
+    exit 0
 fi
 
 # Extract device file path from answer

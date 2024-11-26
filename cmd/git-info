@@ -5,7 +5,7 @@ export INFO='get information about Git repo status for a directory'
 
 # Parse arguments
 while [ "$#" -gt 0 ]; do
-    case "$1" in 
+    case "$1" in
         -h|--help)
             echo "git-info: $INFO"
             echo 'USAGE:'
@@ -135,7 +135,7 @@ sync_status() {
     [ "$(git remote -v)" ] || return
     # Unpulled ?
     if ! git rev-parse --verify "origin/$branch" >/dev/null 2>&1; then
-        echo '↓' 
+        echo '↓'
         return
     fi
     # Unpushed

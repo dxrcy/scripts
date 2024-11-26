@@ -3,7 +3,7 @@ export INFO='index all files in movies directory'
 
 ~/scripts/cmd/require tree || exit $?
 
-# Location of movies folder 
+# Location of movies folder
 drive="/run/media/$(whoami)/MOVIES/Movies"
 # Filepath of movies list backup
 list_copy="$HOME/docs/movies.txt"

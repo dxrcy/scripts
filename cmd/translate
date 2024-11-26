@@ -47,7 +47,7 @@ if [ "$cached" ]; then
     # Print everything after separator
     echo "${cached##*:::}"
 else
-    # Send curl request, and get http code 
+    # Send curl request, and get http code
     res="$(
         curl "https://translator-api.glosbe.com/translateByLangWithScore?sourceLang=$src&targetLang=$dst"\
             -s \

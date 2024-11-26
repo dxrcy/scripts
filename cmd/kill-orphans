@@ -5,7 +5,7 @@ export INFO='kill all unattatched (orphaned) tmux sessions'
 ~/scripts/cmd/require tmux || exit $?
 
 log() {
-    echo "$1" >>"$HOME/.cache/kill-orphans.log" 
+    echo "$1" >>"$HOME/.cache/kill-orphans.log"
     if [ "$2" = --notify ]; then
         notify-send -t 1500 "$1"
     fi

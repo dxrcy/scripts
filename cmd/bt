@@ -112,7 +112,7 @@ case "$1" in
         elif ! is_connected; then echo '' # disconnected
                              else echo '' # connected
         fi ;;
-    
+
     'display-charge')
         charge="$(get_charge_percent)"
         charge="${charge%%%}"
@@ -133,7 +133,7 @@ case "$1" in
             10) printf '\u2588' ;;
              *) # No info found, or invalid
                  printf '[?]'
-                 exit 1 
+                 exit 1
                  ;;
         esac
         echo

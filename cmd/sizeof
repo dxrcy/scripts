@@ -11,7 +11,7 @@ print_size() {
     fi
 
     # -s    only show total
-    # -b    --block-size=1 
+    # -b    --block-size=1
     # --si  use powers of 1000, not 1024
     # ...and append 'B'
     size="$(du -sb --si "$file" | awk '{print $1}')B"
@@ -19,7 +19,7 @@ print_size() {
     if [ -n "$show_filename" ]; then
         printf "%-7s %s\n" "$size" "$file"
     else
-        printf "%s\n" "$size" 
+        printf "%s\n" "$size"
     fi
 }
 

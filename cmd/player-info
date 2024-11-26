@@ -63,7 +63,7 @@ if ~/scripts/cmd/bt status; then
 fi
 
 percent="${percent%.*}"
-desc="$icon $time $charge" 
+desc="$icon $time $charge"
 
 if [ "$mode" = 'notify' ]; then
     dunstify \
