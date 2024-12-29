@@ -3,7 +3,7 @@ export INFO='run ffmpeg on all files in current directory, converting one filety
 
 ~/scripts/cmd/require ffmpeg trash || exit 1
 
-if [ "$#" -le 2 ]; then
+if [ "$#" -lt 2 ]; then
     echo 'ffmpeg-all: missing arguments' >&2
     exit 1
 fi

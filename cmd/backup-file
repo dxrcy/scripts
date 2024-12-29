@@ -3,6 +3,8 @@ export INFO='quickly backup multiple files locally or globally'
 
 ~/scripts/cmd/require rsync || exit $?
 
+# TODO: Add option to move instead of copy
+
 LOCATION_LOCAL='.backups'
 if [ -n "$XDG_DATA_HOME" ];
     then LOCATION_GLOBAL="$XDG_DATA_HOME/backups"
