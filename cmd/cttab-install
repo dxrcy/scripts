@@ -19,7 +19,6 @@ BLUE=34
 cleanup() { color "$RESET"; }
 trap cleanup EXIT
 
-# Must be `firefox` or `librewolf`
 browser="$1"
 path=''
 case "$browser" in
