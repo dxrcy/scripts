@@ -1,10 +1,14 @@
 #!/bin/sh
+# https://github.com/dxrcy/cttab
 
 # Get filename of this script, with fallback
 progname="$(basename "$0" || 'cttab-install')"
 
-# Override built-in printf, for Unicode support with narrowly-compliant shells
-color() { /bin/printf '\033[%sm' "$1"; }
+color() {
+    [ -t 1 ] || return # Only print color if stdout is a terminal
+    # Use built-in printf, for Unicode support with narrowly-compliant shells
+    /bin/printf '\033[%sm' "$1";
+}
 
 RESET=0
 RED=31
@@ -101,7 +105,8 @@ if [ ! -d "$path" ]; then
     echo "cannot find install directory $path"
     color "$BLUE"
     echo '    please make sure that is the correct filepath'
-    echo '    maybe the selected browser is not installed on your system, or installed in a different directory?'
+    echo '    maybe the selected browser is not installed on your system, or installed in'
+    echo '        a different directory?'
     echo '    note that not all Firefox-based browsers use the same install directory'
     exit 4
 fi
