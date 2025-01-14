@@ -140,6 +140,7 @@ if [ -z "$uninstall" ]; then
     if [ -e "$path_1" ] || [ -e "$path_1" ]; then
         color "$YELLOW"
         echo 'overwriting existing files'
+        color "$RESET"
     fi
     if ! echo "$file_1" | sudo tee "$path_1" > /dev/null; then
         color "$RED"
