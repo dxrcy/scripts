@@ -49,21 +49,26 @@ else
             exit 2
         fi
     fi
+    # Remove `file://` prefix
+    filepath="${filepath#file://}"
     # Replace `~` with full path to home directory
     if [ "${filepath%"${filepath#?}"}" = "~" ]; then
         filepath="$HOME${filepath#?}"
+    fi
+    # Make path absolute
+    filepath="$(realpath "$filepath")"
+    # Append `index.html` if path is directory and child exists
+    if [ -d "$filepath" ] && [ -f "$filepath/index.html" ]; then
+        filepath="$filepath/index.html"
     fi
     # Check index file exists
     if [ ! -f "$filepath" ]; then
         echo "cannot find a file at '$filepath'"
         echo 'please make sure that is the correct filepath'
-        echo "NOTE: do NOT include 'file:///' at the start of the path"
         echo "    EXAMPLE: $progname <BROWSER> ~/Documents/cttab/index.html"
         exit 3
     fi
-    # Add `file://` prefix to filename
-    # Note only 2 extra slashes are needed, as path is already absolute, starting at root
-    filepath_full="file://$filepath"
+    echo "NOTE: absolute filepath: $filepath"
 fi
 
 # Path to create all files in
@@ -75,13 +80,14 @@ if [ ! -d "$path" ]; then
     exit 4
 fi
 
+# TODO: Use heredocs
 # Files to create
 # autoconfig.cfg
 path_1="$path/autoconfig.cfg"
 file_1="// First line must be comment! Do not delete this line!
 var {classes:Cc,interfaces:Ci,utils:Cu} = Components;
 try { Cu.import(\"resource:///modules/AboutNewTab.jsm\");
-var newTabURL = \"$filepath_full\";
+var newTabURL = \"file://$filepath\";
 AboutNewTab.newTabURL = newTabURL;
 } catch(e){Cu.reportError(e);} // report errors in the Browser Console"
 # defaults/pref/autoconfig.cfg
