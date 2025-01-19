@@ -1,7 +1,7 @@
 #!/bin/sh
 export INFO='change volume or brightness, with notification'
 
-~/scripts/cmd/require pactl wpctl brightnessctl dunstify
+~/scripts/cmd/require bc pactl wpctl brightnessctl dunstify
 # TODO: Implement `mt` with `wpctl` (removes `pactl` dependency)
 
 # Note: `brightnessctl` can be replaced with `xbacklight`, but this requires
