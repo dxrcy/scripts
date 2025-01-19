@@ -131,7 +131,6 @@ command="$1"
 case "$command" in
 
     v+)
-        # Unmute
         wpctl set-mute @DEFAULT_SINK@ 0
         value=$(get_volume)
         # Increase or set to max value
@@ -142,6 +141,7 @@ case "$command" in
         notify_volume
         ;;
     v-)
+        wpctl set-mute @DEFAULT_SINK@ 0
         wpctl set-volume @DEFAULT_SINK@ "$STEP_VOLUME%-"
         notify_volume
         ;;
