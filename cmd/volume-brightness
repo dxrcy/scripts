@@ -38,7 +38,7 @@ EOF
 
 # Returns 0 if muted, 1 if unmuted
 is_mute() {
-    ! wpctl get-volume @DEFAULT_SINK@ | grep -q '[MUTED]'
+    wpctl get-volume @DEFAULT_SINK@ | grep -q '[MUTED]'
 }
 
 # Returns 0 if ALL microphones are disabled, otherwise 1
