@@ -4,6 +4,8 @@ export INFO='change volume or brightness, with notification'
 ~/scripts/cmd/require bc pactl wpctl brightnessctl dunstify
 # TODO: Implement `mt` with `wpctl` (removes `pactl` dependency)
 
+# TODO: Rename subcommands
+
 # Note: `brightnessctl` can be replaced with `xbacklight`, but this requires
 # modifying `/etc/sudoers` to allow `xbacklight` to run as root without a
 # password.
@@ -33,6 +35,8 @@ $(basename "$0"): $INFO
     b+  Increase brightness
     b-  Decrease brightness
     mt Toggle microphone
+    display-volume          Display volume value with icon
+    display-brightness      Display brightness value with icon
 EOF
 }
 
@@ -99,15 +103,19 @@ notify_progress() {
         --hints "string:hlcolor:$BAR_COLOR"
 }
 
+get_icon_volume() {
+    if [ "$value" -eq 0 ] || is_mute; then
+        echo "$ICON_VOLUME_MUTE"
+    elif [ "$value" -lt 50 ]; then
+        echo "$ICON_VOLUME_LOW"
+    else
+        echo "$ICON_VOLUME_HIGH"
+    fi
+}
+
 notify_volume() {
     value=$(get_volume)
-    if [ "$value" -eq 0 ] || is_mute; then
-        icon="$ICON_VOLUME_MUTE"
-    elif [ "$value" -lt 50 ]; then
-        icon="$ICON_VOLUME_LOW"
-    else
-        icon="$ICON_VOLUME_HIGH"
-    fi
+    icon="$(get_icon_volume)"
     notify_progress "$value" "$icon"
 }
 
@@ -125,6 +133,17 @@ notify_microphone() {
         icon="$ICON_MICROPHONE_MUTE"
     fi
     notify "$text" "$icon"
+}
+
+display_volume() {
+    value=$(get_volume)
+    icon="$(get_icon_volume)"
+    echo "$icon $value%"
+}
+
+display_brightness() {
+    value=$(get_brightness)
+    echo "$ICON_BRIGHTNESS $value%"
 }
 
 command="$1"
@@ -162,6 +181,14 @@ case "$command" in
     mt)
         toggle_all_mics
         notify_microphone
+        ;;
+
+    display-volume)
+        display_volume
+        ;;
+
+    display-brightness)
+        display_brightness
         ;;
 
     h|help|-h|--help)
