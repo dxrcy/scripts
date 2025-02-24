@@ -86,13 +86,17 @@ notify() {
     text="$1"
     icon="$2"
     shift 2
+    # `dunst --replace` currently triggers segfault:
+    # https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg2021298.html
+    # Instead clear all notifications
+    dunstctl close-all
     dunstify \
         "$icon $text" \
         --icon none \
         --timeout "$TIMEOUT" \
-        --replace "$DUNST_ID" \
         --urgency normal \
         "$@"
+        # --replace "$DUNST_ID" \
 }
 
 notify_progress() {
