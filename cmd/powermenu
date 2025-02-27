@@ -1,8 +1,7 @@
 #!/bin/sh
 export INFO='choose a power-off method with Rofi dialog'
 
-~/scripts/cmd/require wofi systemctl betterlockscreen i3-msg
-# TODO: Use wayland-compatible lockscreen
+~/scripts/cmd/require wofi systemctl hyprlock hyprctl
 
 MONITOR='eDP-1'
 
@@ -22,11 +21,18 @@ answer="$(echo "$menu" \
         --cache-file=/dev/null
 )"
 
+try() {
+    $@
+    if [ $? -ne 0 ]; then
+        notify-send "failed operation: $@"
+    fi
+}
+
 case "$answer" in
-    ' Shutdown') systemctl poweroff ;;
-    ' Reboot')   systemctl reboot ;;
-    ' Suspend')  systemctl suspend 2>&1 || notify-send 'Failed to suspend' ;;
-    ' Lock')     betterlockscreen -l ;;
+    ' Shutdown') try systemctl poweroff ;;
+    ' Reboot')   try systemctl reboot ;;
+    ' Suspend')  try hyprlock & try systemctl suspend ;;
+    ' Lock')     try hyprlock ;;
     ' Logout')   hyprctl dispatch exit ;;
     *) ;;
 esac
