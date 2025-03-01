@@ -1,9 +1,9 @@
 #!/bin/sh
 export INFO='choose a power-off method with Rofi dialog'
 
-~/scripts/cmd/require wofi systemctl hyprlock hyprctl
+~/scripts/cmd/require kitty fzf systemctl hyprlock hyprctl
 
-MONITOR='eDP-1'
+CLASS='popup-powermenu'
 
 menu="\
  Cancel
@@ -13,13 +13,24 @@ menu="\
  Logout
  Lock"
 
-# Disable cache file to use consistent order
-answer="$(echo "$menu" \
-    | wofi --show dmenu \
-        --prompt 'Powermenu' \
-        --monitor $MONITOR \
-        --cache-file=/dev/null
-)"
+fifo_path="$(mktemp --dry-run -p /tmp powermenu.XXXX)"
+mkfifo "$fifo_path"
+
+# Send output of terminal command to FIFO, for parent process to read
+kitty --class $CLASS \
+    --override font_size=14 \
+    -- sh -c "
+    echo \"$menu\" \
+        | fzf \
+            --reverse \
+            --highlight-line \
+            --cycle \
+            --margin=1 \
+        >> \"$fifo_path\"
+    " &
+
+answer="$(cat "$fifo_path")"
+rm -f "$fifo_path"
 
 try() {
     $@
