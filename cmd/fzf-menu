@@ -1,0 +1,36 @@
+#!/bin/sh
+
+dir='/usr/share/applications'
+
+list_files() {
+    find "$dir" -type f -name '*.desktop'
+}
+
+list_names() {
+    grep --no-filename --max-count 1 "^Name=" "$dir"/* | sed 's/^Name=//'
+}
+
+resolve_file() {
+    target="$1"
+    grep --files-with-matches --max-count 1 "^Name=$target$" "$dir"/*
+}
+
+extract_key() {
+    key="$1"
+    cat | grep --max-count 1 "^$key=" | sed "s/^$key=//"
+}
+
+answer="$(list_names | fzf || exit $?)"
+
+file="$(resolve_file "$answer")"
+if [ -z "$file" ]; then
+    exit 1
+fi
+
+cmd="$(extract_key 'Exec' < "$file" | sed 's/%[^%]//g')"
+if [ -z "$cmd" ]; then
+    exit 2
+fi
+
+exec $cmd
+
