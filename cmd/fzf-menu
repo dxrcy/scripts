@@ -20,7 +20,10 @@ extract_key() {
     cat | grep --max-count 1 "^$key=" | sed "s/^$key=//"
 }
 
-answer="$(list_names | fzf || exit $?)"
+answer="$(list_names \
+    | fzf \
+        --highlight-line \
+    || exit $?)"
 
 file="$(resolve_file "$answer")"
 if [ -z "$file" ]; then
