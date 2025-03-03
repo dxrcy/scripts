@@ -3,7 +3,7 @@ export INFO='choose a power-off method with Rofi dialog'
 
 ~/scripts/cmd/require kitty fzf systemctl hyprlock hyprctl
 
-CLASS='popup-powermenu'
+CLASS='popup'
 
 menu="\
  Cancel
@@ -18,7 +18,7 @@ mkfifo "$fifo_path"
 
 # Send output of terminal command to FIFO, for parent process to read
 kitty --class $CLASS \
-    --override font_size=14 \
+    --override font_size=12 \
     -- sh -c "
     echo \"$menu\" \
         | fzf \
