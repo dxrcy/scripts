@@ -1,4 +1,7 @@
 #!/bin/sh
+export INFO='search and run a desktop application using fzf'
+
+~/scripts/cmd/require fzf || exit $?
 
 dir='/usr/share/applications'
 
