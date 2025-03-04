@@ -38,5 +38,5 @@ if [ -z "$cmd" ]; then
     exit 2
 fi
 
-exec $cmd
+echo "$cmd"
 
