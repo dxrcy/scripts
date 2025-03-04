@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# TODO: info
+# TODO: dependencies
+
+# TODO: try to read from fd
+
+fifo_path="$(mktemp --dry-run -p /tmp powermenu.XXXX)"
+mkfifo "$fifo_path"
+
+# Send output of terminal command to FIFO, for parent process to read
+kitty --class 'popup' \
+    -- sh -c "$@ >> \"$fifo_path\"" \
+    &
+
+cat "$fifo_path"
+rm -f "$fifo_path"
+
