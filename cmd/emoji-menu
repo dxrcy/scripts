@@ -1,23 +1,18 @@
 #!/bin/sh
-export INFO='open dmenu to find an emoji'
+export INFO='choose an emoji using fzf'
 
-~/scripts/cmd/require wofi notify-send || exit $?
-# TODO: Use wayland-compatible clipboard
+~/scripts/cmd/require fzf notify-send || exit $?
 
-ADD_STYLE='s/^\([^ ]*\)/<span size="13000">\1<\/span>/'
-REMOVE_STYLE='s/^<[^>]*>\([^ <]*\).*$/\1/'
+answer="$(cat ~/scripts/share/emojis \
+    | fzf \
+        --highlight-line \
+    | cat \
+|| exit $?)"
 
-chosen=$(sed "$ADD_STYLE" ~/scripts/share/emojis \
-    | wofi --show dmenu \
-        --allow-markup \
-    | sed "$REMOVE_STYLE"
-)
-[ -n "$chosen" ] || exit 0
+if [ -z "$answer" ]; then
+    exit 0
+fi
 
-echo "$chosen"
-
-# Type chosen emoji, or copy to clipboard
-# xdotool type "$chosen"
-printf "%s" "$chosen" | wl-copy
-notify-send "$chosen" -t 800
+emoji="$(echo $answer | sed 's/ .*//')"
+echo "$emoji"
 

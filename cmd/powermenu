@@ -3,6 +3,8 @@ export INFO='choose a power-off method with Rofi dialog'
 
 ~/scripts/cmd/require kitty fzf systemctl hyprlock hyprctl
 
+# TODO(feat): Use `terminal-popup`
+
 CLASS='popup'
 
 menu="\

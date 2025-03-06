@@ -3,7 +3,7 @@
 # TODO: info
 # TODO: dependencies
 
-# TODO: try to read from fd
+# TODO(refactor): Try to read from fd
 
 fifo_path="$(mktemp --dry-run -p /tmp powermenu.XXXX)"
 mkfifo "$fifo_path"
