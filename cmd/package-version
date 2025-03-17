@@ -4,7 +4,9 @@ export INFO='print package version for a project (Rust)'
 [ "$1" ] && { cd "$1" || exit "$?"; }
 
 # Rust
-[ -f Cargo.toml ] && sed -n 's/^ *version *= *"\(.*\)" *$/\1/p' Cargo.toml
+if [ -f Cargo.toml ]; then
+    sed -n 's/^ *version *= *"\(.*\)" *$/\1/p' Cargo.toml | head -n1
+fi
 
 # Other languages
 # ....
