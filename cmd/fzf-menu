@@ -3,19 +3,28 @@ export INFO='search and run a desktop application using fzf'
 
 ~/scripts/cmd/require fzf || exit $?
 
-dir='/usr/share/applications'
-
-list_files() {
-    find "$dir" -type f -name '*.desktop'
-}
+dirs="/usr/share/applications/ $XDG_DATA_HOME/applications/"
 
 list_names() {
-    grep --no-filename --max-count 1 "^Name=" "$dir"/* | sed 's/^Name=//'
+    #shellcheck disable=SC2086
+    grep \
+        --recursive \
+        --no-filename \
+        --max-count 1 \
+        "^Name=" \
+        $dirs \
+        | sed 's/^Name=//'
 }
 
 resolve_file() {
     target="$1"
-    grep --files-with-matches --max-count 1 "^Name=$target$" "$dir"/*
+    #shellcheck disable=SC2086
+    grep \
+        --recursive \
+        --files-with-matches \
+        --max-count 1 \
+        "^Name=$target$" \
+        $dirs
 }
 
 extract_key() {
@@ -33,7 +42,10 @@ if [ -z "$file" ]; then
     exit 1
 fi
 
-cmd="$(extract_key 'Exec' < "$file" | sed 's/%[^%]//g')"
+cmd="$(extract_key 'Exec' < "$file"\
+    | sed 's/%[^%]//g' \
+    | sed "s/^\s*[\"']//;s/[\"']\s*$//" \
+|| exit $?)"
 if [ -z "$cmd" ]; then
     exit 2
 fi
