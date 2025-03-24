@@ -8,7 +8,7 @@ dirs="/usr/share/applications/ $XDG_DATA_HOME/applications/"
 list_names() {
     #shellcheck disable=SC2086
     grep \
-        --recursive \
+        --dereference-recursive \
         --no-filename \
         --max-count 1 \
         "^Name=" \
@@ -20,7 +20,7 @@ resolve_file() {
     target="$1"
     #shellcheck disable=SC2086
     grep \
-        --recursive \
+        --dereference-recursive \
         --files-with-matches \
         --max-count 1 \
         "^Name=$target$" \
