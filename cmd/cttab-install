@@ -129,11 +129,13 @@ fi
 # autoconfig.cfg
 path_1="$path/autoconfig.cfg"
 file_1="// First line must be comment! Do not delete this line!
-var {classes:Cc,interfaces:Ci,utils:Cu} = Components;
-try { Cu.import(\"resource:///modules/AboutNewTab.jsm\");
-var newTabURL = \"file://$filepath\";
-AboutNewTab.newTabURL = newTabURL;
-} catch(e){Cu.reportError(e);} // report errors in the Browser Console"
+var { utils } = Components;
+try {
+    ChromeUtils.defineESModuleGetters(this, {
+        AboutNewTab: \"resource:///modules/AboutNewTab.sys.mjs\",
+    });
+    AboutNewTab.newTabURL = \"file://$filepath\";
+} catch (e) { utils.reportError(e); }"
 # defaults/pref/autoconfig.cfg
 path_2="$path/defaults/pref/autoconfig.js"
 file_2='// First line must be comment! Do not delete this line!
