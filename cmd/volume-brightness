@@ -10,6 +10,9 @@ export INFO='change volume or brightness, with notification'
 # modifying `/etc/sudoers` to allow `xbacklight` to run as root without a
 # password.
 
+# Percentage modifier to balance left/right channels
+BALANCE_LEFT=100
+BALANCE_RIGHT=78
 # Control options
 STEP_VOLUME=5
 STEP_BRIGHTNESS=5
@@ -150,22 +153,47 @@ display_brightness() {
     echo "$ICON_BRIGHTNESS $value%"
 }
 
+add_saturating() {
+    lhs="$1"
+    rhs="$2"
+    max="$3"
+    result=$((lhs + rhs))
+    if [ "$result" -ge "$max" ];
+        then echo "$max"
+        else echo "$result"
+    fi
+}
+sub_saturating() {
+    lhs="$1"
+    rhs="$2"
+    min="$3"
+    result=$((lhs - rhs))
+    if [ "$result" -le "$min" ];
+        then echo "$min"
+        else echo "$result"
+    fi
+}
+
+set_volume() {
+    value="$1"
+    value_left=$((value * BALANCE_LEFT / 100))
+    value_right=$((value * BALANCE_RIGHT / 100))
+    amixer sset Master "$value_left%,$value_right%"
+}
+
 command="$1"
 case "$command" in
 
     v+)
         wpctl set-mute @DEFAULT_SINK@ 0
-        value=$(get_volume)
-        # Increase or set to max value
-        if [ $(( value + STEP_VOLUME )) -ge "$VOLUME_MAX" ];
-            then wpctl set-volume @DEFAULT_SINK@ "$VOLUME_MAX%"
-            else wpctl set-volume @DEFAULT_SINK@ "$STEP_VOLUME%+"
-        fi
+        value=$(add_saturating "$(get_volume)" $STEP_VOLUME $VOLUME_MAX)
+        set_volume "$value"
         notify_volume
         ;;
     v-)
         wpctl set-mute @DEFAULT_SINK@ 0
-        wpctl set-volume @DEFAULT_SINK@ "$STEP_VOLUME%-"
+        value="$(sub_saturating "$(get_volume)" $STEP_VOLUME 0)"
+        set_volume "$value"
         notify_volume
         ;;
     vm)
