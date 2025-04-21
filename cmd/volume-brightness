@@ -10,9 +10,8 @@ export INFO='change volume or brightness, with notification'
 # modifying `/etc/sudoers` to allow `xbacklight` to run as root without a
 # password.
 
-# Percentage modifier to balance left/right channels
-BALANCE_LEFT=100
-BALANCE_RIGHT=78
+# Percentage modifier of right channel, to left
+VOLUME_BALANCE_RIGHT=76
 # Control options
 STEP_VOLUME=5
 STEP_BRIGHTNESS=5
@@ -176,8 +175,8 @@ sub_saturating() {
 
 set_volume() {
     value="$1"
-    value_left=$((value * BALANCE_LEFT / 100))
-    value_right=$((value * BALANCE_RIGHT / 100))
+    value_left=$((value))
+    value_right=$((value * VOLUME_BALANCE_RIGHT / 100))
     amixer sset Master "$value_left%,$value_right%"
 }
 
