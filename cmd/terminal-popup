@@ -5,7 +5,7 @@
 
 # TODO(refactor): Try to read from fd
 
-fifo_path="$(mktemp --dry-run -p /tmp powermenu.XXXX)"
+fifo_path="$(mktemp --dry-run -p /tmp popup.XXXX)"
 mkfifo "$fifo_path"
 
 # Send output of terminal command to FIFO, for parent process to read
