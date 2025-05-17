@@ -131,6 +131,9 @@ execute() {
     events="$2"
     filename="$3"
 
+    # Remove trailing slash
+    basepath="$(echo "$basepath" | sed 's|/$||')"
+
     fullpath="$basepath/$filename"
     basename="${file%.*}"
     extension="${file##*.}"
