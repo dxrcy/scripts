@@ -11,7 +11,7 @@ export INFO='change volume or brightness, with notification'
 # password.
 
 # Percentage modifier of right channel, to left
-VOLUME_BALANCE_RIGHT=76
+VOLUME_BALANCE_RIGHT=98
 # Control options
 STEP_VOLUME=5
 STEP_BRIGHTNESS=5
