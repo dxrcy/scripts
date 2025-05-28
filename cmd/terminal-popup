@@ -10,7 +10,7 @@ mkfifo "$fifo_path"
 
 # Send output of terminal command to FIFO, for parent process to read
 kitty --class 'popup' \
-    -- sh -c "$@ >> \"$fifo_path\"" \
+    -- sh -c "$* >> \"$fifo_path\"" \
     &
 
 cat "$fifo_path"
