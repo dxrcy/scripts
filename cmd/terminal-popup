@@ -5,6 +5,20 @@
 
 # TODO(refactor): Try to read from fd
 
+# Kill any running instances
+kill_recurse() {
+    pid="$1"
+    for child in $(pgrep -P "$pid"); do
+        kill_recurse "$child"
+    done
+    kill -TERM "$pid" 2>/dev/null
+}
+for pid in $(pgrep 'popup'); do
+    if [ ! "$pid" = $$ ]; then
+        kill_recurse "$pid"
+    fi
+done
+
 fifo_path="$(mktemp --dry-run -p /tmp popup.XXXX)"
 mkfifo "$fifo_path"
 

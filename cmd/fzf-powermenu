@@ -4,20 +4,6 @@ export INFO='choose a power-off method with fzf popup'
 ~/scripts/cmd/require fzf systemctl hyprlock hyprctl || exit $?
 ~/scripts/cmd/require ~/scripts/cmd/terminal-popup || exit $?
 
-# Kill any running instances
-kill_recurse() {
-    pid="$1"
-    for child in $(pgrep -P "$pid"); do
-        kill_recurse "$child"
-    done
-    kill -TERM "$pid" 2>/dev/null
-}
-for pid in $(pgrep -f 'powermenu'); do
-    if [ ! "$pid" = $$ ]; then
-        kill_recurse "$pid"
-    fi
-done
-
 menu="\
  Cancel
  Suspend

@@ -2,6 +2,7 @@
 export INFO='search and run a desktop application using fzf'
 
 ~/scripts/cmd/require fzf || exit $?
+~/scripts/cmd/require ~/scripts/cmd/terminal-popup || exit $?
 
 dirs=$*
 
