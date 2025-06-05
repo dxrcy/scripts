@@ -38,6 +38,7 @@ $(basename "$0"): $INFO
     b-  Decrease brightness
     mt Toggle microphone
     display-volume          Display volume value with icon
+    display-mic             Display microphone status with icon
     display-brightness      Display brightness value with icon
 EOF
 }
@@ -49,7 +50,7 @@ is_mute() {
 
 # Returns 0 if ALL microphones are disabled, otherwise 1
 is_any_mic_enabled() {
-    pactl list sources | grep -q 'Mute: no'
+    ! pactl list sources | grep -q 'Mute: yes'
 }
 
 to_percent() {
@@ -76,8 +77,8 @@ get_brightness() {
 # Else, enable all
 toggle_all_mics() {
     if is_any_mic_enabled;
-        then new_state=1 # Mute / disable
-        else new_state=0 # Unmute / enable
+        then new_state='yes' # Mute / disable
+        else new_state='no'  # Unmute / enable
     fi
     for source in $(pactl list short sources | awk '{print $1}'); do
         pactl set-source-mute "$source" "$new_state"
@@ -145,6 +146,14 @@ display_volume() {
     value=$(get_volume)
     icon="$(get_icon_volume)"
     echo "$icon $value%"
+}
+
+display_mic() {
+    if is_any_mic_enabled; then
+        echo $ICON_MICROPHONE_ON
+    else
+        echo $ICON_MICROPHONE_MUTE
+    fi
 }
 
 display_brightness() {
@@ -216,6 +225,10 @@ case "$command" in
 
     display-volume)
         display_volume
+        ;;
+
+    display-mic)
+        display_mic
         ;;
 
     display-brightness)
