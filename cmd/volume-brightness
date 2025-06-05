@@ -36,7 +36,9 @@ $(basename "$0"): $INFO
     vm  Mute/unmute volume
     b+  Increase brightness
     b-  Decrease brightness
-    mt Toggle microphone
+    mt  Toggle microphone
+    m0  Mute microphone
+    m1  Unmute microphone
     display-volume          Display volume value with icon
     display-mic             Display microphone status with icon
     display-brightness      Display brightness value with icon
@@ -73,15 +75,21 @@ get_brightness() {
     echo "$percent"
 }
 
-# If any microphones are enabled, then disable all
-# Else, enable all
 toggle_all_mics() {
     if is_any_mic_enabled;
-        then new_state='yes' # Mute / disable
-        else new_state='no'  # Unmute / enable
+        then disable_all_mics
+        else enable_all_mics
     fi
+}
+
+disable_all_mics() {
     for source in $(pactl list short sources | awk '{print $1}'); do
-        pactl set-source-mute "$source" "$new_state"
+        pactl set-source-mute "$source" 'yes'
+    done
+}
+enable_all_mics() {
+    for source in $(pactl list short sources | awk '{print $1}'); do
+        pactl set-source-mute "$source" 'no'
     done
 }
 
@@ -220,6 +228,14 @@ case "$command" in
 
     mt)
         toggle_all_mics
+        notify_microphone
+        ;;
+    m0)
+        disable_all_mics
+        notify_microphone
+        ;;
+    m1)
+        enable_all_mics
         notify_microphone
         ;;
 
