@@ -1,0 +1,5 @@
+#!/bin/sh
+export INFO='grep for non-ascii characters'
+
+LC_ALL=C grep -P -n '[\x80-\xFF]' --color $*
+
