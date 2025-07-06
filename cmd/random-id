@@ -1,9 +1,0 @@
-#!/bin/sh
-export INFO='return a random 4-letter id'
-
-[ "$1" ] \
-    && len="$1" \
-    || len=4
-
-tr -dc '[:lower:]' < /dev/urandom | head -c "$len"
-
