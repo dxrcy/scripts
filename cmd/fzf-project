@@ -1,0 +1,31 @@
+#!/bin/sh
+export INFO='choose a project directory using fzf'
+
+DIR=~/.projects
+
+get_paths() {
+    # Print mtime to sort, then remove
+    find -L \
+            $DIR \
+            -mindepth 2 -maxdepth 2 \
+            -not -path '.*' \
+            -printf '%T@ %p\n' \
+        | sort -r \
+        | awk '{print $2}'
+}
+
+trim_path() {
+    cat | rev \
+        | cut -d/ -f-2 \
+        | rev
+}
+
+canonicalize_path() {
+    cat | xargs -I'{}' readlink -f "$DIR/{}"
+}
+
+get_paths \
+    | trim_path \
+    | fzf \
+    | canonicalize_path
+
