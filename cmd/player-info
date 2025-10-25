@@ -4,7 +4,6 @@ export INFO='show description of currently playing song'
 ~/scripts/cmd/require playerctl ~/scripts/cmd/bt dunstify || exit $?
 
 player='spotify'
-bar_color="#7f7fff"
 
 show_help() {
     cat << EOF
@@ -69,7 +68,6 @@ if [ "$mode" = 'notify' ]; then
     dunstify \
         --timeout 1000 \
         -h int:value:"$percent" \
-        -h string:hlcolor:"$bar_color" \
         -- \
         "$song" \
         "$desc"
