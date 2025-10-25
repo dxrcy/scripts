@@ -3,6 +3,7 @@ export INFO='show description of currently playing song'
 
 ~/scripts/cmd/require playerctl ~/scripts/cmd/bt dunstify || exit $?
 
+NOTIFY_ID=9238
 player='spotify'
 
 show_help() {
@@ -66,12 +67,12 @@ desc="$icon $time $charge"
 
 if [ "$mode" = 'notify' ]; then
     dunstify \
+        --replace $NOTIFY_ID \
         --timeout 1000 \
         -h int:value:"$percent" \
         -- \
         "$song" \
         "$desc"
-        # --replace 9238 \
     exit 0
 fi
 
