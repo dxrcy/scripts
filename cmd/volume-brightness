@@ -17,7 +17,6 @@ STEP_VOLUME=5
 STEP_BRIGHTNESS=5
 VOLUME_MAX=100
 # Notification options
-BAR_COLOR="#7f7fff"
 TIMEOUT=1000
 DUNST_ID="2593"
 # Icons
@@ -114,8 +113,7 @@ notify_progress() {
     value="$1"
     icon="$2"
     notify "$value%" "$icon" \
-        --hints "int:value:$value" \
-        --hints "string:hlcolor:$BAR_COLOR"
+        --hints "int:value:$value"
 }
 
 get_icon_volume() {
