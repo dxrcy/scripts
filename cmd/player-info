@@ -50,11 +50,11 @@ status=$(playerctl -p "$player" status) || exit $?
 icon=$(ok_icon "$status")
 
 song=$(playerctl -p "$player" metadata \
-    -f '{{title}} - {{artist}}') || exit $?
-
+    -f '{{title}}') || exit $?
+artist=$(playerctl -p "$player" metadata \
+    -f '{{artist}}') || exit $?
 time=$(playerctl -p "$player" metadata \
     -f '{{duration(position)}} / {{duration(mpris:length)}}') || exit $?
-
 percent=$(playerctl -p "$player" metadata \
     -f '{{position / mpris:length * 100}}') || exit $?
 
@@ -72,7 +72,7 @@ if [ "$mode" = 'notify' ]; then
         -h int:value:"$percent" \
         -- \
         "$song" \
-        "$desc"
+        "$artist\n$desc"
     exit 0
 fi
 
