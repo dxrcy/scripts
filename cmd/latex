@@ -1,0 +1,71 @@
+#!/bin/sh
+
+name=''
+watch=''
+bibtex=''
+
+log() {
+    echo "$@" >&2
+}
+help() {
+    log 'USAGE:'
+    log '    latex [NAME] [...OPTIONS]'
+    log 'OPTIONS:'
+    log '    -w --watch'
+    log '    -b --bibtex'
+    exit 0
+}
+die() {
+    log "latex:" "$@"
+    exit 1
+}
+
+for arg in "$@"; do
+    case "$arg" in
+        --help) help ;;
+        --watch) watch=1 ;;
+        --bibtex) bibtex=1 ;;
+        --*) die "invalid option \`$arg\`" ;;
+        -*)
+            i=2
+            while [ "$i" -le "${#arg}" ]; do
+                char=$(printf '%s' "$arg" | cut -c "$i")
+                case "$char" in
+                    h) help ;;
+                    w) watch=1 ;;
+                    b) bibtex=1 ;;
+                    *) die "invalid option \`$char\`" ;;
+                esac
+                i=$((i+1))
+            done
+            ;;
+        *)
+            if [ -n "$name" ]; then
+                die "invalid argument \`$name\`"
+            fi
+            name="$arg"
+            ;;
+    esac
+done
+
+if [ -z "$name" ]; then
+    die 'missing argument [NAME]'
+fi
+
+log "  name: $name"
+log " watch: $watch"
+log "bibtex: $bibtex"
+
+{
+    inotifywait \
+        --monitor \
+        --event modify \
+        --recursive \
+        --exclude '.*/\.git/.*' \
+        --quiet \
+        "$dir" \
+    || kill "$self"
+} | while read -r basepath events filename; do
+    echo "$basepath $events $filename"
+done
+
