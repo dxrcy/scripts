@@ -1,5 +1,8 @@
 #!/usr/bin/nu
 
+# TODO: Implement `mt` with `wpctl` (removes `pactl` dependency)
+# TODO: Add function signatures
+
 let config = {
     volume: {
         step: 5
@@ -28,44 +31,37 @@ let config = {
 
 def main [] { }
 
-def "main v+" [] {
+def "main volume up" [] {
     set-mute unmute
     set-volume ((get-volume) + $config.volume.step | clamp-percent)
     notify-volume
 }
-
-def "main v-" [] {
+def "main volume down" [] {
     set-mute unmute
     set-volume ((get-volume) - $config.volume.step | clamp-percent)
     notify-volume
 }
-
-def "main vm" [] {
+def "main mute toggle" [] {
     set-mute toggle
     notify-volume
 }
-
-def "main b+" [] {
+def "main brightness up" [] {
     set-brightness (get-brightness | smart-step increase $config.brightness)
     notify-brightess
 }
-
-def "main b-" [] {
+def "main brightness down" [] {
     set-brightness (get-brightness | smart-step decrease $config.brightness)
     notify-brightess
 }
-
-def "main mt" [] {
+def "main microphones toggle" [] {
     set-microphones toggle
     notify-microphone
 }
-
-def "main m0" [] {
+def "main microphones disable" [] {
     set-microphones false
     notify-microphone
 }
-
-def "main m1" [] {
+def "main microphones enable" [] {
     set-microphones true
     notify-microphone
 }
