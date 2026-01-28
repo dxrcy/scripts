@@ -27,12 +27,19 @@ let config = {
 def main [] { }
 
 def "main v+" [] {
+    set-mute unmute
     set-volume ((get-volume) + $config.volume.step | clamp-percent)
     notify-volume
 }
 
 def "main v-" [] {
+    set-mute unmute
     set-volume ((get-volume) - $config.volume.step | clamp-percent)
+    notify-volume
+}
+
+def "main vm" [] {
+    set-mute toggle
     notify-volume
 }
 
@@ -54,6 +61,10 @@ def get-volume []: nothing -> float {
     ) * 100
 }
 
+def get-mute []: nothing -> bool {
+    wpctl get-volume @DEFAULT_SINK@ | str contains '[MUTED]'
+}
+
 def get-brightness []: nothing -> float {
     let value = (brightnessctl get | into float)
     let max = (brightnessctl max | into float)
@@ -66,13 +77,21 @@ def set-volume [value: float] {
     amixer sset Master $"($value_left)%,($value_right)%"
 }
 
+def "set-mute unmute" [] {
+    wpctl set-mute @DEFAULT_SINK@ 0
+}
+
+def "set-mute toggle" [] {
+    wpctl set-mute @DEFAULT_SINK@ toggle
+}
+
 def set-brightness [value: float] {
     brightnessctl set $"($value)%"
 }
 
 def notify-volume [] {
     let value = (get-volume)
-    let icon = if $value == 0 {
+    let icon = if ($value == 0) or (get-mute) {
             $config.icon.volume_mute
         } else if $value < 50 {
             $config.icon.volume_low
