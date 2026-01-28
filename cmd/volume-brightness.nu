@@ -33,41 +33,41 @@ let config = {
 def main [] { }
 
 def "main volume up" [] {
-    set-mute unmute
-    set-volume ((get-volume) + $config.volume.step | clamp-percent)
-    notify-volume
+    mute set-disabled
+    volume set ((volume get) + $config.volume.step | clamp-percent)
+    notify volume
 }
 def "main volume down" [] {
-    set-mute unmute
-    set-volume ((get-volume) - $config.volume.step | clamp-percent)
-    notify-volume
+    mute set-disabled
+    volume set ((volume get) - $config.volume.step | clamp-percent)
+    notify volume
 }
 def "main mute toggle" [] {
-    set-mute toggle
-    notify-volume
-}
-def "main brightness up" [] {
-    set-brightness (get-brightness | smart-step increase $config.brightness)
-    notify-brightess
-}
-def "main brightness down" [] {
-    set-brightness (get-brightness | smart-step decrease $config.brightness)
-    notify-brightess
+    mute toggle
+    notify volume
 }
 def "main microphones toggle" [] {
-    set-microphones toggle
-    notify-microphone
+    microphones toggle
+    notify microphone
 }
 def "main microphones disable" [] {
-    set-microphones false
-    notify-microphone
+    microphones set-enabled false
+    notify microphone
 }
 def "main microphones enable" [] {
-    set-microphones true
-    notify-microphone
+    microphones set-enabled true
+    notify microphone
+}
+def "main brightness up" [] {
+    brightness set (brightness get | smart-step increase $config.brightness)
+    notify brightess
+}
+def "main brightness down" [] {
+    brightness set (brightness get | smart-step decrease $config.brightness)
+    notify brightess
 }
 
-def get-volume []: nothing -> float {
+def "volume get" []: nothing -> float {
     (wpctl get-volume @DEFAULT_SINK@
         | split column " "
         | get 0.column1
@@ -75,57 +75,57 @@ def get-volume []: nothing -> float {
     ) * 100
 }
 
-def get-mute []: nothing -> bool {
-    wpctl get-volume @DEFAULT_SINK@ | str contains "[MUTED]"
-}
-
-def get-brightness []: nothing -> float {
-    let value = (brightnessctl get | into float)
-    let max = (brightnessctl max | into float)
-    echo (100 * $value / $max)
-}
-
-def get-microphones []: nothing -> bool {
-    pactl list sources | str contains "Mute: yes"
-}
-
-def set-volume [value: float] {
+def "volume set" [value: float] {
     let value_left = $value
     let value_right = ($value * $config.volume.balance_right / 100.0)
     amixer sset Master $"($value_left)%,($value_right)%"
 }
 
-def "set-mute unmute" [] {
+def "mute is-enabled" []: nothing -> bool {
+    wpctl get-volume @DEFAULT_SINK@ | str contains "[MUTED]"
+}
+
+def "mute set-disabled" [] {
     wpctl set-mute @DEFAULT_SINK@ 0
 }
 
-def "set-mute toggle" [] {
+def "mute toggle" [] {
     wpctl set-mute @DEFAULT_SINK@ toggle
 }
 
-def set-brightness [value: float] {
-    brightnessctl set $"($value)%"
+def "microphones is-enabled" []: nothing -> bool {
+    pactl list sources | str contains "Mute: yes"
 }
 
-def "set-microphones" [enable: bool] {
+def "microphones set-enabled" [enable: bool] {
     let state = if $enable { "yes" } else { "no" }
-    for line in (pactl list short sources | lines) {
-        let source = ($line | split column "\t" | get column1.0)
+    for source in (pactl list short sources
+        | lines
+        | each { split column "\t"
+            | get column1.0
+        }
+    ) {
         pactl set-source-mute $source $state
     }
 }
 
-def "set-microphones toggle" [] {
-    if (get-microphones) {
-        set-microphones false
-    } else {
-        set-microphones true
-    }
+def "microphones toggle" [] {
+    microphones set-enabled (not (microphones is-enabled))
 }
 
-def notify-volume [] {
-    let value = (get-volume)
-    let icon = if ($value == 0) or (get-mute) {
+def "brightness get" []: nothing -> float {
+    let value = (brightnessctl get | into float)
+    let max = (brightnessctl max | into float)
+    echo (100 * $value / $max)
+}
+
+def "brightness set" [value: float] {
+    brightnessctl set $"($value)%"
+}
+
+def "notify volume" [] {
+    let value = (volume get)
+    let icon = if ($value == 0) or (mute is-enabled) {
             $config.icon.volume_mute
         } else if $value < 50 {
             $config.icon.volume_low
@@ -135,16 +135,16 @@ def notify-volume [] {
     notify-progress $value $icon
 }
 
-def notify-brightess [] {
-    notify-progress (get-brightness) $config.icon.brightness
-}
-
-def notify-microphone [] {
-    let text = if (get-microphones) {
+def "notify microphone" [] {
+    let text = if (microphones is-enabled) {
         "Microphone ENABLED" } else { "Microphone disabled" }
-    let icon = if (get-microphones) {
+    let icon = if (microphones is-enabled) {
         $config.icon.microphone_on } else { $config.icon.microphone_mute }
     notify-inner $text $icon
+}
+
+def "notify brightess" [] {
+    notify-progress (brightness get) $config.icon.brightness
 }
 
 def clamp-percent []: float -> float {
