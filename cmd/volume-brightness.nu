@@ -2,7 +2,10 @@
 
 let config = {
     brightness: {
-        step_percent: 10
+        amount_small: 1
+        amount_large: 10
+        threshold_min: 5
+        threshold_max: 10
     }
     notification: {
         timeout: 1000
@@ -16,16 +19,38 @@ let config = {
 def main [] { }
 
 def "main b+" [] {
-    brightnessctl set $"($config.brightness.step_percent)%+"
+    let new = (get-brightness | apply-step increase $config.brightness)
+    brightnessctl set $"($new)%"
     notify-brightess
 }
 
 def "main b-" [] {
-    brightnessctl set $"($config.brightness.step_percent)%-"
+    let new = (get-brightness | apply-step decrease $config.brightness)
+    brightnessctl set $"($new)%"
     notify-brightess
 }
 
-def get-brightness [] {
+def "apply-step increase" [params]: float -> float {
+    if $in >= $params.threshold_max {
+        ($in + $params.amount_large)
+    } else if $in + $params.amount_small > $params.threshold_min {
+        ($params.threshold_max)
+    } else {
+        ($in + $params.amount_small)
+    }
+}
+
+def "apply-step decrease" [params]: float -> float {
+    if $in > $params.threshold_max {
+        ($in - $params.amount_large)
+    } else if $in - $params.amount_small > $params.threshold_min {
+        ($params.threshold_min)
+    } else {
+        ($in - $params.amount_small)
+    }
+}
+
+def get-brightness []: nothing -> float {
     let value = (brightnessctl get | into float)
     let max = (brightnessctl max | into float)
     echo (100 * $value / $max)
