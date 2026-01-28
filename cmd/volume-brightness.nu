@@ -17,10 +17,12 @@ let config = {
         unique_id: 5818
     }
     icon: {
-        volume_mute: ''
-        volume_low: ''
-        volume_high: ''
+        volume_mute: ""
+        volume_low: ""
+        volume_high: ""
         brightness: ""
+        microphone_mute: ""
+        microphone_on: ""
     }
 }
 
@@ -53,22 +55,41 @@ def "main b-" [] {
     notify-brightess
 }
 
+def "main mt" [] {
+    set-microphones toggle
+    notify-microphone
+}
+
+def "main m0" [] {
+    set-microphones false
+    notify-microphone
+}
+
+def "main m1" [] {
+    set-microphones true
+    notify-microphone
+}
+
 def get-volume []: nothing -> float {
     (wpctl get-volume @DEFAULT_SINK@
-        | split column ' '
+        | split column " "
         | get 0.column1
         | into float
     ) * 100
 }
 
 def get-mute []: nothing -> bool {
-    wpctl get-volume @DEFAULT_SINK@ | str contains '[MUTED]'
+    wpctl get-volume @DEFAULT_SINK@ | str contains "[MUTED]"
 }
 
 def get-brightness []: nothing -> float {
     let value = (brightnessctl get | into float)
     let max = (brightnessctl max | into float)
     echo (100 * $value / $max)
+}
+
+def get-microphones []: nothing -> bool {
+    pactl list sources | str contains "Mute: yes"
 }
 
 def set-volume [value: float] {
@@ -89,6 +110,22 @@ def set-brightness [value: float] {
     brightnessctl set $"($value)%"
 }
 
+def "set-microphones" [enable: bool] {
+    let state = if $enable { "yes" } else { "no" }
+    for line in (pactl list short sources | lines) {
+        let source = ($line | split column "\t" | get column1.0)
+        pactl set-source-mute $source $state
+    }
+}
+
+def "set-microphones toggle" [] {
+    if (get-microphones) {
+        set-microphones false
+    } else {
+        set-microphones true
+    }
+}
+
 def notify-volume [] {
     let value = (get-volume)
     let icon = if ($value == 0) or (get-mute) {
@@ -103,6 +140,14 @@ def notify-volume [] {
 
 def notify-brightess [] {
     notify-progress (get-brightness) $config.icon.brightness
+}
+
+def notify-microphone [] {
+    let text = if (get-microphones) {
+        "Microphone ENABLED" } else { "Microphone disabled" }
+    let icon = if (get-microphones) {
+        $config.icon.microphone_on } else { $config.icon.microphone_mute }
+    notify-inner $text $icon
 }
 
 def clamp-percent []: float -> float {
