@@ -12,6 +12,7 @@ let config = {
     brightness: {
         amount_small: 1
         amount_large: 5
+        # TODO: Instead of two thresholds, round to multiple of step amount
         threshold_min: 5
         threshold_max: 10
     }
@@ -160,7 +161,7 @@ def "smart-step increase" [params]: float -> float {
     if $in >= $params.threshold_max {
         ($in + $params.amount_large)
     } else if $in + $params.amount_small > $params.threshold_min {
-        ($params.threshold_max)
+        ($params.threshold_max | into float)
     } else {
         ($in + $params.amount_small)
     }
@@ -170,7 +171,7 @@ def "smart-step decrease" [params]: float -> float {
     if $in > $params.threshold_max {
         ($in - $params.amount_large)
     } else if $in - $params.amount_small > $params.threshold_min {
-        ($params.threshold_min)
+        ($params.threshold_min | into float)
     } else {
         ($in - $params.amount_small)
     }
