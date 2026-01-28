@@ -1,7 +1,7 @@
-#!/usr/bin/nu
+#!/usr/bin/env nu
 
 # TODO: Implement `mt` with `wpctl` (removes `pactl` dependency)
-# TODO: Add function signatures
+# TODO: Use `brightnessctl` options `--exponent` etc
 
 let config = {
     volume: {
@@ -30,39 +30,46 @@ let config = {
     }
 }
 
-def main [] { }
+def main []: nothing -> nothing {
+    help main
+}
 
-def "main volume up" [] {
+def "main volume"      []: nothing -> nothing { main }
+def "main mute"        []: nothing -> nothing { main }
+def "main microphones" []: nothing -> nothing { main }
+def "main brightness"  []: nothing -> nothing { main }
+
+def "main volume up" []: nothing -> nothing {
     mute set-disabled
     volume set ((volume get) + $config.volume.step | clamp-percent)
     notify volume
 }
-def "main volume down" [] {
+def "main volume down" []: nothing -> nothing {
     mute set-disabled
     volume set ((volume get) - $config.volume.step | clamp-percent)
     notify volume
 }
-def "main mute toggle" [] {
+def "main mute toggle" []: nothing -> nothing {
     mute toggle
     notify volume
 }
-def "main microphones toggle" [] {
+def "main microphones toggle" []: nothing -> nothing {
     microphones toggle
     notify microphone
 }
-def "main microphones disable" [] {
+def "main microphones disable" []: nothing -> nothing {
     microphones set-enabled false
     notify microphone
 }
-def "main microphones enable" [] {
+def "main microphones enable" []: nothing -> nothing {
     microphones set-enabled true
     notify microphone
 }
-def "main brightness up" [] {
+def "main brightness up" []: nothing -> nothing {
     brightness set (brightness get | smart-step increase $config.brightness)
     notify brightess
 }
-def "main brightness down" [] {
+def "main brightness down" []: nothing -> nothing {
     brightness set (brightness get | smart-step decrease $config.brightness)
     notify brightess
 }
@@ -75,7 +82,7 @@ def "volume get" []: nothing -> float {
     ) * 100
 }
 
-def "volume set" [value: float] {
+def "volume set" [value: float]: nothing -> nothing {
     let value_left = $value
     let value_right = ($value * $config.volume.balance_right / 100.0)
     amixer sset Master $"($value_left)%,($value_right)%"
@@ -85,11 +92,11 @@ def "mute is-enabled" []: nothing -> bool {
     wpctl get-volume @DEFAULT_SINK@ | str contains "[MUTED]"
 }
 
-def "mute set-disabled" [] {
+def "mute set-disabled" []: nothing -> nothing {
     wpctl set-mute @DEFAULT_SINK@ 0
 }
 
-def "mute toggle" [] {
+def "mute toggle" []: nothing -> nothing {
     wpctl set-mute @DEFAULT_SINK@ toggle
 }
 
@@ -97,7 +104,7 @@ def "microphones is-enabled" []: nothing -> bool {
     pactl list sources | str contains "Mute: yes"
 }
 
-def "microphones set-enabled" [enable: bool] {
+def "microphones set-enabled" [enable: bool]: nothing -> nothing {
     let state = if $enable { "yes" } else { "no" }
     for source in (pactl list short sources
         | lines
@@ -109,7 +116,7 @@ def "microphones set-enabled" [enable: bool] {
     }
 }
 
-def "microphones toggle" [] {
+def "microphones toggle" []: nothing -> nothing {
     microphones set-enabled (not (microphones is-enabled))
 }
 
@@ -119,11 +126,11 @@ def "brightness get" []: nothing -> float {
     echo (100 * $value / $max)
 }
 
-def "brightness set" [value: float] {
+def "brightness set" [value: float]: nothing -> nothing {
     brightnessctl set $"($value)%"
 }
 
-def "notify volume" [] {
+def "notify volume" []: nothing -> nothing {
     let value = (volume get)
     let icon = if ($value == 0) or (mute is-enabled) {
             $config.icon.volume_mute
@@ -135,7 +142,7 @@ def "notify volume" [] {
     notify-progress $value $icon
 }
 
-def "notify microphone" [] {
+def "notify microphone" []: nothing -> nothing {
     let text = if (microphones is-enabled) {
         "Microphone ENABLED" } else { "Microphone disabled" }
     let icon = if (microphones is-enabled) {
@@ -143,7 +150,7 @@ def "notify microphone" [] {
     notify-inner $text $icon
 }
 
-def "notify brightess" [] {
+def "notify brightess" []: nothing -> nothing {
     notify-progress (brightness get) $config.icon.brightness
 }
 
@@ -157,7 +164,7 @@ def clamp-percent []: float -> float {
     }
 }
 
-def "smart-step increase" [params]: float -> float {
+def "smart-step increase" [params: record]: float -> float {
     if $in >= $params.threshold_max {
         ($in + $params.amount_large)
     } else if $in + $params.amount_small > $params.threshold_min {
@@ -167,7 +174,7 @@ def "smart-step increase" [params]: float -> float {
     }
 }
 
-def "smart-step decrease" [params]: float -> float {
+def "smart-step decrease" [params: record]: float -> float {
     if $in > $params.threshold_max {
         ($in - $params.amount_large)
     } else if $in - $params.amount_small > $params.threshold_min {
@@ -177,13 +184,17 @@ def "smart-step decrease" [params]: float -> float {
     }
 }
 
-def notify-progress [value: float, icon: string] {
+def notify-progress [value: float, icon: string]: nothing -> nothing {
     (notify-inner $"($value | math round)%" $icon
         --hints $"int:value:($value)"
     )
 }
 
-def --wrapped notify-inner [text: string, icon: string, ...args] {
+def --wrapped notify-inner [
+    text: string,
+    icon: string,
+    ...args,
+]: nothing -> nothing {
     (dunstify
         $"($icon) ($text)"
         --icon none
