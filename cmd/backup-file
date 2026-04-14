@@ -50,7 +50,7 @@ create_dir() {
     fi
 }
 
-create_dir "$dest_local"
+# create_dir "$dest_local"
 create_dir "$dest_global"
 
 # Quickly check all files exist (non-recursively)
