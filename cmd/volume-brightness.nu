@@ -101,11 +101,11 @@ def "mute toggle" []: nothing -> nothing {
 }
 
 def "microphones is-enabled" []: nothing -> bool {
-    pactl list sources | str contains "Mute: yes"
+    not (pactl list sources | str contains "Mute: yes")
 }
 
 def "microphones set-enabled" [enable: bool]: nothing -> nothing {
-    let state = if $enable { "yes" } else { "no" }
+    let state = if $enable { "no" } else { "yes" }
     for source in (pactl list short sources
         | lines
         | each { split column "\t"
