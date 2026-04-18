@@ -15,7 +15,13 @@ case "$1" in
     'off') sudo tlp setcharge 0 0 "$battery" ;;
     'on')  sudo tlp setcharge 1 1 "$battery" ;;
 
-    'status') get_status ;;
+    'status')
+        if get_status; then
+            echo "enabled"
+        else
+            echo "disabled"
+        fi
+     ;;
 
     'gui')
         if get_status; then
