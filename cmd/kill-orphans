@@ -1,5 +1,5 @@
 #!/bin/sh
-export INFO='kill all unattatched (orphaned) tmux sessions'
+export INFO='kill all unattatched (orphaned) tmux/zellij sessions'
 # This is a bit broken at the moment, I am not sure why...
 
 ~/scripts/cmd/require tmux || exit $?
@@ -14,21 +14,38 @@ log() {
 
 log '------------------'
 
-count=0
-# Get list of sessions
-for session in $(tmux list-sessions -F '#{session_name}:#{session_attached}'); do
-    # Split session into name and attached count
-        name="${session%:*}"
-    attached="${session#*:}"
-    log "$session"
-    log "<$name> <$attached>"
-    # Kill if nothing is attached
-    if [ "$attached" = 0 ]; then
-        log " -> KILL!"
-        tmux kill-session -t "$name"
+kill_tmux() {
+    # Get list of sessions
+    for session in $(tmux list-sessions -F '#{session_name}:#{session_attached}'); do
+        # Split session into name and attached count
+            name="${session%:*}"
+        attached="${session#*:}"
+        log "$session"
+        log "<$name> <$attached>"
+        # Kill if nothing is attached
+        if [ "$attached" = 0 ]; then
+            log " -> KILL!"
+            tmux kill-session -t "$name"
+            count=$((count + 1))
+        fi
+    done
+}
+
+kill_zellij() {
+    for session in $(
+        grep -l 'connected_clients 0' \
+            ~/.cache/zellij/*/session_info/*/session-metadata.kdl \
+        | awk -F/ '{print $(NF-1)}'
+    ); do
+        zellij kill-session "$session"
+        zellij delete-session "$session"
         count=$((count + 1))
-    fi
-done
+    done
+}
+
+count=0
+kill_tmux
+kill_zellij
 
 if [ "$count" -gt 0 ]; then
     [ "$count" = 1 ] || s='s'
