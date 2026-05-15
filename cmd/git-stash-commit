@@ -1,0 +1,12 @@
+#!/bin/sh
+export INFO='convert the latest git commit to a stash'
+
+if [ -n "$(git status --porcelain)" ]; then
+    echo 'git-stash-commit: working tree is not clean' >&2
+    exit 1
+fi
+
+name=$(git log -1 --pretty='format:%s')
+git reset --mixed HEAD^1
+git stash push --include-untracked --message "$name"
+
