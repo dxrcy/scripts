@@ -7,6 +7,11 @@ if [ -n "$(git status --porcelain)" ]; then
 fi
 
 name=$(git log -1 --pretty='format:%s')
+
+echo "commit: $name"
+printf "convert commit to stash? (CTRL-C to cancel) "
+read -r
+
 git reset --mixed HEAD^1
 git stash push --include-untracked --message "$name"
 
