@@ -1,0 +1,20 @@
+#!/bin/sh
+
+git ls-files | while read -r file; do
+    git blame --line-porcelain "$file" 2>/dev/null |
+    sed -n 's/^author //p'
+done |
+sort |
+uniq -c |
+sort -nr |
+awk '
+{
+    count[$2] = $1
+    total += $1
+}
+END {
+    printf "%-30s %10s %10s\n", "Author", "Lines", "Percent"
+    for (a in count)
+        printf "%-30s %10d %9.2f%%\n", a, count[a], count[a] / total * 100
+}'
+
