@@ -1,8 +1,8 @@
 #!/bin/sh
 export INFO='choose a power-off method with fzf popup'
 
-~/scripts/cmd/require fzf systemctl hyprlock hyprctl || exit $?
-~/scripts/cmd/require ~/scripts/cmd/terminal-popup || exit $?
+~/code/scripts/cmd/require fzf systemctl hyprlock hyprctl || exit $?
+~/code/scripts/cmd/require ~/code/scripts/cmd/terminal-popup || exit $?
 
 menu="\
  Cancel

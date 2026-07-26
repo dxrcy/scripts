@@ -1,10 +1,10 @@
 #!/bin/sh
 export INFO='print random name for note file, with date'
 
-~/scripts/cmd/require namegen || exit $?
+~/code/scripts/cmd/require namegen || exit $?
 
 # Directory of notes
-dir="$HOME/docs/notes"
+dir="$HOME/media/notes"
 
 # Create folder if doesn't exist
 if [ ! -d "$dir" ]; then

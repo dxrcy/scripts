@@ -1,7 +1,7 @@
 #!/bin/sh
 export INFO='watch a file for changes, to compile and run'
 
-~/scripts/cmd/require inotifywait clear setsid pgrep || exit $?
+~/code/scripts/cmd/require inotifywait clear setsid pgrep || exit $?
 
 #TODO: Add `ignore` option for outputted files ?
 

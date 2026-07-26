@@ -1,9 +1,9 @@
 #!/bin/sh
 export INFO='choose an emoji using fzf'
 
-~/scripts/cmd/require fzf notify-send || exit $?
+~/code/scripts/cmd/require fzf notify-send || exit $?
 
-answer="$(cat ~/scripts/share/emojis \
+answer="$(cat ~/code/scripts/share/emojis \
     | fzf \
         --highlight-line \
     | cat \

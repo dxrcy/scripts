@@ -1,8 +1,8 @@
 #!/bin/sh
 export INFO='search and run a desktop application using fzf'
 
-~/scripts/cmd/require fzf || exit $?
-~/scripts/cmd/require ~/scripts/cmd/terminal-popup || exit $?
+~/code/scripts/cmd/require fzf || exit $?
+~/code/scripts/cmd/require ~/code/scripts/cmd/terminal-popup || exit $?
 
 dirs=$*
 

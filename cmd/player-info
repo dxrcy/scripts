@@ -1,7 +1,7 @@
 #!/bin/sh
 export INFO='show description of currently playing song'
 
-~/scripts/cmd/require playerctl ~/scripts/cmd/bt dunstify || exit $?
+~/code/scripts/cmd/require playerctl ~/code/scripts/cmd/bt dunstify || exit $?
 
 NOTIFY_ID=9238
 player='spotify'
@@ -58,8 +58,8 @@ time=$(playerctl -p "$player" metadata \
 percent=$(playerctl -p "$player" metadata \
     -f '{{position / mpris:length * 100}}') || exit $?
 
-if ~/scripts/cmd/bt status; then
-    charge="|  $(~/scripts/cmd/bt charge)"
+if ~/code/scripts/cmd/bt status; then
+    charge="|  $(~/code/scripts/cmd/bt charge)"
 fi
 
 percent="${percent%.*}"

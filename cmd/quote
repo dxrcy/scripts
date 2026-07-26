@@ -1,5 +1,5 @@
 #!/bin/sh
 export INFO='display a random quote'
 
-shuf ~/scripts/share/quotes -n1
+shuf ~/code/scripts/share/quotes -n1
 

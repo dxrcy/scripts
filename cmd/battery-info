@@ -1,7 +1,7 @@
 #!/bin/sh
 export INFO='display battery percentage with an icon'
 
-~/scripts/cmd/require acpi || exit $?
+~/code/scripts/cmd/require acpi || exit $?
 
 icon_battery=''
 icon_plug=''

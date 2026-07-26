@@ -1,7 +1,7 @@
 #!/bin/sh
 export INFO='run ffmpeg on all files in current directory, converting one filetype to another'
 
-~/scripts/cmd/require ffmpeg trash || exit 1
+~/code/scripts/cmd/require ffmpeg trash || exit 1
 
 if [ "$#" -lt 2 ]; then
     echo 'ffmpeg-all: missing arguments' >&2

@@ -1,8 +1,8 @@
 #!/bin/sh
 export INFO='enable or disable battery conservation with tlp'
 
-~/scripts/cmd/require tlp notify-send rofi sudo || exit $?
-~/scripts/cmd/require gksu
+~/code/scripts/cmd/require tlp notify-send rofi sudo || exit $?
+~/code/scripts/cmd/require gksu
 
 battery='BAT0'
 driver='/sys/bus/platform/drivers/ideapad_acpi/VPC2004:00'
