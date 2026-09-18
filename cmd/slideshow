@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ $# -ne 2 ]; then
+    echo 'slideshow: incorrect usage' >&2
+    exit 1
+fi
+
+count=$1
+delay=$2
+
+viewer=swiv
+
+for i in $(seq "$count"); do
+    i=$(ls | shuf -n1)
+    echo "$i"
+    "$viewer" -f "$i" &
+    pid=$!
+    sleep "$delay"
+    pgrep "$viewer" | grep -vx "$pid" | xargs kill
+done
+
