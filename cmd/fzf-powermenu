@@ -32,7 +32,7 @@ case "$answer" in
     ' Reboot')   try systemctl reboot ;;
     ' Suspend')  try hyprlock & try systemctl suspend ;;
     ' Lock')     try hyprlock ;;
-    ' Logout')   hyprctl dispatch exit ;;
+    ' Logout')   hyprctl dispatch 'hl.dsp.exit()' ;;
     *) ;; # Ignore
 esac
 
